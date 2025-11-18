@@ -1,0 +1,13 @@
+@theme {
+    --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+
+    --text-scale-1: 0.75rem;    /* 12px */
+    --text-scale-2: 0.875rem;   /* 14px */
+    --text-scale-3: 1rem;       /* 16px */
+    --text-scale-4: 1.125rem;   /* 18px */
+    --text-scale-5: 1.25rem;    /* 20px */
+    --text-scale-6: 1.5rem;     /* 24px */
+    --text-scale-7: 1.75rem;    /* 30px */
+    --font-weight-regular: 400;
+    --font-weight-bold: 700;
+}
