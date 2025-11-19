@@ -1,8 +1,12 @@
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 import MobileLayout from "./layouts/MobileLayout.tsx";
-import Home from "./pages/home.tsx";
-import Profile from "./pages/profile.tsx";
+import Home from "./pages/Home.tsx";
+import Profile from "./pages/Profile.tsx";
+import LoginCallback from "./pages/LoginCallback.tsx";
+import ErrorPage from "./pages/ErrorPage.tsx";
+import Match from "./pages/Match.tsx";
+import ProfileComplete from "./pages/ProfileComplete.tsx";
 
 const router = createBrowserRouter([
     {
@@ -16,6 +20,22 @@ const router = createBrowserRouter([
             {
                 path: "profile",
                 element: <Profile/>
+            },
+            {
+                path: "/login/success",
+                element: <LoginCallback />
+            },
+            {
+                path: "/login/failure",
+                element: <ErrorPage/>
+            },
+            {
+                path: "/match",
+                element: <Match/>
+            },
+            {
+                path: "/profile-complete",
+                element: <ProfileComplete/>
             }
         ]
     }

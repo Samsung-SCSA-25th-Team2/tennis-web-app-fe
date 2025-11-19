@@ -15,6 +15,8 @@ const MobileLayout = () => {
                 sm:w-[480px]
                 sm:h-[calc(100dvh-1rem)]
                 bg-background shadow-sm
+                py-sm
+                px-md
             ">
                 <main className="
                     flex-1
