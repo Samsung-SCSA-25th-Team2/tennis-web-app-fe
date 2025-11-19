@@ -1,4 +1,4 @@
-const Profile= () => {
+const Profile = () => {
     return (
         <>
             <div className="w-10 bg-primary">HOME</div>
@@ -6,7 +6,7 @@ const Profile= () => {
                 hello this is profile
             </span>
         </>
-    )
-}
+    );
+};
 
 export default Profile;

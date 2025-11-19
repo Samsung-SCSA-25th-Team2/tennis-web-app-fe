@@ -27,6 +27,6 @@ const MobileLayout = () => {
             </div>
         </div>
     );
-}
+};
 
 export default MobileLayout;

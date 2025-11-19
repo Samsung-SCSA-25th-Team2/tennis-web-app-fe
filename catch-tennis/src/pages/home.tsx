@@ -6,7 +6,7 @@ const Home = () => {
                 hello this is home
             </span>
         </>
-    )
-}
+    );
+};
 
 export default Home;
