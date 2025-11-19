@@ -1,10 +1,7 @@
-import React from 'react';
+import {Outlet} from 'react-router-dom';
 
-interface MobileLayoutProps {
-    children: React.ReactNode
-}
 
-const MobileLayout = ({children}: MobileLayoutProps) => {
+const MobileLayout = () => {
     return (
         <div className="
             flex justify-center items-center
@@ -25,7 +22,7 @@ const MobileLayout = ({children}: MobileLayoutProps) => {
                     scrollbar-hide
                     min-h-0
                 ">
-                    {children}
+                    <Outlet/>
                 </main>
             </div>
         </div>
