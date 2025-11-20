@@ -7,7 +7,7 @@
 
     --color-surface: #FFFFFF;
     --color-surface-muted: var(--color-neutral-300);
-    --color-surface-raised: var(--color-neutral-300);
+    --color-surface-raised: var(--color-neutral-100);
 
     --color-background: var(--color-neutral-100);
 

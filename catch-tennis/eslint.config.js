@@ -20,8 +20,7 @@ export default defineConfig([
             globals: globals.browser,
         },
         rules: {
-            'semi': ['error', 'always'],
-            'semi-spacing': ['error', {'before': false, 'after': true}]
+            'semi': ['error', 'never'],
         }
     },
 ])

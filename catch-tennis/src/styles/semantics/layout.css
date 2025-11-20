@@ -1,16 +1,16 @@
 @theme {
-    --spacing-xs: var(--spacing-1);
-    --spacing-sm: var(--spacing-2);
-    --spacing-md: var(--spacing-4);
-    --spacing-lg: var(--spacing-6);
-    --spacing-xl: var(--spacing-8);
-    --spacing-5xl: var(--spacing-32);
+    --spacing-xs: var(--spacing-1);     /* 4px */
+    --spacing-sm: var(--spacing-2);     /* 8px */
+    --spacing-md: var(--spacing-4);     /* 16px */
+    --spacing-lg: var(--spacing-6);     /* 4px */
+    --spacing-xl: var(--spacing-8);     /* 24px */
+    --spacing-5xl: var(--spacing-32);   /* 128px */
 
-    --radius-sm: var(--spacing-2);
-    --radius-md: var(--spacing-4);
-    --radius-lg: var(--spacing-8);
-    --radius-xl: var(--spacing-16);
+    --radius-sm: var(--spacing-2);      /* 8px */
+    --radius-md: var(--spacing-4);      /* 16px */
+    --radius-lg: var(--spacing-8);      /* 32px */
+    --radius-xl: var(--spacing-16);     /* 64px */
 
-    --border-width-sm: var(--border-thickness-1);
-    --border-width-md: var(--border-thickness-2);
+    --border-width-sm: var(--border-thickness-1);   /* 1px */
+    --border-width-md: var(--border-thickness-2);   /* 2px */
 }

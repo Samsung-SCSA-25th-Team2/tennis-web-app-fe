@@ -1,12 +1,13 @@
-import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+import {createBrowserRouter, RouterProvider, Navigate} from 'react-router-dom'
 
-import MobileLayout from "./layouts/MobileLayout.tsx";
-import Home from "./pages/Home.tsx";
-import Profile from "./pages/Profile.tsx";
-import LoginCallback from "./pages/LoginCallback.tsx";
-import ErrorPage from "./pages/ErrorPage.tsx";
-import Match from "./pages/Match.tsx";
-import ProfileComplete from "./pages/ProfileComplete.tsx";
+import MobileLayout from "./layouts/MobileLayout.tsx"
+import Home from "./pages/Home.tsx"
+import Profile from "./pages/Profile.tsx"
+import LoginCallback from "./pages/LoginCallback.tsx"
+import ErrorPage from "./pages/ErrorPage.tsx"
+import Match from "./pages/Match.tsx"
+import Submit from "./pages/Submit.tsx"
+import ProfileCompleteWrapper from "./pages/ProfileCompleteWrapper.tsx"
 
 const router = createBrowserRouter([
     {
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
                 element: <Profile/>
             },
             {
-                path: "/login/success",
+                path: "/auth/callback",
                 element: <LoginCallback />
             },
             {
@@ -35,14 +36,22 @@ const router = createBrowserRouter([
             },
             {
                 path: "/profile-complete",
-                element: <ProfileComplete/>
+                element: <Navigate to={"/profile-complete/1"} replace/>
+            },
+            {
+                path: "/profile-complete/:questionNumber",
+                element: <ProfileCompleteWrapper/>
+            },
+            {
+                path: "/submit",
+                element: <Submit/>
             }
         ]
     }
-]);
+])
 
 function App() {
-    return <RouterProvider router={router}/>;
+    return <RouterProvider router={router}/>
 }
 
-export default App;
+export default App

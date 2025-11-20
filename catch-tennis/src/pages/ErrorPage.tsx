@@ -3,7 +3,7 @@ const ErrorPage = () => {
         <>
             <div className="w-full bg-error-500">ERROR</div>
         </>
-    );
-};
+    )
+}
 
-export default ErrorPage;
+export default ErrorPage

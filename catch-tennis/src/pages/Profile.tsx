@@ -6,7 +6,7 @@ const Profile = () => {
                 hello this is profile
             </span>
         </>
-    );
-};
+    )
+}
 
-export default Profile;
+export default Profile

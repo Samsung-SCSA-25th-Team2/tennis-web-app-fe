@@ -1,4 +1,4 @@
-import {Outlet} from 'react-router-dom';
+import {Outlet} from 'react-router-dom'
 
 
 const MobileLayout = () => {
@@ -19,7 +19,7 @@ const MobileLayout = () => {
                 px-md
             ">
                 <main className="
-                    flex-1
+                    flex-1 flex flex-col
                     overflow-y-auto
                     scrollbar-hide
                     min-h-0
@@ -28,7 +28,7 @@ const MobileLayout = () => {
                 </main>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default MobileLayout;
+export default MobileLayout

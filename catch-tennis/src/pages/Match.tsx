@@ -3,7 +3,7 @@ const Match = () => {
         <>
             <div className="text-heading-h1">MATCH</div>
         </>
-    );
-};
+    )
+}
 
-export default Match;
+export default Match

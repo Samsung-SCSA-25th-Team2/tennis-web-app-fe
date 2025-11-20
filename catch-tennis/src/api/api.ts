@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8888/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8888/api'
 
 async function apiCall<T = unknown>(
     endpoint: string,
@@ -10,7 +10,7 @@ async function apiCall<T = unknown>(
         headers?: Record<string, string>;
     } = {}
 ): Promise<T> {
-    const {useJWT = false, useCredentials = false, headers = {}} = options;
+    const {useJWT = false, useCredentials = false, headers = {}} = options
 
     const config: RequestInit = {
         method,
@@ -19,35 +19,35 @@ async function apiCall<T = unknown>(
             ...headers,
         },
         credentials: useCredentials ? 'include' : 'same-origin',
-    };
+    }
 
     if (useJWT) {
-        const token = localStorage.getItem('accessToken');
+        const token = localStorage.getItem('accessToken')
         if (token) {
             config.headers = {
                 Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
                 ...config.headers
-            };
+            }
         }
     }
 
     if (body && method !== 'GET') {
-        config.body = JSON.stringify(body);
+        config.body = JSON.stringify(body)
     }
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-    const data = (await response.json()) as T;
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, config)
+    const data = (await response.json()) as T
     
     if (!response.ok) {
         const errorMessage = (
             data && typeof data === 'object' && 'message' in data
             )
             ? (data as {message: string}).message
-            : 'Request Failed';
+            : 'Request Failed'
         
-        throw new Error(errorMessage);
+        throw new Error(errorMessage)
     }
-    return data;
+    return data
 }
 
 const api = {
@@ -65,6 +65,6 @@ const api = {
 
     delete: <T = unknown>(endpoint: string, options?: { useJWT?: boolean; useCredentials?: boolean }) =>
         apiCall<T>(endpoint, 'DELETE', undefined, options),
-};
+}
 
-export default api;
+export default api
