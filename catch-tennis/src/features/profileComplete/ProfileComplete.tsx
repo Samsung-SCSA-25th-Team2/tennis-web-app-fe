@@ -4,6 +4,7 @@ import {useNavigate, useParams} from "react-router-dom"
 import {questions} from "./questions.ts"
 import {storage} from "./storage.ts"
 import {Button, InputText} from "../../atoms"
+import api from "../../api/api.ts"
 
 
 const ProfileComplete = () => {
@@ -25,7 +26,8 @@ const ProfileComplete = () => {
     }, [question, questionIndex, navigate])
 
 
-    const handleNext = () => {
+
+    const handleNext = async () => {
         if (!selectedValue.trim()) return
         
         storage.setAnswer(question.id, selectedValue.trim())
@@ -33,11 +35,21 @@ const ProfileComplete = () => {
         if (questionIndex < questions.length - 1) {
             navigate(`/profile-complete/${questionIndex + 2}`)
         } else {
-            navigate('/submit')
+            const answers = storage.getAnswers()
+            try {
+                await api.post(
+                    '/v1/users/complete-profile',
+                    answers,
+                    {useJWT: true}
+                )
+                storage.clearAnswers()
+                navigate('/match')
+            } catch (e) {
+                console.error(`Failed at POST ProfileComplete ${e}`)
+                navigate('/error')
+            }
         }
     }
-
-    const isAnswerSelected = selectedValue.trim().length > 0
 
     return (
         <>
@@ -53,7 +65,7 @@ const ProfileComplete = () => {
                                     question.options.map((option) => (
                                         <Button
                                             variant={selectedValue === option.value ? 'primary' : 'inactive'}
-                                            buttonSize={'small'}
+                                            buttonSize='small'
                                             key={option.value}
                                             onClick={() => setSelectedValue(option.value)}
                                         >
@@ -82,9 +94,10 @@ const ProfileComplete = () => {
 
 
                 <Button
+                    variant={selectedValue.length > 0 ? 'primary' : 'inactive'}
                     onClick={handleNext}
                     buttonSize='big'
-                    disabled={!isAnswerSelected}
+                    disabled={selectedValue.length == 0}
                     type="submit"
                 >
                     넘어가기

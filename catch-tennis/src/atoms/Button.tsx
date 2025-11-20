@@ -12,7 +12,7 @@ export default function Button({
                                    children,
                                    ...rest
                                }: ButtonProps) {
-    const baseStyles = 'px-lg py-md rounded-sm border-sm text-heading-h3'
+    const baseStyles = 'px-sm py-md rounded-sm border-sm text-heading-h3'
 
     const variantStyles = {
         primary: 'bg-primary text-text-body border-primary-border',
@@ -20,7 +20,7 @@ export default function Button({
     }
 
     const sizeStyles = {
-        small: 'w-80px',
+        small: 'min-w-20',
         big: 'w-full',
     }
 

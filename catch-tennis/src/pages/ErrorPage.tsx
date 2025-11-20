@@ -1,7 +1,9 @@
+import ErrorImg from "../assets/error.png"
+
 const ErrorPage = () => {
     return (
         <>
-            <div className="w-full bg-error-500">ERROR</div>
+            <img src={ErrorImg} alt="error"/>
         </>
     )
 }

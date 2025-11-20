@@ -27,7 +27,7 @@ const router = createBrowserRouter([
                 element: <LoginCallback />
             },
             {
-                path: "/login/failure",
+                path: "/error",
                 element: <ErrorPage/>
             },
             {
