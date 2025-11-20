@@ -5,10 +5,11 @@ import LoginImg from '../../../assets/kakao_login_large_wide.png'
 import LoadingImg from '../../../assets/loading.png'
 import LogoImg from '../../../assets/logo.png'
 
+export type ImgType = 'error' | 'login' | 'loading' | 'logo'
 
 interface ImgLoaderProps extends ImgHTMLAttributes<HTMLImageElement>{
     imgSize?: 'small' | 'medium' | 'large' | 'full'
-    imgType: 'error' | 'login' | 'loading' | 'logo'
+    imgType: ImgType
     shape?: 'circle' | 'square'
 }
 
