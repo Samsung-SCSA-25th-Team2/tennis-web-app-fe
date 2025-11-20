@@ -1,5 +1,5 @@
-import KakaoLoginImg from "../assets/kakao_login_large_wide.png"
-import LogoImg from "../assets/logo.png"
+import KakaoLoginImg from "../../assets/kakao_login_large_wide.png"
+import LogoImg from "../../assets/logo.png"
 
 const Home = () => {
     return (

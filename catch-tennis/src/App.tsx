@@ -1,13 +1,15 @@
 import {createBrowserRouter, RouterProvider, Navigate} from 'react-router-dom'
 
-import MobileLayout from "./layouts/MobileLayout.tsx"
-import Home from "./pages/Home.tsx"
-import Profile from "./pages/Profile.tsx"
-import LoginCallback from "./pages/LoginCallback.tsx"
-import ErrorPage from "./pages/ErrorPage.tsx"
-import Match from "./pages/Match.tsx"
-import Submit from "./pages/Submit.tsx"
-import ProfileCompleteWrapper from "./pages/ProfileCompleteWrapper.tsx"
+import type {RouteHandle} from "./shared/types/routes.ts"
+
+import MobileLayout from "./shared/layouts/MobileLayout.tsx"
+import Home from "./shared/pages/Home.tsx"
+import Profile from "./shared/pages/Profile.tsx"
+import LoginCallback from "./shared/pages/LoginCallback.tsx"
+import ErrorPage from "./shared/pages/ErrorPage.tsx"
+import Match from "./shared/pages/Match.tsx"
+import Submit from "./shared/pages/Submit.tsx"
+import ProfileCompleteWrapper from "./shared/pages/ProfileCompleteWrapper.tsx"
 
 const router = createBrowserRouter([
     {
@@ -16,7 +18,8 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Home/>
+                element: <Home/>,
+                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
             },
             {
                 path: "profile",
@@ -24,27 +27,32 @@ const router = createBrowserRouter([
             },
             {
                 path: "/auth/callback",
-                element: <LoginCallback />
+                element: <LoginCallback />,
+                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
             },
             {
                 path: "/error",
-                element: <ErrorPage/>
+                element: <ErrorPage/>,
+                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
             },
             {
                 path: "/match",
-                element: <Match/>
+                element: <Match/>,
             },
             {
                 path: "/profile-complete",
-                element: <Navigate to={"/profile-complete/1"} replace/>
+                element: <Navigate to={"/profile-complete/1"} replace/>,
+                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
             },
             {
                 path: "/profile-complete/:questionNumber",
-                element: <ProfileCompleteWrapper/>
+                element: <ProfileCompleteWrapper/>,
+                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
             },
             {
                 path: "/submit",
-                element: <Submit/>
+                element: <Submit/>,
+                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
             }
         ]
     }

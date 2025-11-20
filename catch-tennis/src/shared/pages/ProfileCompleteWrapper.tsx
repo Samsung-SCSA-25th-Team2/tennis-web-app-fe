@@ -1,4 +1,4 @@
-import ProfileComplete from "../features/profileComplete/ProfileComplete.tsx"
+import ProfileComplete from "../../features/profileComplete/ProfileComplete.tsx"
 import {useParams} from "react-router-dom"
 
 const ProfileCompleteWrapper = () => {

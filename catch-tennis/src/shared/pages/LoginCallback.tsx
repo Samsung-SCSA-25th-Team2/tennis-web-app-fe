@@ -1,7 +1,7 @@
 import {useState, useEffect} from "react"
 import {useNavigate, useSearchParams} from "react-router-dom"
 
-import LoadingImg from "../assets/loading.png"
+import LoadingImg from "../../assets/loading.png"
 import api from "../api/api.ts"
 
 interface UserStatus {

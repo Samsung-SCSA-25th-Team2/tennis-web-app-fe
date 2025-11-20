@@ -3,8 +3,8 @@ import {useNavigate, useParams} from "react-router-dom"
 
 import {questions} from "./questions.ts"
 import {storage} from "./storage.ts"
-import {Button, InputText} from "../../atoms"
-import api from "../../api/api.ts"
+import {Button, InputText} from "../../shared/components/atoms"
+import api from "../../shared/api/api.ts"
 
 
 const ProfileComplete = () => {
