@@ -1,8 +1,8 @@
 import {useState, useEffect} from "react"
 import {useNavigate, useSearchParams} from "react-router-dom"
 
-import LoadingImg from "../../assets/loading.png"
-import api from "../api/api.ts"
+import {ImgLoader} from "../shared/components/atoms"
+import api from "../shared/api/api.ts"
 
 interface UserStatus {
     isProfileComplete: boolean;
@@ -45,7 +45,7 @@ const LoginCallback = () => {
     }, [searchParams, navigate])
 
     if (checking) {
-        return <img src={LoadingImg} alt='Loading...'/>
+        return <ImgLoader imgType={"loading"} imgSize={'full'}/>
     } else {
         return null
     }

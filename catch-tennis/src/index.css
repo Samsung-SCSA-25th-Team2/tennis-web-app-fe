@@ -33,6 +33,9 @@
     padding: 0;
     margin: 0;
     overflow: hidden;
+
+    color: var(--color-text-body);
+
 }
 
 #root {
