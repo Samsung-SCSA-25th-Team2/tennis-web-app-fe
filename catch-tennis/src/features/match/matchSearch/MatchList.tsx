@@ -2,6 +2,9 @@ import type {HTMLAttributes} from "react"
 import {useGetApi} from "../../../shared/hooks/api_hook.ts"
 import type {MatchListResult} from "../types.ts"
 import {ImgLoader} from "../../../shared/components/atoms"
+import MatchCard from "../../../shared/components/molecules/MatchCard.tsx"
+import type {MatchInfo} from "../../../shared/types/matches.ts"
+import type {CourtInfo} from "../../../shared/types/courts.ts"
 
 interface MatchListProps extends HTMLAttributes<HTMLDivElement> {
     // TODO: use types
@@ -57,14 +60,14 @@ const MatchList = ({
         return <ImgLoader imgType={'error'} imgSize={'full'}/>
     }
 
+    // TODO: calculate the distances for each courts
+
 
     return (
         <div className="flex flex-1 flex-col bg-blue-500">
             {
                 data?.matches.map((item, index) => (
-                    <div key={index} className="text-heading-h1">
-                        {item.matchId}
-                    </div>
+                    <MatchCard key={index} matchInfo={item}/>
                 ))
             }
 

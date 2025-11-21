@@ -1,4 +1,4 @@
-import {GameType} from "../../shared/types/enums.ts"
+import type {MatchInfo} from "../../shared/types/matches.ts"
 
 export type SortType = 'latest' | 'loc5' | 'loc10' | 'loc15' | 'locInf'
 
@@ -9,17 +9,4 @@ export interface MatchListResult {
     size: number
     hasNext: boolean
     cursor: number
-}
-
-export interface MatchInfo {
-    matchId: number,
-    hostId: number,
-    startDateTime: Date,
-    endDateTime: Date,
-    gameType: GameType,
-    courtId : number,
-    fee: number,
-    status: StatusType,
-    createdAt: Date,
-    
 }

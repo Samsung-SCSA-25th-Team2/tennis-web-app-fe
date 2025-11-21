@@ -2,6 +2,8 @@ import {Button} from "../../../shared/components/atoms"
 
 const FilterBar = () => {
 
+    // TODO: change buttons to switches
+    // TODO: dropdowns
     return (
         <div className="flex flex-col gap-xs">
             <div className="flex justify-between">
