@@ -1,9 +1,9 @@
-import ErrorImg from "../assets/error.png"
+import {ImgLoader} from "../shared/components/atoms"
 
 const ErrorPage = () => {
     return (
         <>
-            <img src={ErrorImg} alt="error"/>
+            <ImgLoader imgType={'error'} imgSize={'full'}/>
         </>
     )
 }

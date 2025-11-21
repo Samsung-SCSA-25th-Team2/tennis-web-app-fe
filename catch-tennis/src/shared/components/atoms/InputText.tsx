@@ -6,7 +6,6 @@ interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export default function InputText({
                                       inputSize = 'big',
-                                      className = '',
                                       ...rest
 
                                   }: InputTextProps) {
@@ -16,7 +15,7 @@ export default function InputText({
         big: 'w-full'
     }
 
-    const styles = `${className} ${baseStyles} ${sizeStyles[inputSize]}`
+    const styles = `${baseStyles} ${sizeStyles[inputSize]}`
 
     return (
         <input className={styles} {...rest}/>

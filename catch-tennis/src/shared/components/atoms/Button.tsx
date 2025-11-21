@@ -8,7 +8,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export default function Button({
                                    variant = 'primary',
                                    buttonSize = 'big',
-                                   className = '',
                                    children,
                                    ...rest
                                }: ButtonProps) {
@@ -24,7 +23,7 @@ export default function Button({
         big: 'w-full',
     }
 
-    const styles = `${className} ${baseStyles} ${variantStyles[variant]} ${sizeStyles[buttonSize]}`.trim()
+    const styles = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[buttonSize]}`.trim()
 
     return (
         <button className={styles} {...rest}>
