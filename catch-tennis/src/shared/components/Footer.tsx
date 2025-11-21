@@ -1,13 +1,18 @@
-import {useNavigate} from "react-router-dom"
+import {useNavigate, useLocation} from "react-router-dom"
+
+import IconLoader from "./atoms/IconLoader.tsx"
+import {type IconType } from "./atoms/IconLoader.tsx"
+
 
 interface NavItem {
     label: string
-    imgType: ImgType
+    imgType: IconType
     dest: string
 }
 
 const Footer = () => {
     const navigate = useNavigate()
+    const location = useLocation()
 
     const navElems: NavItem[] = [
         {
@@ -31,9 +36,14 @@ const Footer = () => {
             dest: '/profile'
         },
     ]
+
+    const isActive = (dest: string) => {
+        return location.pathname === dest
+    }
+
     return (
         <footer className="
-            flex px-xl py-sm
+            flex px-lg pt-sm pb-0
             border-border border-sm border-b-0
             rounded-t-sm
             justify-around
@@ -45,9 +55,17 @@ const Footer = () => {
                     <div
                         className="flex flex-col items-center"
                         onClick={() => {navigate(`${navElem.dest}`)}}
+                        key={navElem.imgType}
                     >
-                        <ImgLoader imgType={navElem.imgType} imgSize={'small'}/>
-                        <span className="text-caption">{navElem.label}</span>
+                        <IconLoader
+                            name={navElem.imgType}
+                            className={isActive(navElem.dest) ? 'text-text-title' : 'text-text-muted'}
+                        />
+                        <span
+                            className={`text-caption ${isActive(navElem.dest) ? 'text-text-title' : 'text-text-muted'}`}
+                        >
+                            {navElem.label}
+                        </span>
                     </div>
                 ))
             }

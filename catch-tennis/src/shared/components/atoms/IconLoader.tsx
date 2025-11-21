@@ -1,31 +1,35 @@
-import type {SVGProps} from "react"
+import type {HTMLAttributes} from "react"
 
-export type IconName = 'match' | 'chat' | 'club' | 'profile'
+import MatchIcon from '../../../assets/match.svg?react'
+import ChatIcon from '../../../assets/chat.svg?react'
+import ClubIcon from '../../../assets/club.svg?react'
+import ProfileIcon from '../../../assets/profile.svg?react'
 
-interface IconLoaderProps extends SVGProps<SVGSVGElement> {
-    name: IconName
+export type IconType = 'match' | 'chat' | 'club' | 'profile'
+
+interface IconLoaderProps extends HTMLAttributes<SVGSVGElement> {
+    name: IconType
 }
 
-export default function IconLoader({
+const IconLoader = ({
     name,
+    className = '',
     ...rest
 
-                                   }:IconLoaderProps) {
-
-    const commonProps = {
-        width: 24,
-        height: 24,
-        viewBox: '0 0 24 24',
-        fill: 'currentColor',
-        ...rest
+                                   }:IconLoaderProps) =>  {
+    const icons = {
+        match: MatchIcon,
+        chat: ChatIcon,
+        club: ClubIcon,
+        profile: ProfileIcon,
     }
 
-    switch (name) {
-        case 'chat':
-            return (
-                <svg {...commonProps}></svg>
-            )
-    }
+    const Icon = icons[name]
+
+    console.log(`IconLoader className ${className}`)
+    return (
+        <Icon className={`w-lg h-lg ${className}`} {...rest}/>
+    )
 }
 
 export default IconLoader
