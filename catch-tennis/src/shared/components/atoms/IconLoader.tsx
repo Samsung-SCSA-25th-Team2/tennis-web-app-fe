@@ -26,7 +26,6 @@ const IconLoader = ({
 
     const Icon = icons[name]
 
-    console.log(`IconLoader className ${className}`)
     return (
         <Icon className={`w-lg h-lg ${className}`} {...rest}/>
     )

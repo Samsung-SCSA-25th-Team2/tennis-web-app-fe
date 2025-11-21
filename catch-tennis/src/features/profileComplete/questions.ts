@@ -1,4 +1,5 @@
 import type {Question} from "./types.ts"
+import {Period, Gender, Age} from "../../shared/types/enums.ts"
 
 export const questions: Question[] = [
     {
@@ -12,10 +13,10 @@ export const questions: Question[] = [
         heading: '테니스는 얼마나 치셨나요?',
         type: 'button',
         options: [
-            {label: '1년', value: 'ONE_YEAR'},
-            {label: '2년', value: 'TWO_YEARS'},
-            {label: '3년', value: 'THREE_YEARS'},
-            {label: '+4년', value: 'OVER_FOUR_YEARS'},
+            {label: '1년', value: Period.OneYear},
+            {label: '2년', value: Period.TwoYears},
+            {label: '3년', value: Period.ThreeYears},
+            {label: '+4년', value: Period.OverFourYears},
         ]
     },
     {
@@ -23,8 +24,8 @@ export const questions: Question[] = [
         heading: '성별이 어떻게 되시나요?',
         type: "button",
         options: [
-            {label: '남자', value: 'MALE'},
-            {label: '여자', value: 'FEMALE'},
+            {label: '남자', value: Gender.Male},
+            {label: '여자', value: Gender.Female},
         ]
     },
     {
@@ -32,10 +33,10 @@ export const questions: Question[] = [
         heading: '나이가 어떻게 되시나요?',
         type: "button",
         options: [
-            {label: '20대', value: 'TWENTY'},
-            {label: '30대', value: 'THIRTY'},
-            {label: '40대', value: 'FORTY'},
-            {label: '+50대', value: 'OVER_FIFTY'},
+            {label: '20대', value: Age.Twenty},
+            {label: '30대', value: Age.Thirty},
+            {label: '40대', value: Age.Forty},
+            {label: '+50대', value: Age.OverFifty},
         ]
     }
 ]

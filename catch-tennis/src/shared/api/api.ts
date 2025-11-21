@@ -8,9 +8,10 @@ async function apiCall<T = unknown>(
         useJWT?: boolean;
         useCredentials?: boolean;
         headers?: Record<string, string>;
+        params?: Record<string, string | number | boolean>;
     } = {}
 ): Promise<T> {
-    const {useJWT = false, useCredentials = false, headers = {}} = options
+    const {useJWT = false, useCredentials = false, headers = {}, params} = options
 
     const config: RequestInit = {
         method,
@@ -20,6 +21,18 @@ async function apiCall<T = unknown>(
         },
         credentials: useCredentials ? 'include' : 'same-origin',
     }
+
+    let url = `${API_BASE_URL}${endpoint}`
+    if (params && Object.keys(params).length > 0) {
+        const queryString = new URLSearchParams(
+            Object.entries(params).reduce((acc, [key, value]) => {
+                acc[key] = String(value)
+                return acc
+            }, {} as Record<string, string>)
+        ).toString()
+        url += `?${queryString}`
+    }
+
 
     if (useJWT) {
         const token = localStorage.getItem('accessToken')
@@ -35,7 +48,7 @@ async function apiCall<T = unknown>(
         config.body = JSON.stringify(body)
     }
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config)
+    const response = await fetch(url, config)
     const data = (await response.json()) as T
     
     if (!response.ok) {
@@ -51,7 +64,8 @@ async function apiCall<T = unknown>(
 }
 
 const api = {
-    get: <T = unknown>(endpoint: string, options?: { useJWT?: boolean; useCredentials?: boolean }) =>
+    get: <T = unknown>(endpoint: string,
+                       options?: { useJWT?: boolean; useCredentials?: boolean; params?: Record<string, string | number | boolean> }) =>
         apiCall<T>(endpoint, 'GET', undefined, options),
 
     post: <T = unknown>(endpoint: string, body?: unknown, options?: { useJWT?: boolean; useCredentials?: boolean }) =>

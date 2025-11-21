@@ -49,7 +49,6 @@ const Footer = () => {
             justify-around
             items-center
         ">
-            {/*TODO: add hover, set min size, set active/inactive according to the url, color???*/}
             {
                 navElems.map((navElem) => (
                     <div
