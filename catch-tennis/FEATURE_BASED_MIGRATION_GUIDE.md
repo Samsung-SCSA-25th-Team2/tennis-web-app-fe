@@ -182,7 +182,7 @@ catch-tennis/
 │   │       ├── common.ts                 ✅ Already here
 │   │       ├── utils/
 │   │       │   ├── questions.ts         ✅ Already here
-│   │       │   └── storage.ts           ✅ Already here
+│   │       │   └── QAStorage.ts           ✅ Already here
 │   │       └── index.ts                 ✅ Already here
 │   │
 │   ├── pages/                      # General routing pages (not feature-specific)

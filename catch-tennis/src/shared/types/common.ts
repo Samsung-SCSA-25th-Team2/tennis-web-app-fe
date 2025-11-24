@@ -12,3 +12,7 @@ export interface Question {
     options?: ButtonOption[];
     placeholder?: string;
 }
+
+export interface AnswersState {
+    [questionId: string]: string;
+}

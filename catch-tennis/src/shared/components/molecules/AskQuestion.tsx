@@ -1,5 +1,6 @@
 import {Button, InputText} from "@shared/components/atoms"
-import {type Question} from "@shared/types/common.ts"
+import {type Question} from "@shared/types"
+
 
 interface AskQuestionProps {
     question: Question

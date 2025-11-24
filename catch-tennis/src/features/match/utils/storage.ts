@@ -1,3 +1,3 @@
 import {QAStorage} from "@shared/utils/QAStorage.ts"
 
-export const storage = QAStorage('profileComplete')
+export const storage = QAStorage("matchCreate")

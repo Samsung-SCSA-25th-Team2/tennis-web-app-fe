@@ -1,12 +1,10 @@
-import {useEffect, useState} from "react"
 import {useNavigate, useParams} from "react-router-dom"
+import {useEffect, useState} from "react"
 
-
-import {postProfile} from "../api/profileApi.ts"
 import {questions} from "../utils/questions.ts"
 import {storage} from "../utils/storage.ts"
 
-export function useCompleteProfile() {
+export function useMatchCreate() {
     const navigate = useNavigate()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const {questionNumber} = useParams<{questionNumber:string}>()
@@ -21,7 +19,7 @@ export function useCompleteProfile() {
 
     useEffect(() => {
         if (!question || questionIndex < 0 || questionIndex >= questions.length) {
-            navigate('/profile-complete/1', {replace:true})
+            navigate('/match-create/1', {replace:true})
         }
     }, [question, questionIndex, navigate])
 
@@ -31,16 +29,16 @@ export function useCompleteProfile() {
         storage.setAnswer(question.id, selectedValue.trim())
 
         if (questionIndex < questions.length - 1) {
-            navigate(`/profile-complete/${questionIndex + 2}`)
+            navigate(`/match-create/${questionIndex + 2}`)
         } else {
             setIsSubmitting(true)
             try {
-                const answers = storage.getAnswers()
-                await postProfile(answers)
+                // const answers = storage.getAnswers()
+                // TODO: add post -> get created match id -> redirect to match details
                 storage.clearAnswers()
                 navigate('/match')
             } catch (error) {
-                console.log('CompleteProfileError:', error)
+                console.log('MatchCreateError:', error)
                 navigate('/error')
             } finally {
                 setIsSubmitting(false)
@@ -53,7 +51,6 @@ export function useCompleteProfile() {
         selectedValue,
         setSelectedValue,
         handleNext,
-        isSubmitting
+        isSubmitting,
     }
-
 }
