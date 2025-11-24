@@ -66,7 +66,7 @@ export const questions: Question[] = [
     {
         id: 'description',
         heading: '매칭 소개글을 입력해 주세요',
-        type: 'input', // TODO: change this
+        type: 'textarea',
         placeholder: '소개글 입력'
     },
 ]

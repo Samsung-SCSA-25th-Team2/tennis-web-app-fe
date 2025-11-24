@@ -1,4 +1,4 @@
-export type QuestionType = 'button' | 'input';
+export type QuestionType = 'button' | 'input' | 'textarea'
 
 export interface ButtonOption {
     label: string;
