@@ -5,7 +5,7 @@ import type {RouteHandle} from "@shared/types"
 
 
 // Pages
-import {HomePage, ErrorPage} from "@/pages"
+import {HomePage, ErrorPage, NotFoundPage} from "@/pages"
 
 // Auth
 import {LoginCallbackPage} from "@features/auth"
@@ -80,6 +80,13 @@ const router = createBrowserRouter([
             {
                 path: "/profile-complete/:questionNumber",
                 element: <ProfileCompletePage/>,
+                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
+            },
+
+            // 404 Not Found
+            {
+                path: "*",
+                element: <NotFoundPage/>,
                 handle: {showHeader: false, showFooter: false} satisfies RouteHandle
             },
         ]
