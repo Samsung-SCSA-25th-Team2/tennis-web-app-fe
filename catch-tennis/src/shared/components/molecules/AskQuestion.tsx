@@ -1,4 +1,4 @@
-import {Button, InputText, Textarea} from "@shared/components/atoms"
+import {Button, InputText, Textarea, Count} from "@shared/components/atoms"
 import {type Question} from "@shared/types"
 
 
@@ -57,6 +57,17 @@ export function AskQuestion({
                 placeholder={question.placeholder}
                 autoFocus
             />
+        )
+    } else if (question.type === 'count' && question.options) {
+        questionElem = (
+            <div className='flex flex-col w-full px-xl gap-sm'>
+                {
+                    question.options.map((option) => (
+                        <Count label={option.label} value={option.value}></Count>
+                    ))
+                }
+
+            </div>
         )
     }
 

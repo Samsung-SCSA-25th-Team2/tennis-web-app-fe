@@ -9,7 +9,6 @@ export function InputText({
                                       ...rest
 
                                   }: InputTextProps) {
-    // const baseStyles = 'p-md rounded-sm bg-surface-raised border-sm border-border text-heading-h4 text-text-muted';
     const baseStyles = 'p-md rounded-sm bg-surface-raised border-sm border-border text-heading-h4'
     const sizeStyles = {
         big: 'w-full'
@@ -17,6 +16,7 @@ export function InputText({
 
     const styles = `${baseStyles} ${sizeStyles[inputSize]}`
 
+    // TODO: add validation rules
     return (
         <input className={styles} {...rest}/>
     )

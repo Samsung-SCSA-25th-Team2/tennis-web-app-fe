@@ -40,7 +40,7 @@ export const questions: Question[] = [
     {
         id: 'playerCount',
         heading: '모집 인원을 작성해 주세요',
-        type: "button",  // TODO: change this
+        type: "count",
         options: [
             {label: '남자', value: Gender.Male},
             {label: '여자', value: Gender.Female},
