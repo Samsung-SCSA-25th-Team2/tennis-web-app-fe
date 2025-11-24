@@ -4,7 +4,7 @@ interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
     inputSize: 'big';
 }
 
-export default function InputText({
+export function InputText({
                                       inputSize = 'big',
                                       ...rest
 

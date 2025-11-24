@@ -1,9 +1,9 @@
 import type {ImgHTMLAttributes} from "react"
 
-import ErrorImg from '../../../assets/error.png'
-import LoginImg from '../../../assets/kakao_login_large_wide.png'
-import LoadingImg from '../../../assets/loading.png'
-import LogoImg from '../../../assets/logo.png'
+import ErrorImg from '@assets/images/error.png'
+import LoginImg from '@assets/images/kakao_login_large_wide.png'
+import LoadingImg from '@assets/images/loading.png'
+import LogoImg from '@assets/images/logo.png'
 
 export type ImgType = 'error' | 'login' | 'loading' | 'logo' | 'unknown'
 
@@ -15,7 +15,7 @@ interface ImgLoaderProps extends ImgHTMLAttributes<HTMLImageElement>{
     unknownAlt?: string
 }
 
-export default function ImgLoader({
+export function ImgLoader({
     imgSize = 'small',
     imgType,
     shape = 'circle',

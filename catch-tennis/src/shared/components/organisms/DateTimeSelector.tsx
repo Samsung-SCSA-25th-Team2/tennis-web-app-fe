@@ -1,8 +1,8 @@
-const DateTimeSelector = () => {
+export function DateTimeSelector(
+
+) {
 
     return (
         <div></div>
     )
 }
-
-export default DateTimeSelector

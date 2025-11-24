@@ -1,11 +1,12 @@
 import {Outlet, type UIMatch, useMatches} from 'react-router-dom'
 
-import Header from "../components/Header.tsx"
-import Footer from "../components/Footer.tsx"
-import type {RouteHandle} from "../types/routes.ts"
+import type {RouteHandle} from "@shared/types/routes.ts"
+
+import {Header} from "./Header.tsx"
+import {Footer} from  "./Footer.tsx"
 
 
-const MobileLayout = () => {
+export function MobileLayout() {
     const matches = useMatches() as UIMatch<unknown, RouteHandle>[]
     const currentRoute = matches[matches.length - 1]
     const {showHeader = true, showFooter = true} = currentRoute.handle || {}
@@ -39,5 +40,3 @@ const MobileLayout = () => {
         </div>
     )
 }
-
-export default MobileLayout

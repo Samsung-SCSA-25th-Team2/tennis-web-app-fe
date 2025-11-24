@@ -1,11 +1,9 @@
-import {ImgLoader} from "../shared/components/atoms"
+import {ImgLoader} from "@shared/components/atoms"
 
-const ErrorPage = () => {
+export function ErrorPage() {
     return (
         <>
             <ImgLoader imgType={'error'} imgSize={'full'}/>
         </>
     )
 }
-
-export default ErrorPage

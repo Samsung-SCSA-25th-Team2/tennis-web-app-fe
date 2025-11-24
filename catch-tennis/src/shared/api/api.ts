@@ -63,7 +63,7 @@ async function apiCall<T = unknown>(
     return data
 }
 
-const api = {
+export const api = {
     get: <T = unknown>(endpoint: string,
                        options?: { useJWT?: boolean; useCredentials?: boolean; params?: Record<string, string | number | boolean> }) =>
         apiCall<T>(endpoint, 'GET', undefined, options),
@@ -80,5 +80,3 @@ const api = {
     delete: <T = unknown>(endpoint: string, options?: { useJWT?: boolean; useCredentials?: boolean }) =>
         apiCall<T>(endpoint, 'DELETE', undefined, options),
 }
-
-export default api

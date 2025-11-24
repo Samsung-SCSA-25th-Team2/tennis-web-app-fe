@@ -1,0 +1,1 @@
+export {useGetApi} from "./useApi.ts"

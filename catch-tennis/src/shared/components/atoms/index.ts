@@ -1,3 +1,5 @@
-export { default as Button } from './Button.tsx'
-export { default as InputText } from './InputText.tsx'
-export { default as ImgLoader } from './ImgLoader'
+export { Button } from './Button.tsx'
+export { InputText } from './InputText.tsx'
+export { type ImgType, ImgLoader } from './ImgLoader.tsx'
+export { type IconType, IconLoader } from './IconLoader.tsx'
+

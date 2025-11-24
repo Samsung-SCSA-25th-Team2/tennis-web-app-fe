@@ -1,17 +1,27 @@
 import {createBrowserRouter, RouterProvider, Navigate} from 'react-router-dom'
 
-import type {RouteHandle} from "./shared/types/routes.ts"
+import {MobileLayout} from "@shared/layouts"
+import type {RouteHandle} from "@shared/types"
 
-import MobileLayout from "./shared/layouts/MobileLayout.tsx"
-import Home from "./pages/Home.tsx"
-import LoginCallback from "./pages/LoginCallback.tsx"
-import ErrorPage from "./pages/ErrorPage.tsx"
-import Submit from "./pages/Submit.tsx"
-import ProfileCompleteWrapper from "./pages/ProfileCompleteWrapper.tsx"
-import Match from "./pages/Match.tsx"
-import Chat from "./pages/Chat.tsx"
-import Club from "./pages/Club.tsx"
-import Profile from "./pages/Profile.tsx"
+
+// Pages
+import {HomePage, ErrorPage} from "@/pages"
+
+// Auth
+import {LoginCallbackPage} from "@features/auth"
+
+// Match
+import {MatchPage} from "@features/match"
+
+// Chat
+import {ChatPage} from "@features/chat"
+
+// Club
+import {ClubPage} from "@features/club"
+
+// Profile
+import {ProfileCompletePage} from "@features/profile"
+import {ProfilePage} from "@features/profile"
 
 
 const router = createBrowserRouter([
@@ -19,20 +29,48 @@ const router = createBrowserRouter([
         path: "/",
         element: <MobileLayout/>,
         children: [
+            // Pages
             {
                 index: true,
-                element: <Home/>,
-                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
-            },
-            {
-                path: "/auth/callback",
-                element: <LoginCallback />,
+                element: <HomePage/>,
                 handle: {showHeader: false, showFooter: false} satisfies RouteHandle
             },
             {
                 path: "/error",
                 element: <ErrorPage/>,
                 handle: {showHeader: false, showFooter: false} satisfies RouteHandle
+            },
+
+            // Auth
+            {
+                path: "/auth/callback",
+                element: <LoginCallbackPage />,
+                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
+            },
+
+
+            // Match
+            {
+                path: "/match",
+                element: <MatchPage/>,
+            },
+
+            // Chat
+            {
+                path: "/chat",
+                element: <ChatPage/>,
+            },
+
+            // Club
+            {
+                path: "/club",
+                element: <ClubPage/>,
+            },
+
+            // Profile
+            {
+                path: "/profile",
+                element: <ProfilePage/>
             },
             {
                 path: "/profile-complete",
@@ -41,29 +79,8 @@ const router = createBrowserRouter([
             },
             {
                 path: "/profile-complete/:questionNumber",
-                element: <ProfileCompleteWrapper/>,
+                element: <ProfileCompletePage/>,
                 handle: {showHeader: false, showFooter: false} satisfies RouteHandle
-            },
-            {
-                path: "/submit",
-                element: <Submit/>,
-                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
-            },
-            {
-                path: "/match",
-                element: <Match/>,
-            },
-            {
-                path: "/chat",
-                element: <Chat/>,
-            },
-            {
-                path: "/club",
-                element: <Club/>,
-            },
-            {
-                path: "/profile",
-                element: <Profile/>
             },
         ]
     }

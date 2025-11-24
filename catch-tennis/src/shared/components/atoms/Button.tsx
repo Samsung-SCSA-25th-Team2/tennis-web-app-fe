@@ -5,7 +5,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     buttonSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
 }
 
-export default function Button({
+export function Button({
                                    variant = 'primary',
                                    buttonSize = 'sm',
                                    children,
