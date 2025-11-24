@@ -1,11 +1,12 @@
 import type {ImgHTMLAttributes} from "react"
 
-import ErrorImg from '@assets/images/error.png'
+import Error404Img from '@assets/images/404_error.png'
+import Error500Img from '@assets/images/500_error.png'
 import LoginImg from '@assets/images/kakao_login_large_wide.png'
 import LoadingImg from '@assets/images/loading.png'
 import LogoImg from '@assets/images/logo.png'
 
-export type ImgType = 'error' | 'login' | 'loading' | 'logo' | 'unknown'
+export type ImgType = '404_error' | '500_error' | 'login' | 'loading' | 'logo' | 'unknown'
 
 interface ImgLoaderProps extends ImgHTMLAttributes<HTMLImageElement>{
     imgSize?: 'small' | 'medium' | 'large' | 'full'
@@ -33,7 +34,8 @@ export function ImgLoader({
     }
 
     const imgTypeSrc = {
-        error: ErrorImg,
+        '404_error': Error404Img,
+        '500_error': Error500Img,
         login: LoginImg,
         loading: LoadingImg,
         logo: LogoImg,
@@ -41,7 +43,8 @@ export function ImgLoader({
     }
 
     const imgTypeAlt = {
-        error: 'Error Image',
+        '404_error': '404 Error Image',
+        '500_error': '500 Error Image',
         login: 'Login Image',
         loading: 'Loading Image',
         logo: 'Logo Image',
