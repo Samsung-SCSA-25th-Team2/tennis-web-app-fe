@@ -1,50 +1,13 @@
-import {useState, useEffect} from "react"
-import {useNavigate, useSearchParams} from "react-router-dom"
-
 import {ImgLoader} from "@shared/components/atoms"
-import {api} from "@shared/api"
 
-interface UserStatus {
-    isProfileComplete: boolean;
-}
+import {useProcessLogin} from "../hooks/useProcessLogin.ts"
+
 
 export function LoginCallback() {
-    const [searchParams] = useSearchParams()
-    const navigate = useNavigate()
-    const [checking, setChecking] = useState(true)
 
-    useEffect(() => {
-        const checkUserProfile = async () => {
-            const token = searchParams.get('accessToken')
+    const { isProcessing } = useProcessLogin()
 
-            if (!token) {
-                navigate('/login/error', {replace:true})
-                return
-            }
-
-            try {
-                localStorage.setItem('accessToken', token)
-
-                const { isProfileComplete }: UserStatus = await api.get('/v1/auth/status', {useJWT: true})
-
-                if (isProfileComplete) {
-                    navigate('/match', {replace: true})
-                } else {
-                    navigate('/profile-complete', {replace: true})
-                }
-            } catch (error) {
-                console.log(`Error at login callback: ${error}`)
-                navigate('/login/error', {replace: true})
-            } finally {
-                setChecking(false)
-            }
-        }
-
-        checkUserProfile()
-
-    }, [searchParams, navigate])
-
-    if (checking) {
+    if (isProcessing) {
         return <ImgLoader imgType={"loading"} imgSize={'full'}/>
     } else {
         return null
