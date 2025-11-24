@@ -1,56 +1,16 @@
-import {useEffect, useState} from "react"
-import {useNavigate, useParams} from "react-router-dom"
-
 import {Button, InputText} from "@shared/components/atoms"
-import {api} from "@shared/api"
 
-import {questions} from "../utils/questions.ts"
-import {storage} from "../utils/storage.ts"
+import {useCompleteProfile} from "../hooks/useCompleteProfile.tsx"
 
 
 export function ProfileComplete() {
-    const {questionNumber} = useParams<{questionNumber:string}>()
-    const navigate = useNavigate()
-    const questionIndex = parseInt(questionNumber || '1') - 1
-    const question = questions[questionIndex]
-
-    const [selectedValue, setSelectedValue] = useState(() => {
-        if (!question) return ''
-        const savedAnswers = storage.getAnswers()
-        return savedAnswers[question.id] || ''
-    })
-
-    useEffect(() => {
-        if (!question || questionIndex < 0 || questionIndex >= questions.length) {
-            navigate('/profile-complete/1', {replace: true})
-        }
-    }, [question, questionIndex, navigate])
-
-
-
-    const handleNext = async () => {
-        if (!selectedValue.trim()) return
-        
-        storage.setAnswer(question.id, selectedValue.trim())
-        
-        if (questionIndex < questions.length - 1) {
-            navigate(`/profile-complete/${questionIndex + 2}`)
-        } else {
-            const answers = storage.getAnswers()
-            try {
-                await api.post(
-                    '/v1/users/complete-profile',
-                    answers,
-                    {useJWT: true}
-                )
-                storage.clearAnswers()
-                navigate('/match')
-            } catch (e) {
-                console.error(`Failed at POST ProfileComplete ${e}`)
-                navigate('/error')
-            }
-        }
-    }
+    const {
+        question,
+        selectedValue,
+        setSelectedValue,
+        handleNext,
+        isSubmitting
+    } = useCompleteProfile()
 
     return (
         <>
@@ -97,11 +57,13 @@ export function ProfileComplete() {
                 <Button
                     variant={selectedValue.length > 0 ? 'primary' : 'inactive'}
                     onClick={handleNext}
-                    buttonSize='lg'
-                    disabled={selectedValue.length == 0}
+                    buttonSize='full'
+                    disabled={selectedValue.length == 0 || isSubmitting}
                     type="submit"
                 >
-                    넘어가기
+                    {
+                        isSubmitting ? '제출중...' : '넘어가기'
+                    }
                 </Button>
             </div>
         </>
