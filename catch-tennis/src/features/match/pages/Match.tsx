@@ -4,6 +4,7 @@ import {GameType} from "@shared/types"
 
 import {FilterBar} from "../components/FilterBar.tsx"
 import {MatchList} from "../components/MatchList.tsx"
+import {CreateMatchButton} from "../components/CreateMatchButton.tsx"
 import type {SortType, StatusType} from "../common.ts"
 
 
@@ -26,6 +27,7 @@ export function Match() {
                 endDatetime={endDatetime}
                 status={statusType}
             />
+            <CreateMatchButton />
         </>
     )
 }

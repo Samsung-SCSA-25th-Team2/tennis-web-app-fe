@@ -9,6 +9,7 @@ export function Button({
                                    variant = 'primary',
                                    buttonSize = 'sm',
                                    children,
+                                   className = '',
                                    ...rest
                                }: ButtonProps) {
     const baseStyles = 'rounded-sm border-sm text-heading-h3'
@@ -29,7 +30,7 @@ export function Button({
         full: 'px-xl py-sm w-full',
     }
 
-    const styles = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[buttonSize]}`.trim()
+    const styles = `${className} ${baseStyles} ${variantStyles[variant]} ${sizeStyles[buttonSize]}`.trim()
 
     return (
         <button className={styles} {...rest}>
