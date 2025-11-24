@@ -1,6 +1,5 @@
 import {Period, Gender, Age} from "@shared/types"
-
-import type {Question} from "../common.ts"
+import {type Question} from "@shared/types/common.ts"
 
 export const questions: Question[] = [
     {

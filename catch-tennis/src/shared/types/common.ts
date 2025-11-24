@@ -1,0 +1,14 @@
+export type QuestionType = 'button' | 'input';
+
+export interface ButtonOption {
+    label: string;
+    value: string;
+}
+
+export interface Question {
+    id: string;
+    heading: string;
+    type: QuestionType;
+    options?: ButtonOption[];
+    placeholder?: string;
+}
