@@ -59,7 +59,7 @@ export function MatchList({
         return <ImgLoader imgType={'loading'} imgSize={'full'}/>
     } else if (error) {
         console.log(`Error at MatchList: ${error}`)
-        return <ImgLoader imgType={'error'} imgSize={'full'}/>
+        return <ImgLoader imgType={'500_error'} imgSize={'full'}/>
     }
 
     // TODO: calculate the distances for each courts
