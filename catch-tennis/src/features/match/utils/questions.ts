@@ -1,24 +1,27 @@
 import {Period, Gender, Age, GameType, type Question} from "@shared/types"
 
+// Questions to fill src/shared/types/MatchFormState
 export const questions: Question[] = [
     {
+        // use api to search courts then fill courtId: number
         id: 'courtId',
         heading: '테니스장을 선택해 주세요',
-        type: 'input',  // TODO: change this
+        type: 'search',
         placeholder: '예시: 서울, 과천, ...'
     },
     {
+        // set DateTimeRange
         id: 'datetime',
         heading: '날짜와 시간을 선택해 주세요',
-        type: 'button', // TODO: change this
+        type: 'datetime',
         options: [
-            {label: '1년', value: Period.OneYear},
         ]
     },
     {
-        id: 'level',
+        // multiselect
+        id: 'period',
         heading: '구력을 설정해 주세요',
-        type: "button",
+        type: "button-multi",
         options: [
             {label: '1년', value: Period.OneYear},
             {label: '2년', value: Period.TwoYears},
@@ -38,6 +41,7 @@ export const questions: Question[] = [
         ]
     },
     {
+        // set PlayerCount
         id: 'playerCount',
         heading: '모집 인원을 작성해 주세요',
         type: "count",
@@ -47,9 +51,10 @@ export const questions: Question[] = [
         ]
     },
     {
+        // multiselect
         id: 'age',
         heading: '모집 연령대를 선택해 주세요(복수 선택 가능)',
-        type: "button",
+        type: "button-multi",
         options: [
             {label: '20대', value: Age.Twenty},
             {label: '30대', value: Age.Thirty},
@@ -61,7 +66,8 @@ export const questions: Question[] = [
         id: 'fee',
         heading: '참가비를 입력해주세요',
         type: 'input',
-        placeholder: '참가비 입력'
+        placeholder: '참가비 입력',
+        inputType: 'number',
     },
     {
         id: 'description',

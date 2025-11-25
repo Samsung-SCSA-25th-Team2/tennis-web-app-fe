@@ -2,7 +2,6 @@ import {AskQuestion} from "@shared/components/molecules"
 
 import {useCompleteProfile} from "../hooks/useCompleteProfile.tsx"
 
-
 export function ProfileComplete() {
     const {
         question,
@@ -13,11 +12,11 @@ export function ProfileComplete() {
     } = useCompleteProfile()
 
     return (
-            <AskQuestion 
-                question={question} 
-                selectedValue={selectedValue} 
-                setSelectedValue={setSelectedValue} 
-                clickHandler={handleNext} 
+            <AskQuestion
+                question={question}
+                value={selectedValue}
+                onChange={setSelectedValue}
+                onNext={handleNext}
                 isSubmitting={isSubmitting}
             />
     )

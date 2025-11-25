@@ -22,7 +22,7 @@ export function Button({
 
     // TODO: adjust the sizes
     const sizeStyles = {
-        xs: 'px-sm py-xs w-[40px]',
+        xs: 'px-sm py-xs w-[40px] rounded-xl',
         sm: 'px-sm py-xs w-[80px]',
         md: 'px-sm py-xs w-[120px]',
         lg: 'px-sm py-sm w-[180px]',

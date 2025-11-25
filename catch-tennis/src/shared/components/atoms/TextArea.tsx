@@ -26,7 +26,7 @@ export function Textarea({
     return (
         <div className="flex flex-col w-full">
             <div className="flex justify-end">
-                <span>{value.length}/1000</span>
+                <span>{value.length}/500</span>
             </div>
             <textarea className={styles} rows={4} {...rest}>{placeholder}</textarea>
         </div>

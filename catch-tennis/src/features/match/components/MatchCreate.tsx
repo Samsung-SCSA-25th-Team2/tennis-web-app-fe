@@ -15,9 +15,9 @@ export function MatchCreate() {
     return (
         <AskQuestion
             question={question}
-            selectedValue={selectedValue}
-            setSelectedValue={setSelectedValue}
-            clickHandler={handleNext}
+            value={selectedValue}
+            onChange={setSelectedValue}
+            onNext={handleNext}
             isSubmitting={isSubmitting}
         />
     )

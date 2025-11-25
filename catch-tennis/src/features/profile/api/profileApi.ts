@@ -1,10 +1,10 @@
 import {api} from '@shared/api'
-import type {AnswersState} from "../common.ts"
+import type {ProfileCompleteRequest} from '@shared/types/api'
 
-export async function postProfile(answers: AnswersState) {
+export async function postProfile(request: ProfileCompleteRequest) {
     return api.post(
         '/v1/users/complete-profile',
-        answers,
+        request,
         {useJWT:true}
     )
 }

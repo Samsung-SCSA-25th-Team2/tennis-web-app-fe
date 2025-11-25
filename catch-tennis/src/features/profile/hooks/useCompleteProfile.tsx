@@ -1,10 +1,12 @@
 import {useEffect, useState} from "react"
 import {useNavigate, useParams} from "react-router-dom"
 
-
 import {postProfile} from "../api/profileApi.ts"
 import {questions} from "../utils/questions.ts"
 import {storage} from "../utils/storage.ts"
+import {profileAdapter} from "../utils/profileAdapter.ts"
+import type {ProfileFormState} from "@shared/types/forms"
+
 
 export function useCompleteProfile() {
     const navigate = useNavigate()
@@ -13,11 +15,29 @@ export function useCompleteProfile() {
     const questionIndex = parseInt(questionNumber || '1') - 1
     const question = questions[questionIndex]
 
-    const [selectedValue, setSelectedValue] = useState(() => {
-        if (!question) return ''
+    const [formState, setFormState] = useState<ProfileFormState>(() => {
         const savedAnswers = storage.getAnswers()
-        return savedAnswers[question.id] || ''
+        return profileAdapter.fromStorage(savedAnswers)
     })
+
+    const currentValue = formState[question?.id as keyof ProfileFormState] || ''
+
+    const setSelectedValue = (value: string) => {
+        if (!question) return
+
+        const newFormState = profileAdapter.updateFormState(
+            question.id,
+            value,
+            formState
+        )
+
+        setFormState(newFormState)
+
+        const storageData = profileAdapter.toStorage(newFormState)
+        Object.entries(storageData).forEach(([key, val]) => {
+            storage.setAnswer(key, val)
+        })
+    }
 
     useEffect(() => {
         if (!question || questionIndex < 0 || questionIndex >= questions.length) {
@@ -26,21 +46,31 @@ export function useCompleteProfile() {
     }, [question, questionIndex, navigate])
 
     const handleNext = async () => {
-        if (!selectedValue.trim()) return
-
-        storage.setAnswer(question.id, selectedValue.trim())
+        const currentVal = currentValue as string
+        if (!currentVal || !currentVal.trim()) {
+            return
+        }
 
         if (questionIndex < questions.length - 1) {
             navigate(`/profile-complete/${questionIndex + 2}`)
         } else {
             setIsSubmitting(true)
             try {
-                const answers = storage.getAnswers()
-                await postProfile(answers)
+                const errors = profileAdapter.validate?.(formState) || []
+                if (errors.length > 0) {
+                    alert(errors.join('\n'))
+                    setIsSubmitting(false)
+                    return
+                }
+
+                const apiRequest = profileAdapter.toApiRequest(formState)
+                await postProfile(apiRequest)
+
                 storage.clearAnswers()
+
                 navigate('/match')
             } catch (error) {
-                console.log('CompleteProfileError:', error)
+                console.error('CompleteProfileError:', error)
                 navigate('/error')
             } finally {
                 setIsSubmitting(false)
@@ -50,7 +80,7 @@ export function useCompleteProfile() {
 
     return {
         question,
-        selectedValue,
+        selectedValue: currentValue,
         setSelectedValue,
         handleNext,
         isSubmitting

@@ -1,48 +1,78 @@
 import {Button, InputText, Textarea, Count} from "@shared/components/atoms"
 import {type Question} from "@shared/types"
+import type {JSX} from "react"
 
 
-interface AskQuestionProps {
+interface AskQuestionProps<T = string> {
     question: Question
-    selectedValue: string
-    setSelectedValue: (selectedValue: string) => void
-    clickHandler: () => void
+    value: T
+    onChange: (value: T) => void
+    onNext: () => void
     isSubmitting: boolean
 }
 
-export function AskQuestion({
-   question,
-    selectedValue,
-    setSelectedValue,
-    clickHandler,
+export function AskQuestion<T = string>({
+    question,
+    value,
+    onChange,
+    onNext,
     isSubmitting,
-                            }: AskQuestionProps) {
+                            }: AskQuestionProps<T>) {
 
-    let questionElem
+    let questionElem: JSX.Element | null = null
+
     if (question.type === 'button' && question.options) {
         questionElem = (
-                <div className="flex gap-sm">
-                    {
-                        question.options.map((option) => (
-                            <Button
-                                variant={selectedValue === option.value ? 'primary' : 'inactive'}
-                                buttonSize='sm'
-                                key={option.value}
-                                onClick={() => setSelectedValue(option.value)}
-                            >
-                                {option.label}
-                            </Button>
-                        ))
-                    }
-                </div>
-            )
+            <div className="flex gap-sm">
+                {
+                    question.options.map((option) => (
+                        <Button
+                            variant={value === (option.value as T) ? 'primary' : 'inactive'}
+                            buttonSize='sm'
+                            key={option.value}
+                            onClick={() => onChange(option.value as T)}
+                        >
+                            {option.label}
+                        </Button>
+                    ))
+                }
+            </div>
+        )
+    } else if (question.type === 'button-multi' && question.options) {
+        const selectedValues = (value as unknown) as string[]
+        const isSelected = (optionValue: string) => {
+            return selectedValues.includes(optionValue)
+        }
+
+        questionElem = (
+            <div className="flex gap-sm flex-wrap">
+                {
+                    question.options.map((option) => (
+                        <Button
+                            variant={isSelected(option.value) ? 'primary' : 'inactive'}
+                            buttonSize='sm'
+                            key={option.value}
+                            onClick={() => {
+                                const newSelection = isSelected(option.value)
+                                    ? selectedValues.filter(v => v !== option.value)
+                                    : [...selectedValues, option.value]
+                                onChange(newSelection as T)
+                            }}
+                        >
+                            {option.label}
+                        </Button>
+                    ))
+                }
+            </div>
+        )
+
     } else if (question.type === 'input') {
         questionElem = (
             <InputText
                 inputSize="big"
-                value={selectedValue}
-                type="text"
-                onChange={(e) => setSelectedValue(e.target.value)}
+                value={value as string}
+                type={question.inputType || "text"}
+                onChange={(e) => onChange(e.target.value as T)}
                 placeholder={question.placeholder}
                 autoFocus
             />
@@ -52,23 +82,54 @@ export function AskQuestion({
         questionElem = (
             <Textarea
                 textareaSize={'full'}
-                value={selectedValue}
-                onChange={(e) => setSelectedValue(e.target.value)}
+                value={value as string}
+                onChange={(e) => onChange(e.target.value as T)}
                 placeholder={question.placeholder}
                 autoFocus
             />
         )
     } else if (question.type === 'count' && question.options) {
+        const counts = (value as unknown) as Record<string, number>
+
         questionElem = (
             <div className='flex flex-col w-full px-xl gap-sm'>
                 {
                     question.options.map((option) => (
-                        <Count label={option.label} value={option.value}></Count>
+                        <Count
+                            key={option.value}
+                            label={option.label}
+                            value={counts[option.value] || 0}
+                            onChange={(newCount) => {
+                                const newCounts = {
+                                    ...counts,
+                                    [option.value]: newCount
+                                }
+                                onChange(newCounts as T)
+                            }}
+                        />
                     ))
                 }
 
             </div>
         )
+    }
+
+    const isValueValid = (): boolean => {
+        if (value === null || value === undefined) return false
+
+        if (typeof value === 'string') {
+            return value.trim().length > 0
+        }
+
+        if (Array.isArray(value)) {
+            return value.length > 0
+        }
+
+        if (typeof value === 'object') {
+            return Object.values(value).some(v => v > 0)
+        }
+
+        return true
     }
 
     return (
@@ -79,10 +140,10 @@ export function AskQuestion({
             </div>
 
             <Button
-                variant={selectedValue.length > 0 ? 'primary' : 'inactive'}
-                onClick={clickHandler}
+                variant={isValueValid() ? 'primary' : 'inactive'}
+                onClick={onNext}
                 buttonSize='full'
-                disabled={selectedValue.length == 0 || isSubmitting}
+                disabled={!isValueValid() || isSubmitting}
                 type="submit"
             >
                 {

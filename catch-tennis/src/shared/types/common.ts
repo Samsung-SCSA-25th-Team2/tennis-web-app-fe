@@ -1,4 +1,11 @@
-export type QuestionType = 'button' | 'input' | 'textarea' | 'count'
+export type QuestionType =
+    'button'
+    | 'button-multi'
+    | 'input'
+    | 'textarea'
+    | 'count'
+    | 'search'
+    | 'datetime'
 
 export interface ButtonOption {
     label: string;
@@ -11,8 +18,10 @@ export interface Question {
     type: QuestionType;
     options?: ButtonOption[];
     placeholder?: string;
+    inputType?: 'text' | 'number'
 }
 
 export interface AnswersState {
+
     [questionId: string]: string;
 }
