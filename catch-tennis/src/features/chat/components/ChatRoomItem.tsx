@@ -49,8 +49,9 @@ export function ChatRoomItem({room, onClick}: ChatRoomItemProps) {
             className="flex items-center gap-md p-md border-b border-border cursor-pointer hover:bg-surface-muted"
         >
             <ImgLoader
-                src={room.opponentImgUrl}
-                alt={room.opponentNickname}
+                imgType={'unknown'}
+                unknownSrc={room.opponentImgUrl}
+                unknownAlt={room.opponentNickname}
                 className="w-12 h-12 rounded-full"
             />
             <div className="flex-1 min-w-0">

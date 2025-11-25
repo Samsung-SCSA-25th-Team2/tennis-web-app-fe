@@ -11,7 +11,7 @@ export function useWebSocket(chatRoomId: number, onMessageReceived?: (message: C
 
     useEffect(() => {
         const service = wsService.current
-        let retryTimeout: NodeJS.Timeout
+        let retryTimeout: ReturnType<typeof setTimeout>
 
         const connectAndSubscribe = async () => {
             try {

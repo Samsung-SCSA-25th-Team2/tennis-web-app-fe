@@ -3,7 +3,6 @@ import {useParams, useNavigate} from 'react-router-dom'
 import {MessageItem} from '../components/MessageItem'
 import {useChatMessages} from '../hooks/useChatMessages'
 import {useWebSocket} from '../hooks/useWebSocket'
-import {Button} from '@shared/components/atoms'
 import type {ChatMessage} from '../common'
 import type {ChatWebSocketMessage} from '../services/websocket'
 
