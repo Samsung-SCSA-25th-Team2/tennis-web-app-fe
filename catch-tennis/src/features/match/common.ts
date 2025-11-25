@@ -1,14 +1,14 @@
 import {type Age, type GameType, type Period} from '@shared/types'
 
-export type SortType = 'latest' | 'loc5' | 'loc10' | 'loc15' | 'locInf'
+export type SortType = 'latest' | 'loc5' | 'loc10' | 'loc15' | 'locInf' | 'recommend'
 
-export type StatusType = 'RECRUITING' | 'COMPLETED' | 'ALL'
+export type StatusType = 'RECRUITING' | 'COMPLETED' | 'RECRUITING,COMPLETED'
 
 export interface MatchListResult {
     matches: Array<MatchInfo>
     size: number
     hasNext: boolean
-    cursor: number
+    cursor: string
 }
 
 export interface MatchInfo {
@@ -36,4 +36,32 @@ export interface CourtInfo {
     longitude: number,
     address: string,
     name: string,
+}
+
+export const getSortTypeLabel = (sortType: SortType) => {
+    switch (sortType) {
+        case "latest":
+            return "최근순"
+        case "recommend":
+            return "추천순"
+        case "loc5":
+            return "거리순(<5km)"
+        case "loc10":
+            return "거리순(<10km)"
+        case "loc15":
+            return "거리순(<15km)"
+        case "locInf":
+            return "거리순"
+    }
+}
+
+export const getStatusTypeLabel = (statusType: StatusType) => {
+    switch (statusType) {
+        case "RECRUITING":
+            return "모집중"
+        case "COMPLETED":
+            return "종료됨"
+        case "RECRUITING,COMPLETED":
+            return "모두"
+    }
 }
