@@ -1,26 +1,32 @@
 import type {ButtonHTMLAttributes} from "react"
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'inactive';
-    buttonSize: 'small' | 'big';
+    variant?: 'primary' | 'info' | 'inactive';
+    buttonSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
 }
 
-export default function Button({
+export function Button({
                                    variant = 'primary',
-                                   buttonSize = 'big',
+                                   buttonSize = 'sm',
                                    children,
                                    ...rest
                                }: ButtonProps) {
-    const baseStyles = 'px-sm py-md rounded-sm border-sm text-heading-h3'
+    const baseStyles = 'rounded-sm border-sm text-heading-h3'
 
     const variantStyles = {
         primary: 'bg-primary text-text-body border-primary-border',
+        info: 'bg-info text-text-title border-info-border',
         inactive: 'bg-surface-muted text-text-muted border-border',
     }
 
+    // TODO: adjust the sizes
     const sizeStyles = {
-        small: 'min-w-20',
-        big: 'w-full',
+        xs: 'px-sm py-xs w-[40px]',
+        sm: 'px-sm py-xs w-[80px]',
+        md: 'px-sm py-xs w-[120px]',
+        lg: 'px-sm py-sm w-[180px]',
+        xl: 'px-sm py-sm w-[280px]',
+        full: 'px-xl py-sm w-full',
     }
 
     const styles = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[buttonSize]}`.trim()

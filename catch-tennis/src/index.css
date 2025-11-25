@@ -2,13 +2,13 @@
 
 @import "tailwindcss";
 
-@import "./styles/primitives/colors.css";
-@import "./styles/primitives/spacing.css";
-@import "./styles/primitives/typography.css";
+@import "./shared/styles/primitives/colors.css";
+@import "./shared/styles/primitives/spacing.css";
+@import "./shared/styles/primitives/typography.css";
 
-@import "./styles/semantics/colors.css";
-@import "./styles/semantics/layout.css";
-@import "./styles/semantics/typography.css";
+@import "./shared/styles/semantics/colors.css";
+@import "./shared/styles/semantics/layout.css";
+@import "./shared/styles/semantics/typography.css";
 
 @layer utilities {
     /* Hide scrollbar for Chrome, Safari and Opera */

@@ -1,0 +1,1 @@
+export { LoginCallback as LoginCallbackPage } from './pages/LoginCallback.tsx'
