@@ -1,3 +1,5 @@
+import type {Period, Gender, Age} from '@shared/types'
+
 export type QuestionType = 'button' | 'input';
 
 export interface ButtonOption {
@@ -25,9 +27,9 @@ export interface AnswersState {
 export interface ProfileData {
     userId: number;
     nickname: string;
-    period: string;
-    gender: string;
-    age: string;
+    period: Period;
+    gender: Gender;
+    age: Age;
     imgUrl?: string;
     name: string;
 }

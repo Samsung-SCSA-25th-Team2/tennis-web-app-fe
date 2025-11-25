@@ -79,21 +79,3 @@ export async function uploadProfileImage(file: File): Promise<string> {
     return imageUrl
 }
 
-/**
- * 대안: 백엔드가 직접 업로드하는 방식 (multipart/form-data)
- *
- * 장점: 구현이 간단, 권한 관리 용이
- * 단점: 백엔드 서버 부하 증가, 대용량 파일 처리 시 성능 저하
- */
-export async function uploadProfileImageDirect(file: File): Promise<string> {
-    const formData = new FormData()
-    formData.append('image', file)
-
-    const response = await api.post<{imageUrl: string}>(
-        '/v1/users/me/profile-image/upload',
-        formData,
-        {useJWT: true}
-    )
-
-    return response.imageUrl
-}

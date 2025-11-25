@@ -20,8 +20,7 @@ import {ChatPage} from "@features/chat"
 import {ClubPage} from "@features/club"
 
 // Profile
-import {ProfileCompletePage} from "@features/profile"
-import {ProfilePage, UserProfilePage} from "@features/profile"
+import {ProfileCompletePage, ProfilePage, UserProfilePage} from "@features/profile"
 
 
 const router = createBrowserRouter([
