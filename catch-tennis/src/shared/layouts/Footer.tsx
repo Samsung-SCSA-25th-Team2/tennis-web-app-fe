@@ -32,7 +32,7 @@ export const Footer = () => {
         {
             label: '프로필',
             imgType: 'profile',
-            dest: '/profile'
+            dest: '/profile/my'
         },
     ]
 

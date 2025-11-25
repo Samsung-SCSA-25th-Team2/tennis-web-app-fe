@@ -21,7 +21,7 @@ import {ClubPage} from "@features/club"
 
 // Profile
 import {ProfileCompletePage} from "@features/profile"
-import {ProfilePage} from "@features/profile"
+import {ProfilePage, UserProfilePage} from "@features/profile"
 
 
 const router = createBrowserRouter([
@@ -69,8 +69,12 @@ const router = createBrowserRouter([
 
             // Profile
             {
-                path: "/profile",
+                path: "/profile/my",
                 element: <ProfilePage/>
+            },
+            {
+                path: "/profile/:userId",
+                element: <UserProfilePage/>
             },
             {
                 path: "/profile-complete",
