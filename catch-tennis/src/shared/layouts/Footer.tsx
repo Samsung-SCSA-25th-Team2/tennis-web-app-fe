@@ -22,7 +22,7 @@ export const Footer = () => {
         {
             label: '채팅',
             imgType: 'chat',
-            dest: '/chat'
+            dest: '/chat/my'
         },
         {
             label: '클럽',

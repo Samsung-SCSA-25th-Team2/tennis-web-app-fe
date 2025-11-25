@@ -6,4 +6,7 @@ import tsconfigPaths from 'vite-tsconfig-paths' // <--- The magic plugin
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), svgr(), tsconfigPaths()],
+  define: {
+    global: 'globalThis',
+  },
 })

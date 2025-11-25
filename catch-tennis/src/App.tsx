@@ -14,7 +14,7 @@ import {LoginCallbackPage} from "@features/auth"
 import {MatchPage} from "@features/match"
 
 // Chat
-import {ChatPage} from "@features/chat"
+import {ChatPage, ChatRoomPage} from "@features/chat"
 
 // Club
 import {ClubPage} from "@features/club"
@@ -56,8 +56,12 @@ const router = createBrowserRouter([
 
             // Chat
             {
-                path: "/chat",
+                path: "/chat/my",
                 element: <ChatPage/>,
+            },
+            {
+                path: "/chat/:roomId",
+                element: <ChatRoomPage/>,
             },
 
             // Club
