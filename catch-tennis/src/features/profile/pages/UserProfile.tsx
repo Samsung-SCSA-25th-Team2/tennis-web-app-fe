@@ -3,6 +3,7 @@ import {useParams, useNavigate} from 'react-router-dom'
 
 import {ProfileView} from '../components/ProfileView'
 import {getProfile} from '../api/profileApi'
+import {getAuthStatus} from '@features/auth/api/authApi'
 import type {ProfileData} from '../common'
 
 export function UserProfile() {
@@ -21,6 +22,15 @@ export function UserProfile() {
 
             try {
                 setIsLoading(true)
+
+                // 본인 여부 확인
+                const authStatus = await getAuthStatus()
+                if (authStatus.userId === Number(userId)) {
+                    // 본인의 프로필인 경우 /profile/my로 리다이렉트
+                    navigate('/profile/my', {replace: true})
+                    return
+                }
+
                 const data = await getProfile(Number(userId))
                 setProfile(data)
                 setError(null)
