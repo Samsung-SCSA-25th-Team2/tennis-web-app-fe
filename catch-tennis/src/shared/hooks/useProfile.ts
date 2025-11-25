@@ -1,29 +1,25 @@
 import {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 
-import {getAuthStatus} from '@features/auth/api/authApi'
-import {getProfile} from '../api/profileApi'
-import type {ProfileData} from '../common'
+import {getProfile} from '@features/profile/api/profileApi.ts'
+import type {ProfileData} from '@features/profile/common.ts'
 
-export function useProfile() {
+export function useProfile(userId: number | string | undefined) {
     const navigate = useNavigate()
     const [profile, setProfile] = useState<ProfileData | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
+
     useEffect(() => {
+        if (userId === undefined) {
+            return
+        }
+
         const fetchProfile = async () => {
             try {
                 setIsLoading(true)
-                console.log('Fetching auth status...')
-                // 먼저 auth status로 userId를 얻음
-                const authStatus = await getAuthStatus()
-                console.log('Auth status:', authStatus)
-
-                // userId로 프로필 조회
-                console.log('Fetching profile for userId:', authStatus.userId)
-                const data = await getProfile(authStatus.userId)
-                console.log('Profile data:', data)
+                const data = await getProfile(userId)
 
                 setProfile(data)
                 setError(null)
@@ -38,7 +34,7 @@ export function useProfile() {
         }
 
         fetchProfile()
-    }, [navigate])
+    }, [navigate, userId])
 
     return {
         profile,
