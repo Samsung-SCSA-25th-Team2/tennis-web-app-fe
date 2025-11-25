@@ -9,7 +9,7 @@ export async function postProfile(answers: AnswersState) {
     )
 }
 
-export async function getProfile(userId: number) {
+export async function getProfile(userId: number | string) {
     return api.get<ProfileData>(
         `/v1/users/${userId}`,
         {useJWT: true}

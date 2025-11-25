@@ -1,9 +1,14 @@
+import {useNavigate} from "react-router-dom"
+
+import {useAuth, useProfile} from "@shared/hooks"
+
 import {ProfileView} from '../components/ProfileView'
-import {useProfile} from '../hooks/useProfile'
 import {useProfileEdit} from '../hooks/useProfileEdit'
 
 export function Profile() {
-    const {profile, isLoading, error} = useProfile()
+    const {userStatus, isLoading, error} = useAuth()
+    const {profile, isProfileLoading, profileError} = useProfile(userStatus?.userId)
+    const navigate = useNavigate()
 
     const {
         isEditing,
@@ -18,8 +23,12 @@ export function Profile() {
         handleImageChange
     } = useProfileEdit(profile)
 
-    if (!profile) {
+    if (!profile || isProfileLoading ) {
         return null
+    }
+
+    if (profileError){
+        navigate("/error")
     }
 
     return (
