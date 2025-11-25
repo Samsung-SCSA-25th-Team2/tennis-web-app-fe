@@ -37,7 +37,9 @@ export const Footer = () => {
     ]
 
     const isActive = (dest: string) => {
-        return location.pathname === dest
+        const cur = location.pathname.split('/')[1]
+        const d = dest.split('/')[1]
+        return cur === d
     }
 
     return (

@@ -2,11 +2,12 @@ import {useParams} from "react-router-dom"
 
 import {useProfile} from "@shared/hooks"
 import {ImgLoader} from "@shared/components/atoms"
-import {ProfileCard} from "@shared/components/molecules"
+import {ProfileCard, CourtCard} from "@shared/components/molecules"
+import {getAgeLabel, getGametypeLabel, getPeriodLabel} from "@shared/utils/toLabel.ts"
 
 import {useMatchInfo} from "@features/match/hook/useMatchInfo.ts"
 import {useCourtInfo} from "@features/match/hook/useCourtInfo.ts"
-import {CourtCard} from "@shared/components/molecules/CourtCard.tsx"
+import type {Age, Period} from "@shared/types"
 
 
 export function MatchDetail() {
@@ -15,7 +16,7 @@ export function MatchDetail() {
     const {courtInfo, isLoading: isCourtLoading, error: isCourtError} = useCourtInfo(matchInfo?.courtId)
     const {profile, isLoading: isProfileLoading, error: isProfileError} = useProfile(matchInfo?.hostId)
 
-    if (error || isCourtError || isProfileError || courtInfo === null || profile === null) {
+    if (error || isCourtError || isProfileError || matchInfo === null || courtInfo === null || profile === null) {
         return <ImgLoader imgType={"404_error"} imgSize={"full"}/>
     }
 
@@ -23,11 +24,79 @@ export function MatchDetail() {
         return <ImgLoader imgType={"loading"} imgSize={"full"}/>
     }
 
+    const toDatetimeString = (start: Date, end: Date) => {
+        start = new Date(start)
+        end = new Date(end)
+        const year = start.getFullYear()
+        const month = start.getMonth() + 1 // getMonth() returns 0-11
+        const day = start.getDate()
+        const startHour = start.getHours()
+        const endHour = end.getHours()
+
+        return `${year}년 ${month}월 ${day}일 ${startHour}~${endHour}시`
+    }
+
+    const toPlayerCount = (men: number, women: number) => {
+        let ret = ''
+        if (men != 0) {
+            ret = ret.concat(`남${men}`)
+        }
+        if (women != 0) {
+           ret = ret.concat(`여${women}`)
+        }
+        return ret
+    }
+
+    const toAgeRange = (ageRange: Array<Age>) => {
+        const ageRangeString = ageRange.map((item) => getAgeLabel(item))
+        return ageRangeString.join(',')
+    }
+
+    const toPeriodRange = (periodRange: Array<Period>) => {
+        const periodRangeString = periodRange.map((item) => getPeriodLabel(item))
+        return periodRangeString.join(',')
+    }
+
+    const toFee = (fee: number) => {
+        return `${fee.toLocaleString()}원`
+    }
+
+
     return (
         <div className='flex flex-col gap-md'>
-            <CourtCard courtInfo={courtInfo}/>
-            <ProfileCard userProfile={profile}/>
-            {matchInfo?.description}
+            <div className='flex flex-col gap-md'>
+                <CourtCard courtInfo={courtInfo}/>
+                <ProfileCard userProfile={profile}/>
+            </div>
+            <div className='flex flex-col gap-xs'>
+                <div className='flex items-start'>
+                    <span className='text-heading-h2 w-[30%] text-left'>일시</span>
+                    <span className='text-heading-h3'>{toDatetimeString(matchInfo.startDateTime, matchInfo.endDateTime)}</span>
+                </div>
+                <div className='flex items-start'>
+                    <span className='text-heading-h2 w-[30%] text-left'>게임유형</span>
+                    <span className='text-heading-h3'>{getGametypeLabel(matchInfo.gameType)}</span>
+                </div>
+                <div className='flex items-start'>
+                    <span className='text-heading-h2 w-[30%]'>모집인원</span>
+                    <span className='text-heading-h3'>{toPlayerCount(matchInfo.playerCountMen, matchInfo.playerCountWomen)}</span>
+                </div>
+                <div className='flex items-start'>
+                    <span className='text-heading-h2 w-[30%]'>연령대</span>
+                    <span className='text-heading-h3'>{toAgeRange(matchInfo.ageRange)}</span>
+                </div>
+                <div className='flex items-start'>
+                    <span className='text-heading-h2 w-[30%]'>구력</span>
+                    <span className='text-heading-h3'>{toPeriodRange(matchInfo.period)}</span>
+                </div>
+                <div className='flex items-start'>
+                    <span className='text-heading-h2 w-[30%]'>참가비</span>
+                    <span className='text-heading-h3'>{toFee(matchInfo.fee)}</span>
+                </div>
+            </div>
+            <div className='text-body pb-lg'>
+                {matchInfo.description}
+            </div>
         </div>
     )
 }
