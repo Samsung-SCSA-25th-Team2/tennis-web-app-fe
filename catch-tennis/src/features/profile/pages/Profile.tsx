@@ -7,7 +7,7 @@ import {useProfileEdit} from '../hooks/useProfileEdit'
 
 export function Profile() {
     const {userStatus, isLoading, error} = useAuth()
-    const {profile, isProfileLoading, profileError} = useProfile(userStatus?.userId)
+    const {profile, isLoading: isProfileLoading, error: profileError} = useProfile(userStatus?.userId)
     const navigate = useNavigate()
 
     const {

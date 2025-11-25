@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 
+import type {ProfileData} from "@shared/types/common.ts"
 import {getProfile} from '@features/profile/api/profileApi.ts'
-import type {ProfileData} from '@features/profile/common.ts'
 
 export function useProfile(userId: number | string | undefined) {
     const navigate = useNavigate()
@@ -18,11 +18,8 @@ export function useProfile(userId: number | string | undefined) {
 
         const fetchProfile = async () => {
             try {
-                setIsLoading(true)
                 const data = await getProfile(userId)
-
                 setProfile(data)
-                setError(null)
             } catch (err) {
                 console.error('Profile fetch error:', err)
                 setError('프로필을 불러오는데 실패했습니다')

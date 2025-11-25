@@ -9,7 +9,7 @@ export function UserProfile() {
     const navigate = useNavigate()
     const {userId} = useParams<{userId: string}>()
     const {userStatus, isLoading, error} = useAuth()
-    const {profile, isProfileLoading, profileError} = useProfile(userId)
+    const {profile, isLoading: isProfileLoading, error: profileError} = useProfile(userId)
 
     if (isLoading || isProfileLoading) {
         return <ImgLoader imgType={"loading"} imgSize={'full'}/>

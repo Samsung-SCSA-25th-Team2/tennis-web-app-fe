@@ -3,8 +3,7 @@ import {useRef} from 'react'
 import {ImgLoader} from '@shared/components/atoms/ImgLoader'
 import EditIcon from '@/assets/icons/edit.svg?react'
 import StarIcon from '@/assets/icons/star.svg?react'
-
-import type {ProfileData} from '../common'
+import type {ProfileData} from "@shared/types/common.ts"
 
 interface ProfileViewProps {
     profile: ProfileData

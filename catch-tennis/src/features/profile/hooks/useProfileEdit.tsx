@@ -1,9 +1,10 @@
 import {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
 
+import type {ProfileData} from "@shared/types/common.ts"
+
 import {updateProfile, deleteProfile} from '../api/profileApi'
 import {uploadProfileImage, validateImageFile} from '../api/imageUpload'
-import type {ProfileData} from '../common'
 
 export function useProfileEdit(initialProfile: ProfileData | null) {
     const navigate = useNavigate()

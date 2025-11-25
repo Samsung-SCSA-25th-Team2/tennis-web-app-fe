@@ -1,5 +1,6 @@
 import {api} from '@shared/api'
-import type {AnswersState, ProfileData} from "../common.ts"
+import type {ProfileData} from "@shared/types/common.ts"
+import type {AnswersState} from "../common.ts"
 
 export async function postProfile(answers: AnswersState) {
     return api.post(
