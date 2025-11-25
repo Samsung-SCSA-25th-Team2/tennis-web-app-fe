@@ -1,15 +1,21 @@
 import {TimePicker, DatePicker} from "@shared/components/atoms"
 import {useState} from "react"
-import type {DateRange} from "react-day-picker";
+import type {DateRange} from "react-day-picker"
+import type {TimeRange} from "@shared/types/common.ts"
 
 export function MatchCreate() {
     const [date, setDate] = useState<Date>(new Date())
     const [dates, setDates] = useState<Array<Date>>([])
     const [dateRange, setDateRange] = useState<DateRange>()
+    const [timeRange, setTimeRange] = useState<TimeRange>({start:0, end:24})
 
     return (
         <div>
-            <TimePicker/>
+            <TimePicker
+                value={timeRange}
+                onTimeRangeChange={setTimeRange}
+            />
+            {timeRange.start} - {timeRange.end}
             <DatePicker
                 mode={'single'}
                 date={date}
