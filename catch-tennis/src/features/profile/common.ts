@@ -21,3 +21,13 @@ export interface Answer {
 export interface AnswersState {
     [questionId: string]: string;
 }
+
+export interface ProfileData {
+    userId: number;
+    nickname: string;
+    period: string;
+    gender: string;
+    age: string;
+    imgUrl?: string;
+    name: string;
+}
