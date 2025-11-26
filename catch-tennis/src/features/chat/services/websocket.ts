@@ -168,16 +168,15 @@ export class ChatWebSocketService {
             chatRoomId,
             senderId: userId,
             content,
-            messageBody,
-            hasToken: !!token
+            messageBody
         })
 
         try {
+            // CONNECT 단계에서 이미 인증되었으므로 여기서는 JWT 불필요
             this.client.publish({
                 destination,
                 body: messageBody,
                 headers: {
-                    ...(token && {Authorization: `Bearer ${token}`}),
                     'content-type': 'application/json'
                 }
             })
