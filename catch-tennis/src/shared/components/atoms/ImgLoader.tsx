@@ -60,12 +60,9 @@ export function ImgLoader({
     
     const styles = `${imgSizeStyle[imgSize]} ${shapeStyle[shape]}`
 
-    const handleError = (e) => {
+    const handleError = () => {
         if (!isError) {
             setIsError(true)
-        }
-        if (rest.onError) {
-            rest.onError(e)
         }
     }
 
