@@ -55,6 +55,15 @@ export const getSortTypeLabel = (sortType: SortType) => {
     }
 }
 
+export const SORT_TYPE_OPTIONS: Array<{value: SortType, label: string}> = [
+    'latest', 'loc5', 'loc10', 'loc15', 'locInf', 'recommend'
+].map(value => (
+    {
+        value: value as SortType,
+        label: getSortTypeLabel(value as SortType)
+    }
+))
+
 export const getStatusTypeLabel = (statusType: StatusType) => {
     switch (statusType) {
         case "RECRUITING":
@@ -65,3 +74,12 @@ export const getStatusTypeLabel = (statusType: StatusType) => {
             return "모두"
     }
 }
+
+export const STATUS_TYPE_OPTIONS: Array<{value: StatusType, label: string}> = [
+    'RECRUITING', 'COMPLETED', 'RECRUITING,COMPLETED'
+].map(value => (
+    {
+        value: value as StatusType,
+        label: getStatusTypeLabel(value as StatusType)
+    }
+))

@@ -43,7 +43,7 @@ export function DateTimeSelector({
     const timeRangeText = formatTimeRangeText()
 
     return (
-        <div className='w-[70%]'>
+        <div className='w-full'>
             <Popover>
                 <PopoverTrigger asChild>
                     <Button
@@ -54,9 +54,7 @@ export function DateTimeSelector({
                         )}
                     >
                         <CalendarIcon/>
-                        {dateRangeText}
-                        <br/>
-                        {timeRangeText}
+                        {dateRangeText}: {timeRangeText}
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent

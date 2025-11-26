@@ -1,5 +1,6 @@
 import type {Gender, Period, Age, GameType} from "@shared/types"
 
+
 export const getGenderLabel = (gender: Gender) => {
     switch (gender) {
         case "MALE":
@@ -49,3 +50,12 @@ export const getGametypeLabel= (gametype: GameType) => {
             return "혼복"
     }
 }
+
+export const GAME_TYPE_OPTIONS: Array<{value: GameType, label: string}> = [
+    'SINGLES', 'MEN_DOUBLES', 'WOMEN_DOUBLES', 'MIXED_DOUBLES'
+].map(value => (
+    {
+        value: value as GameType,
+        label: getGametypeLabel(value as GameType)
+    }
+))

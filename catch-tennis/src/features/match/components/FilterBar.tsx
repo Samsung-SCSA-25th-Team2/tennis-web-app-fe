@@ -1,14 +1,16 @@
 import type {DateRange} from "react-day-picker"
-import {format} from "date-fns"
-import {ko} from "date-fns/locale"
 
-import {Button} from "@shared/components/atoms"
 import type {GameType} from "@shared/types"
 import type {TimeRange} from "@shared/types/common.ts"
-import {getGametypeLabel} from "@shared/utils/toLabel.ts"
+import {GAME_TYPE_OPTIONS} from "@shared/utils/toLabel.ts"
 import {DateTimeSelector} from "@shared/components/organisms"
 
-import {getSortTypeLabel, getStatusTypeLabel, type SortType, type StatusType} from "@features/match/common.ts"
+import {
+    SORT_TYPE_OPTIONS,
+    type SortType, STATUS_TYPE_OPTIONS,
+    type StatusType
+} from "@features/match/common.ts"
+import {FilterDropdown} from "@features/match/components/FilterDropdown.tsx"
 
 
 interface FilterBarProps {
@@ -20,8 +22,8 @@ interface FilterBarProps {
     onDateRangeChange: (dateRange: DateRange) => void,
     timeRange: TimeRange,
     onTimeRangeChange: (timeRange: TimeRange) => void,
-    status: StatusType,
-    onStatusChange: (status: StatusType) => void,
+    statusType: StatusType,
+    onStatusTypeChange: (status: StatusType) => void,
 }
 
 export function FilterBar({
@@ -33,25 +35,29 @@ export function FilterBar({
     onDateRangeChange,
     timeRange,
     onTimeRangeChange,
-    status,
-    onStatusChange,
+    statusType,
+    onStatusTypeChange,
                           }: FilterBarProps) {
 
-    const formatDateTimeRange = (dateRange: DateRange, timeRange: TimeRange) => {
-        if (dateRange.from === undefined || dateRange.to === undefined) {
-            return ''
-        }
-        const startString = format(dateRange.from, 'MM월 dd일', {locale:ko})
-        const endString = format(dateRange.to, "dd일", {locale:ko})
-        return `${startString}~${endString}, ${timeRange.start}시~${timeRange.end}시`
-    }
 
     return (
         <div className="flex flex-col gap-xs">
-            // TODO: use dropdowns
             <div className='flex justify-between'>
-                <Button buttonSize={'lg'}>{getSortTypeLabel(sortType)}</Button>
-                <Button buttonSize={'lg'}>{getGametypeLabel(gameType)}</Button>
+                <FilterDropdown
+                    value={sortType}
+                    options={SORT_TYPE_OPTIONS}
+                    onChange={onSortTypeChange}
+                    placeholder={'정렬'}/>
+                <FilterDropdown
+                    value={gameType}
+                    options={GAME_TYPE_OPTIONS}
+                    onChange={onGameTypeChange}
+                    placeholder={'게임타입'}/>
+                <FilterDropdown
+                    value={statusType}
+                    options={STATUS_TYPE_OPTIONS}
+                    onChange={onStatusTypeChange}
+                    placeholder={'상태'}/>
             </div>
             <div className='flex justify-between gap-lg'>
                 <DateTimeSelector
@@ -60,7 +66,6 @@ export function FilterBar({
                     timeRange={timeRange}
                     onTimeRangeChange={onTimeRangeChange}
                 />
-                <Button buttonSize={'lg'}>{getStatusTypeLabel(status)}</Button>
             </div>
         </div>
     )

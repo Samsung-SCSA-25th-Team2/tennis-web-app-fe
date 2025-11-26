@@ -28,9 +28,12 @@ export function Match() {
                 onDateRangeChange={setDateRange}
                 timeRange={timeRange}
                 onTimeRangeChange={setTimeRange}
-                status={statusType}
-                onStatusChange={setStatusType}
+                statusType={statusType}
+                onStatusTypeChange={setStatusType}
             />
+            {gameType}, {sortType}, {statusType}
+            <br/>
+            {dateRange.from?.toLocaleDateString()}-{dateRange.to?.toLocaleDateString()} : {timeRange.start}-{timeRange.end}
             <MatchList
                 gameType={gameType}
                 sortType={sortType}
