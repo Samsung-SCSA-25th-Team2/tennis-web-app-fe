@@ -62,7 +62,9 @@ function buildQueryString(params?: Record<string, string | number | boolean | un
 
     const queryString = new URLSearchParams(
         Object.entries(params).reduce((acc, [key, value]) => {
-            acc[key] = String(value)
+            if (value !== undefined) {
+                acc[key] = String(value)
+            }
             return acc
         }, {} as Record<string, string>),
     ).toString()

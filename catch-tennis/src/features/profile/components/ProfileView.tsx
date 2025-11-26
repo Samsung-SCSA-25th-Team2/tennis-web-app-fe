@@ -20,25 +20,30 @@ interface ProfileViewProps {
     onDelete?: () => void
     onImageChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
     onFieldUpdate?: (field: keyof ProfileData, value: string) => void
+    nicknameValidation?: {
+        isChecking: boolean
+        isAvailable: boolean | null
+        error: string | null
+    }
 }
 
 export function ProfileView({
-                                profile,
-                                isLoading = false,
-                                error = null,
-                                isEditing = false,
-                                isSaving = false,
-                                isDeleting = false,
-                                editedProfile = null,
-                                isOwner = false,
-                                onEdit,
-                                onCancel,
-                                onSave,
-                                onDelete,
-                                onImageChange,
-                                onFieldUpdate
-                            }: ProfileViewProps) {
-    // 파일 입력을 제어하기 위한 ref
+    profile,
+    isLoading = false,
+    error = null,
+    isEditing = false,
+    isSaving = false,
+    isDeleting = false,
+    editedProfile = null,
+    isOwner = false,
+    onEdit,
+    onCancel,
+    onSave,
+    onDelete,
+    onImageChange,
+    onFieldUpdate,
+    nicknameValidation
+}: ProfileViewProps) {
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     // 수정 중일 때는 편집된 프로필 데이터를, 아니면 원본 프로필을 표시
@@ -172,7 +177,43 @@ export function ProfileView({
                     <div className="bg-surface rounded-lg shadow-md p-5">
                         <div className="flex flex-col gap-6">
 
-                            {/* 테니스 경력 섹션 */}
+                            {/* 닉네임 */}
+                            <div>
+                                <label className="text-sm text-text-muted mb-2 block font-medium">닉네임</label>
+                                {isEditing && isOwner ? (
+                                    <div>
+                                        <input
+                                            type="text"
+                                            value={displayProfile.nickname}
+                                            onChange={(e) => onFieldUpdate?.('nickname', e.target.value)}
+                                            className="w-full py-2 px-3 text-base rounded-md border border-border bg-background text-text-title focus:outline-none focus:border-primary transition-colors"
+                                            placeholder="닉네임을 입력하세요"
+                                        />
+                                        {nicknameValidation && (
+                                            <div className="mt-2">
+                                                {nicknameValidation.isChecking && (
+                                                    <p className="text-xs text-text-muted">확인 중...</p>
+                                                )}
+                                                {!nicknameValidation.isChecking && nicknameValidation.isAvailable === true && displayProfile.nickname !== profile.nickname && (
+                                                    <p className="text-xs text-green-600">사용 가능한 닉네임입니다</p>
+                                                )}
+                                                {!nicknameValidation.isChecking && nicknameValidation.isAvailable === false && (
+                                                    <p className="text-xs text-error">이미 사용 중인 닉네임입니다</p>
+                                                )}
+                                                {nicknameValidation.error && (
+                                                    <p className="text-xs text-error">{nicknameValidation.error}</p>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <p className="text-base text-text-title pt-1">
+                                        {profile.nickname}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* 테니스 경력 */}
                             <div>
                                 <label className="text-sm text-text-muted mb-2 block font-medium">테니스 경력</label>
                                 {isEditing && isOwner ? (
