@@ -1,62 +1,34 @@
-import {TimePicker, DatePicker} from "@shared/components/atoms"
-import {useState} from "react"
-import type {DateRange} from "react-day-picker"
-import type {TimeRange} from "@shared/types/common.ts"
+import { useState } from "react"
+
+import {useDebounce} from "@shared/hooks"
+import { Button, InputText } from "@shared/components/atoms"
+
+import { CourtList } from "@features/match/components/CourtList.tsx"
+
 
 export function MatchCreate() {
-    const [date, setDate] = useState<Date>(new Date())
-    const [dates, setDates] = useState<Array<Date>>([])
-    const [dateRange, setDateRange] = useState<DateRange>()
-    const [timeRange, setTimeRange] = useState<TimeRange>({start:0, end:24})
+    const [keyword, setKeyword] = useState("서울")
+    const debouncedKeyword = useDebounce(keyword, 750)
 
     return (
-        <div>
-            <TimePicker
-                value={timeRange}
-                onTimeRangeChange={setTimeRange}
-            />
-            {timeRange.start} - {timeRange.end}
-            <DatePicker
-                mode={'single'}
-                date={date}
-                onDateChange={setDate}
-                placeholder={"시작 날짜를 선택하세요"}
-            />
-            <DatePicker
-                mode={'multiple'}
-                dates={dates}
-                onDatesChange={setDates}
-                placeholder={"시작 날짜를 선택하세요"}
-            />
-            <DatePicker
-                mode={'range'}
-                dateRange={dateRange}
-                onDateRangeChange={setDateRange}
-            />
+        <div className='flex flex-col overflow-hidden'>
+            <div className='flex flex-col flex-none gap-sm p-md'>
+                <div className='text-heading-h2'>테니스장을 선택해 주세요</div>
+                <InputText
+                    inputSize={'big'}
+                    onChange={(e)=>{setKeyword(e.target.value)}}
+                    placeholder={'예시: 서울, 과천, ...'}
+                    autoFocus={true}
+                />
+            </div>
 
-            {
-                date && (
-                    <span className='text-heading-h1'>
-                        값: {date.toLocaleDateString("ko-KR")}
-                    </span>
-                )
-            }
+            <div className='flex-1 overflow-y-auto min-h-0 scrollbar-hide'>
+                <CourtList keyword={debouncedKeyword} />
+            </div>
 
-            {
-                dates.length > 0 && (
-                    <span>
-                        DATES: {dates.map((d) => d.toLocaleDateString("ko-KR"))}
-                    </span>
-                )
-            }
-
-            {
-                dateRange && (
-                    <span className='text-heading-h1'>
-                        {dateRange?.from?.toLocaleDateString()} - {dateRange?.to?.toLocaleDateString()}
-                    </span>
-                )
-            }
+            <div className='flex-none pt-sm bg-surface'>
+                <Button buttonSize={'full'}>넘어가기</Button>
+            </div>
         </div>
     )
 }

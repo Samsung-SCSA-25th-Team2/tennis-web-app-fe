@@ -57,7 +57,7 @@ interface ApiOptions {
  * - params가 없거나 비어 있으면 빈 문자열 반환
  * - 예: { page: 1, q: "test" } -> "?page=1&q=test"
  */
-function buildQueryString(params?: Record<string, string | number | boolean>): string {
+function buildQueryString(params?: Record<string, string | number | boolean | undefined>): string {
     if (!params || Object.keys(params).length === 0) return ""
 
     const queryString = new URLSearchParams(
