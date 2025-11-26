@@ -27,3 +27,8 @@ export interface ProfileData {
     imgUrl?: string;
     name: string;
 }
+
+export interface TimeRange {
+    start: number
+    end: number
+}

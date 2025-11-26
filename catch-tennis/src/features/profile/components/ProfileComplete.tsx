@@ -1,4 +1,5 @@
 import {Button, InputText} from "@shared/components/atoms"
+import {Button as NewButton} from "@shared/components/ui/button.tsx"
 
 import {useCompleteProfile} from "../hooks/useCompleteProfile.tsx"
 
@@ -54,6 +55,15 @@ export function ProfileComplete() {
                 </div>
 
 
+                <NewButton
+                    variant={selectedValue.length > 0 ? 'default':'outline'}
+                    size={"lg"}
+                >
+                    {
+                        isSubmitting ? '제출중...' : '넘어가기'
+                    }
+
+                </NewButton>
                 <Button
                     variant={selectedValue.length > 0 ? 'primary' : 'inactive'}
                     onClick={handleNext}

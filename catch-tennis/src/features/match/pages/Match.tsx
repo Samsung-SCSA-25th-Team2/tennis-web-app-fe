@@ -5,25 +5,40 @@ import {GameType} from "@shared/types"
 import {FilterBar} from "../components/FilterBar.tsx"
 import {MatchList} from "../components/MatchList.tsx"
 import type {SortType, StatusType} from "../common.ts"
+import type {TimeRange} from "@shared/types/common.ts"
+import type {DateRange} from "react-day-picker"
 
 
 export function Match() {
     const [gameType, setGameType] = useState<GameType>(GameType.MixedDoubles)
     const [sortType, setSortType] = useState<SortType>('latest')
-    const [startDatetime, setStartDatetime] = useState<Date>(new Date(1763686800000))
-    const [endDatetime, setEndDatetime] = useState<Date>(new Date(1793478550000))
     const [statusType, setStatusType] = useState<StatusType>('RECRUITING')
 
-    console.log(`Match: ${setGameType} ${setSortType} ${setStartDatetime}, ${setEndDatetime}, ${setStatusType}`)
+    const [dateRange, setDateRange] = useState<DateRange>({from: new Date(), to: new Date()})
+    const [timeRange, setTimeRange] = useState<TimeRange>({start:0,end:24})
 
     return (
         <>
-            <FilterBar />
+            <FilterBar
+                gameType={gameType}
+                onGameTypeChange={setGameType}
+                sortType={sortType}
+                onSortTypeChange={setSortType}
+                dateRange={dateRange}
+                onDateRangeChange={setDateRange}
+                timeRange={timeRange}
+                onTimeRangeChange={setTimeRange}
+                statusType={statusType}
+                onStatusTypeChange={setStatusType}
+            />
+            {gameType}, {sortType}, {statusType}
+            <br/>
+            {dateRange.from?.toLocaleDateString()}-{dateRange.to?.toLocaleDateString()} : {timeRange.start}-{timeRange.end}
             <MatchList
                 gameType={gameType}
                 sortType={sortType}
-                startDatetime={startDatetime}
-                endDatetime={endDatetime}
+                dateRange={dateRange}
+                timeRange={timeRange}
                 status={statusType}
             />
         </>

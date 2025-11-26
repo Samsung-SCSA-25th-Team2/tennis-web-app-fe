@@ -4,14 +4,16 @@ import {useGetApi} from "@shared/hooks"
 import {ImgLoader} from "@shared/components/atoms"
 
 import {MatchCard} from "./MatchCard.tsx"
-import type {MatchListResult} from "../common.ts"
+import type {MatchListResult, SortType} from "../common.ts"
+import type {GameType} from "@shared/types"
+import type {DateRange} from "react-day-picker"
+import type {TimeRange} from "@shared/types/common.ts"
 
 interface MatchListProps extends HTMLAttributes<HTMLDivElement> {
-    // TODO: use types
-    gameType: string
-    sortType: string
-    startDatetime: Date
-    endDatetime: Date
+    gameType: GameType
+    sortType: SortType
+    dateRange: DateRange
+    timeRange: TimeRange
     status: string
 }
 
@@ -19,51 +21,91 @@ interface MatchListProps extends HTMLAttributes<HTMLDivElement> {
 export function MatchList({
     gameType,
     sortType,
-    startDatetime,
-    endDatetime,
+    dateRange,
+    timeRange,
     status,
                    }:MatchListProps) {
 
-    console.log(`MatchList: ${gameType}, ${sortType}, ${startDatetime}, ${endDatetime}, ${status}`)
-    // const size = 10
-    // const cursor = 1
-    // const latitude = 37.57
-    // const longitude = 126.97
-    // const radius = 999999999
+    const key = `${gameType}-${sortType}-${dateRange}-${timeRange}-${status}`
+    const apiStatus = localStorage.getItem(key)
 
-    // const options = {
-    //     params: {
-    //         sort: sortType,
-    //         date: startDatetime.toISOString().substring(0, 10),
-    //         // startTime: startDatetime.getHours(),
-    //         // endTime: endDatetime.getHours() > startDatetime.getHours() ? endDatetime.getHours() : 23,
-    //         startTime: 0,
-    //         endTime: 23,
-    //         gameType,
-    //         latitude,
-    //         longitude,
-    //         radius,
-    //         status: status === 'ALL' ? 'RECRUITING,COMPLETED' : 'RECRUITING',
-    //         size,
-    //         cursor,
-    //     }
-    // }
+    const {hasNext, cursor} = apiStatus ? JSON.parse(apiStatus) : {hasNext: false, cursor: null}
 
-    const options = {}
+    // TODO: save data -> manage key-value???
+    if (!hasNext) {
+        return null
+    }
+
+    const toSortParam = (sortType: SortType) => {
+        switch (sortType) {
+            case "latest":
+                return "latest"
+            case "recommend":
+                return "recommend"
+            default:
+                // TODO: add latitude and longitude
+                return "distance"
+        }
+    }
+
+    const distanceParams = (sortType: SortType) => {
+        if (sortType === "latest") {
+            return {}
+        }
+
+        let radius = undefined
+        switch (sortType) {
+            case "loc5":
+                radius = 5
+                break
+            case "loc10":
+                radius = 10
+                break
+            case "loc15":
+                radius = 15
+                break
+            case "locInf":
+                radius = 9999
+                break
+        }
+
+        // TODO: add latitude and longitude
+        return {
+            latitude: 0,
+            longitude: 0,
+            radius: radius,
+        }
+    }
+
+    const options = {
+        params: {
+            sort: toSortParam(sortType),
+            startDate: dateRange.from?.toISOString().split("T")[0],
+            endDate: dateRange.to?.toISOString().split("T")[0],
+            startTime: timeRange.start,
+            endTime: timeRange.end,
+            gameType: gameType,
+            status: status,
+            cursor: cursor,
+
+            ...distanceParams(sortType)
+        }
+    }
 
     const {data, loading, error} = useGetApi<MatchListResult>('/v1/matches', JSON.stringify(options))
 
-    console.log(`${data} ${loading} ${error}`)
+    console.log(`matchSearch: ${data} ${loading} ${error}`)
 
     if (loading) {
         return <ImgLoader imgType={'loading'} imgSize={'full'}/>
     } else if (error) {
-        console.log(`Error at MatchList: ${error}`)
+        console.eror(`Error at MatchList: ${error}`)
         return <ImgLoader imgType={'500_error'} imgSize={'full'}/>
     }
 
-    // TODO: calculate the distances for each courts
-
+    if (data) {
+        localStorage.setItem('matchSearch', JSON.stringify({cursor:data.cursor,hasNext:data.hasNext}))
+    }
 
     return (
         <div className="flex flex-1 flex-col bg-blue-500">
