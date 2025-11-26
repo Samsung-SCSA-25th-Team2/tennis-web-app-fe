@@ -60,6 +60,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/match/create",
+                element: <Navigate to={"/match/create/1"} replace/>,
+                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
+            },
+            {
+                path: "/match/create/:questionNumber",
                 element: <MatchCreatePage/>,
                 handle: {showHeader: false, showFooter: false} satisfies RouteHandle
             },

@@ -1,7 +1,7 @@
 import type {DateRange} from "react-day-picker"
 
 import {api} from '@shared/api'
-import type {TimeRange, GameType} from "@shared/types"
+import type {TimeRange, GameType, Period, Age} from "@shared/types"
 import type {CourtInfo, CourtListResult, MatchInfo} from "@features/match/common.ts"
 
 import type {MatchListResult, SortType, StatusType} from "../common"
@@ -79,4 +79,31 @@ export async function searchCourts(params: SearchCourtParams): Promise<CourtList
         },
         useJWT: true
     })
+}
+
+export interface MatchCreateBody {
+    startDateTime: string,
+    endDateTime: string,
+    gameType: GameType,
+    courtId: number,
+    period: Array<Period>,
+    playerCountMen: number,
+    playerCountWomen: number,
+    ageRange: Array<Age>,
+    fee: number,
+    description: string,
+}
+
+export interface MatchCreateResult {
+    matchId: number
+    message: string
+}
+
+export async function matchCreatePost(body: MatchCreateBody): Promise<MatchCreateResult> {
+    return api.post<MatchCreateResult>(
+        '/v1/me/matches/create',
+        body,
+        {
+            useJWT:true,
+        })
 }
