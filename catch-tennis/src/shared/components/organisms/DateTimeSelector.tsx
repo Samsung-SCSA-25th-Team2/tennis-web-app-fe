@@ -25,7 +25,7 @@ export function DateTimeSelector({
                                  }: DateTimeSelectorProps) {
 
     const formatStartDate = (date: Date) => format(date, "yyyy년 MM월 dd일", {locale: ko})
-    const formatEndDate = (date: Date) => format(date, "dd일", {locale: ko})
+    const formatEndDate = (date: Date) => format(date, "MM월 dd일", {locale: ko})
 
     const formatDateRangeText = () => {
         if (!dateRange?.from) return null

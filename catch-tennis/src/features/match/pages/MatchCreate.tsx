@@ -32,7 +32,6 @@ export function MatchCreate() {
                 mode={'range'}
                 dateRange={dateRange}
                 onDateRangeChange={setDateRange}
-                placeholder={"시작 날짜를 선택하세요"}
             />
 
             {

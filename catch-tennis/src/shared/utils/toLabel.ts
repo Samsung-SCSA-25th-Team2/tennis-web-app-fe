@@ -25,6 +25,17 @@ export const getPeriodLabel = (period: Period) => {
     }
 }
 
+const PERIOD_ORDER: Period[] = ['ONE_YEAR', 'TWO_YEARS', 'THREE_YEARS', "OVER_FOUR_YEARS"]
+export const getEarliestPeriodLabel = (periods: Period[]) => {
+    if (!periods.length) return ''
+
+    const sorted = [...periods].sort((a, b) => {
+        return PERIOD_ORDER.indexOf(a) - PERIOD_ORDER.indexOf(b)
+    })
+
+    return getPeriodLabel(sorted[0])
+}
+
 export const getAgeLabel = (age: Age) => {
     switch (age) {
         case "TWENTY":

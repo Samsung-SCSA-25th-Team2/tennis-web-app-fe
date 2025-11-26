@@ -1,4 +1,4 @@
-import type {ImgHTMLAttributes} from "react"
+import {type ImgHTMLAttributes, useState} from "react"
 
 import Error404Img from '@assets/images/404_error.png'
 import Error500Img from '@assets/images/500_error.png'
@@ -24,6 +24,8 @@ export function ImgLoader({
     unknownAlt = '',
     ...rest
                                   }: ImgLoaderProps) {
+
+    const [isError, setIsError] = useState(false)
 
     // TODO: px to rem
     const imgSizeStyle = {
@@ -58,11 +60,29 @@ export function ImgLoader({
     
     const styles = `${imgSizeStyle[imgSize]} ${shapeStyle[shape]}`
 
+    const handleError = () => {
+        if (!isError) {
+            setIsError(true)
+        }
+    }
+
     return (
-        <img
-            className={styles}
-            src={imgTypeSrc[imgType]}
-            alt={imgTypeAlt[imgType]}
-            {...rest} />
+        <>
+            {
+                isError
+                    ? <img
+                        className={styles}
+                        src={imgTypeSrc['404_error']}
+                        alt={imgTypeAlt['404_error']}
+                        onError={handleError}
+                        {...rest} />
+                    : <img
+                        className={styles}
+                        src={imgTypeSrc[imgType]}
+                        alt={imgTypeAlt[imgType]}
+                        onError={handleError}
+                        {...rest} />
+            }
+        </>
     )
 }
