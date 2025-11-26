@@ -6,8 +6,8 @@ import {ProfileView} from '../components/ProfileView'
 import {useProfileEdit} from '../hooks/useProfileEdit'
 
 export function Profile() {
-    const {userStatus, isLoading, error} = useAuth()
-    const {profile, isLoading: isProfileLoading, error: profileError} = useProfile(userStatus?.userId)
+    const {userStatus} = useAuth()
+    const {profile, isLoading, error} = useProfile(userStatus?.userId)
     const navigate = useNavigate()
 
     const {
@@ -24,12 +24,13 @@ export function Profile() {
         nicknameValidation
     } = useProfileEdit(profile)
 
-    if (!profile || isProfileLoading ) {
+    if (isLoading || !profile) {
         return null
     }
 
-    if (profileError){
+    if (error) {
         navigate("/error")
+        return null
     }
 
     return (
