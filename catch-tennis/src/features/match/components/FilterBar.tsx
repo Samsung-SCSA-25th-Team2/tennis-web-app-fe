@@ -41,7 +41,7 @@ export function FilterBar({
 
 
     return (
-        <div className="flex flex-col gap-xs">
+        <div className="flex flex-col gap-sm">
             <div className='flex justify-between'>
                 <FilterDropdown
                     value={sortType}

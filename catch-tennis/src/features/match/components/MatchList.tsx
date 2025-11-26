@@ -1,120 +1,77 @@
-import type {HTMLAttributes} from "react"
+import {type HTMLAttributes, useEffect, useRef} from "react"
+import type {DateRange} from "react-day-picker"
 
-import {useGetApi} from "@shared/hooks"
 import {ImgLoader} from "@shared/components/atoms"
+import type {TimeRange, GameType} from "@shared/types"
+import {useInfiniteMatchList} from "@features/match/hook/usesInfiniteMatchList.ts"
 
 import {MatchCard} from "./MatchCard.tsx"
-import type {MatchListResult, SortType} from "../common.ts"
-import type {GameType} from "@shared/types"
-import type {DateRange} from "react-day-picker"
-import type {TimeRange} from "@shared/types/common.ts"
+import type {SortType, StatusType} from "../common.ts"
+
 
 interface MatchListProps extends HTMLAttributes<HTMLDivElement> {
     gameType: GameType
     sortType: SortType
     dateRange: DateRange
     timeRange: TimeRange
-    status: string
+    statusType: StatusType
 }
-
 
 export function MatchList({
     gameType,
     sortType,
     dateRange,
     timeRange,
-    status,
+    statusType,
                    }:MatchListProps) {
 
-    const key = `${gameType}-${sortType}-${dateRange}-${timeRange}-${status}`
-    const apiStatus = localStorage.getItem(key)
+    const {matches, loading, loadingMore, error, hasNext, doLoadMore, isEmpty} = useInfiniteMatchList({
+        gameType,
+        sortType,
+        statusType,
+        dateRange,
+        timeRange
+    })
+    const sentinelRef = useRef<HTMLDivElement | null>(null)
 
-    const {hasNext, cursor} = apiStatus ? JSON.parse(apiStatus) : {hasNext: false, cursor: null}
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting && hasNext && !loading && !loadingMore) {
+                    doLoadMore()
+                }
+            },
+            {threshold: 0.1, rootMargin: '100px'}
+        )
 
-    // TODO: save data -> manage key-value???
-    if (!hasNext) {
-        return null
-    }
-
-    const toSortParam = (sortType: SortType) => {
-        switch (sortType) {
-            case "latest":
-                return "latest"
-            case "recommend":
-                return "recommend"
-            default:
-                // TODO: add latitude and longitude
-                return "distance"
+        if (sentinelRef.current) {
+            observer.observe(sentinelRef.current)
         }
-    }
-
-    const distanceParams = (sortType: SortType) => {
-        if (sortType === "latest") {
-            return {}
-        }
-
-        let radius = undefined
-        switch (sortType) {
-            case "loc5":
-                radius = 5
-                break
-            case "loc10":
-                radius = 10
-                break
-            case "loc15":
-                radius = 15
-                break
-            case "locInf":
-                radius = 9999
-                break
-        }
-
-        // TODO: add latitude and longitude
-        return {
-            latitude: 0,
-            longitude: 0,
-            radius: radius,
-        }
-    }
-
-    const options = {
-        params: {
-            sort: toSortParam(sortType),
-            startDate: dateRange.from?.toISOString().split("T")[0],
-            endDate: dateRange.to?.toISOString().split("T")[0],
-            startTime: timeRange.start,
-            endTime: timeRange.end,
-            gameType: gameType,
-            status: status,
-            cursor: cursor,
-
-            ...distanceParams(sortType)
-        }
-    }
-
-    const {data, loading, error} = useGetApi<MatchListResult>('/v1/matches', JSON.stringify(options))
-
-    console.log(`matchSearch: ${data} ${loading} ${error}`)
+        return (() => {observer.disconnect()})
+    }, [hasNext, loading, loadingMore, doLoadMore])
 
     if (loading) {
         return <ImgLoader imgType={'loading'} imgSize={'full'}/>
-    } else if (error) {
-        console.eror(`Error at MatchList: ${error}`)
-        return <ImgLoader imgType={'500_error'} imgSize={'full'}/>
+    }
+    if (error && matches.length === 0) {
+        return <ImgLoader imgType={'500_error'} imgSize={'full'} />
+    }
+    if (isEmpty) {
+        return <div className="text-caption">해당하는 매치가 없습니다.</div>
     }
 
-    if (data) {
-        localStorage.setItem('matchSearch', JSON.stringify({cursor:data.cursor,hasNext:data.hasNext}))
-    }
 
     return (
-        <div className="flex flex-1 flex-col bg-blue-500">
-            {
-                data?.matches.map((item, index) => (
-                    <MatchCard key={index} matchInfo={item}/>
-                ))
-            }
+        <div className="flex flex-1 flex-col gap-sm">
+            {matches.map((match, i) => {
+                return <MatchCard key={i} matchInfo={match}/>
+            })}
 
+            {loadingMore && <span className='text-caption'>로딩중...</span> }
+            {hasNext && <div ref={sentinelRef} className='h-1'/>}
+            {!hasNext && matches.length > 0 && (
+                <span className='text-caption'>모든 매치를 조회했습니다.</span>
+            )}
         </div>
     )
 }

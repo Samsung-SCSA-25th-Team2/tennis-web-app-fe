@@ -1,5 +1,10 @@
+import type {DateRange} from "react-day-picker"
+
 import {api} from '@shared/api'
+import type {TimeRange, GameType} from "@shared/types"
 import type {CourtInfo, MatchInfo} from "@features/match/common.ts"
+
+import type {MatchListResult, SortType, StatusType} from "../common"
 
 export async function getMatchInfo(matchId: number | string) {
     return api.get<MatchInfo>(
@@ -13,4 +18,47 @@ export async function getCourtInfo(courtId: number | string) {
         '/v1/tennis-courts/' + courtId,
         {useJWT:true}
     )
+}
+
+export interface SearchParams {
+    gameType: GameType
+    sortType: SortType
+    statusType: StatusType
+    dateRange: DateRange
+    timeRange: TimeRange
+    cursor?: string | null
+}
+
+export async function searchMatches(params: SearchParams): Promise<MatchListResult> {
+    const {gameType, sortType, statusType, dateRange, timeRange, cursor} = params
+
+    let sort: SortType | string = sortType
+    const distanceParams: Record<string, number> = {}
+
+    if (sortType !== 'latest' && sortType !== 'recommend') {
+        sort = 'distance'
+        distanceParams.latitude = 0  // TODO: Get from user location
+        distanceParams.longitude = 0
+
+        if (sortType === 'loc5') distanceParams.radius = 5
+        else if (sortType === 'loc10') distanceParams.radius = 10
+        else if (sortType === 'loc15') distanceParams.radius = 15
+        else distanceParams.radius = 9999
+    }
+
+    return api.get<MatchListResult>('/v1/matches', {
+        params: {
+            sort: sort,
+            startDate: dateRange.from?.toISOString().split("T")[0],
+            endDate: dateRange.to?.toISOString().split("T")[0],
+            startTime: timeRange.start,
+            endTime: timeRange.end,
+            gameType: gameType,
+            status: statusType,
+            size: 1,
+            ...(cursor && {cursor}),
+            ...distanceParams
+        },
+        useJWT: true
+    })
 }

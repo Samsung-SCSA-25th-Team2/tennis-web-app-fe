@@ -1,9 +1,14 @@
 import {type HTMLAttributes} from "react"
+import {differenceInCalendarDays, format} from "date-fns"
+import {ko} from "date-fns/locale"
 
 import {useGetApi} from "@shared/hooks"
 import {ImgLoader} from "@shared/components/atoms"
+import {getEarliestPeriodLabel, getGametypeLabel} from "@shared/utils/toLabel.ts"
 
 import {type MatchInfo, type CourtInfo} from "../common.ts"
+import {useNavigate} from "react-router-dom"
+
 
 export interface MatchCardProps extends HTMLAttributes<HTMLDivElement> {
     matchInfo: MatchInfo
@@ -11,31 +16,78 @@ export interface MatchCardProps extends HTMLAttributes<HTMLDivElement> {
 
 export function MatchCard  ({
     matchInfo,
-    ...rest
               }: MatchCardProps) {
 
-    console.log(matchInfo)
-    console.log(rest)
+    const navigate = useNavigate()
 
-    const {data, loading, error} = useGetApi<CourtInfo>(
+    const {data: courtInfo, loading, error} = useGetApi<CourtInfo>(
         `/v1/tennis-courts/${matchInfo.courtId}`
     )
 
-    if (data == null) {
+    if (loading) {
+        return (<div className='text-caption'>로딩중...</div>)
+    }
+
+    if (courtInfo == null || error) {
         return (<div>COURT NOT FOUND</div>)
     }
 
-    console.log(`${JSON.stringify(data)} ${loading} ${error}`)
+    const toDDay = (d: Date) => {
+        const startDatetime = new Date(d)
+        const currentDate = new Date()
+        const days = differenceInCalendarDays(startDatetime, currentDate)
+        if (days === 0) return 'D-Day'
+        return days > 0 ? `D-${days}` : `D+${Math.abs(days)}`
+    }
+
+    const formatStartDate = (date: Date) => format(date, "yyyy년 MM월 dd일 hh시", {locale: ko})
+    const formatEndDate = (date: Date) => format(date, "hh시", {locale: ko})
+    const formatDateRangeText = () => {
+        return `${formatStartDate(matchInfo.startDateTime)} - ${formatEndDate(matchInfo.endDateTime)}`
+    }
+
+    const formatPlayerCount = () => {
+        let ret = ''
+        if (matchInfo.playerCountMen > 0) {
+            ret = `남${matchInfo.playerCountMen}`
+        }
+        if (matchInfo.playerCountWomen > 0) {
+            ret = ret + `여${matchInfo.playerCountWomen}`
+        }
+        return ret
+    }
+
+    const toMatchDetails = () => {
+        navigate(`/match/${matchInfo.matchId}`)
+    }
 
     return (
-        <div className="w-full flex bg-surface border-border border-sm">
+        <div
+            className="w-full flex rounded-sm shadow-sm bg-surface-raised border-border border-sm py-xs px-xs gap-sm"
+            onClick={toMatchDetails}
+        >
             <ImgLoader
                 imgType={'unknown'}
-                unknownSrc={data.thumbnail}
+                unknownSrc={courtInfo.thumbnail}
                 unknownAlt='court thumbnail'
-                imgSize={'medium'}
+                imgSize={'large'}
             />
-            MATCH CARD
+            <div className='flex flex-col w-full gap-xs justify-between'>
+                <div className='flex justify-between'>
+                    <span className='text-heading-h2'>{courtInfo.name}</span>
+                    <div>{matchInfo.status}</div>
+                </div>
+                <div className='flex justify-between text-body'>
+                    <div>{toDDay(matchInfo.startDateTime)}</div>
+                    <div>{formatDateRangeText()}</div>
+                </div>
+                <div className='flex justify-between text-body'>
+                    <div>{getGametypeLabel(matchInfo.gameType)}({formatPlayerCount()})</div>
+                    <div>{getEarliestPeriodLabel(matchInfo.period)}</div>
+                    <div>거리</div>
+                </div>
+
+            </div>
         </div>
     )
 

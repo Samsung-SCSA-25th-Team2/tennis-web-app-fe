@@ -9,7 +9,7 @@ async function apiCall<T = unknown>(
         useJWT?: boolean;
         useCredentials?: boolean;
         headers?: Record<string, string>;
-        params?: Record<string, string | number | boolean>;
+        params?: Record<string, string | number | boolean | undefined>;
     } = {}
 ): Promise<T> {
     const {useJWT = false, useCredentials = false, headers = {}, params} = options
@@ -66,7 +66,7 @@ async function apiCall<T = unknown>(
 
 export const api = {
     get: <T = unknown>(endpoint: string,
-                       options?: { useJWT?: boolean; useCredentials?: boolean; params?: Record<string, string | number | boolean> }) =>
+                       options?: { useJWT?: boolean; useCredentials?: boolean; params?: Record<string, string | number | boolean | undefined> }) =>
         apiCall<T>(endpoint, 'GET', undefined, options),
 
     post: <T = unknown>(endpoint: string, body?: unknown, options?: { useJWT?: boolean; useCredentials?: boolean }) =>
