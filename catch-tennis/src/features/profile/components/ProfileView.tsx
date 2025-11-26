@@ -1,10 +1,10 @@
 import {useRef} from 'react'
-
 import {ImgLoader} from '@shared/components/atoms/ImgLoader'
 import EditIcon from '@/assets/icons/edit.svg?react'
 import StarIcon from '@/assets/icons/star.svg?react'
 import type {ProfileData} from "@shared/types/common.ts"
 
+// --- Props 인터페이스 정의 ---
 interface ProfileViewProps {
     profile: ProfileData
     isLoading?: boolean
@@ -46,14 +46,17 @@ export function ProfileView({
 }: ProfileViewProps) {
     const fileInputRef = useRef<HTMLInputElement>(null)
 
+    // 수정 중일 때는 편집된 프로필 데이터를, 아니면 원본 프로필을 표시
     const displayProfile = editedProfile || profile
 
+    // 이미지나 수정 버튼 클릭 시 숨겨진 파일 input 트리거
     const handleImageClick = () => {
         if (isEditing && fileInputRef.current && onImageChange) {
             fileInputRef.current.click()
         }
     }
 
+    // --- 로딩 상태 ---
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center h-full">
@@ -63,6 +66,7 @@ export function ProfileView({
         )
     }
 
+    // --- 데이터 없음 또는 에러 상태 ---
     if (!profile || !displayProfile) {
         return (
             <div className="flex flex-col items-center justify-center h-full p-lg">
@@ -77,12 +81,15 @@ export function ProfileView({
     return (
         <div className="flex flex-col h-full bg-background">
             <div className="flex-1 overflow-y-auto pb-4">
-                {/* 프로필 헤더 - 상단 배경 영역 */}
+
+                {/* --- 1. 프로필 헤더 (상단 파란 배경) --- */}
                 <div className="bg-primary pt-8 pb-24 px-4 relative">
-                    {/* 우측 상단 수정하기 버튼 - 본인 프로필일 때만 */}
+
+                    {/* 우측 상단 버튼 그룹: 본인 프로필일 때만 표시 */}
                     {isOwner && (
                         <>
                             {!isEditing ? (
+                                // 수정 모드 진입 버튼
                                 <button
                                     onClick={onEdit}
                                     className="absolute top-4 right-4 text-sm text-text-body bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-1.5 rounded-md transition-all z-10"
@@ -90,6 +97,7 @@ export function ProfileView({
                                     프로필 수정
                                 </button>
                             ) : (
+                                // 수정 중일 때: 취소/저장 버튼
                                 <div className="absolute top-4 right-4 flex gap-2 z-10">
                                     <button
                                         onClick={onCancel}
@@ -111,8 +119,9 @@ export function ProfileView({
                     )}
 
                     <div className="flex flex-col items-center">
-                        {/* 프로필 이미지 */}
+                        {/* --- 프로필 이미지 영역 --- */}
                         <div className="relative mb-3">
+                            {/* 이미지 컨테이너 */}
                             <div
                                 className={`w-28 h-28 rounded-full overflow-hidden border-4 border-surface shadow-lg ${isEditing && isOwner ? 'cursor-pointer' : ''}`}
                                 onClick={handleImageClick}
@@ -131,11 +140,20 @@ export function ProfileView({
                                     </div>
                                 )}
                             </div>
+
+                            {/* [수정됨] 이미지 변경 아이콘 버튼 */}
+                            {/* isEditing과 isOwner 조건 안이므로 cursor-pointer를 직접 명시했습니다. */}
                             {isEditing && isOwner && (
-                                <div className="absolute bottom-0 right-0 bg-primary rounded-full p-2 shadow-md border-2 border-surface">
+                                <button
+                                    onClick={handleImageClick}
+                                    className="absolute bottom-0 right-0 bg-primary rounded-full p-2 shadow-md border-2 border-surface cursor-pointer hover:bg-opacity-80 transition-all"
+                                    aria-label="프로필 이미지 변경"
+                                >
                                     <EditIcon className="h-5 w-5 text-surface" />
-                                </div>
+                                </button>
                             )}
+
+                            {/* 숨겨진 파일 인풋 */}
                             {isOwner && onImageChange && (
                                 <input
                                     ref={fileInputRef}
@@ -147,14 +165,14 @@ export function ProfileView({
                             )}
                         </div>
 
-                        {/* 닉네임 */}
+                        {/* 닉네임 표시 */}
                         <h1 className="text-2xl text-text-title font-bold drop-shadow-md">
                             {profile.nickname}
                         </h1>
                     </div>
                 </div>
 
-                {/* 프로필 정보 카드 */}
+                {/* --- 2. 프로필 정보 카드 --- */}
                 <div className="px-4 -mt-12 relative z-20">
                     <div className="bg-surface rounded-lg shadow-md p-5">
                         <div className="flex flex-col gap-6">
@@ -199,6 +217,7 @@ export function ProfileView({
                             <div>
                                 <label className="text-sm text-text-muted mb-2 block font-medium">테니스 경력</label>
                                 {isEditing && isOwner ? (
+                                    // 수정 모드: 선택 버튼 UI
                                     <div className="grid grid-cols-4 gap-2">
                                         {[
                                             {value: 'ONE_YEAR', label: '1년'},
@@ -220,6 +239,7 @@ export function ProfileView({
                                         ))}
                                     </div>
                                 ) : (
+                                    // 보기 모드: 텍스트 UI
                                     <p className="text-base text-text-title pt-1">
                                         {profile.period === 'ONE_YEAR' && '1년'}
                                         {profile.period === 'TWO_YEARS' && '2년'}
@@ -229,7 +249,7 @@ export function ProfileView({
                                 )}
                             </div>
 
-                            {/* 성별 */}
+                            {/* 성별 섹션 (수정 불가) */}
                             <div>
                                 <label className="text-sm text-text-muted mb-2 block font-medium">성별</label>
                                 <p className="text-base text-text-title pt-1">
@@ -237,10 +257,11 @@ export function ProfileView({
                                 </p>
                             </div>
 
-                            {/* 나이 */}
+                            {/* 나이 섹션 */}
                             <div>
                                 <label className="text-sm text-text-muted mb-2 block font-medium">나이</label>
                                 {isEditing && isOwner ? (
+                                    // 수정 모드: 선택 버튼 UI
                                     <div className="grid grid-cols-4 gap-2">
                                         {[
                                             {value: 'TWENTY', label: '20대'},
@@ -262,6 +283,7 @@ export function ProfileView({
                                         ))}
                                     </div>
                                 ) : (
+                                    // 보기 모드: 텍스트 UI
                                     <p className="text-base text-text-title pt-1">
                                         {profile.age === 'TWENTY' && '20대'}
                                         {profile.age === 'THIRTY' && '30대'}
@@ -274,7 +296,7 @@ export function ProfileView({
                     </div>
                 </div>
 
-                {/* 리뷰 섹션 - WIP */}
+                {/* --- 3. 리뷰 섹션 (준비 중) --- */}
                 <div className="px-4 mt-6">
                     <div className="bg-surface rounded-lg shadow-md p-5">
                         <div className="flex items-center justify-between mb-4">
@@ -291,7 +313,7 @@ export function ProfileView({
                             <span className="text-sm text-text-muted">아직 받은 리뷰가 없습니다</span>
                         </div>
 
-                        {/* 리뷰 목록 플레이스홀더 */}
+                        {/* 리뷰 목록 스켈레톤 (Placeholder) */}
                         <div className="space-y-3">
                             {[1, 2, 3].map((item) => (
                                 <div key={item} className="p-3 bg-background rounded-lg border border-border opacity-40">
@@ -312,7 +334,7 @@ export function ProfileView({
                             ))}
                         </div>
 
-                        {/* WIP 배지 */}
+                        {/* 준비 중 배지 */}
                         <div className="mt-4 text-center">
                             <span className="inline-block text-xs text-text-muted bg-background px-3 py-1 rounded-full border border-border">
                                 Coming Soon
@@ -321,7 +343,7 @@ export function ProfileView({
                     </div>
                 </div>
 
-                {/* 회원 탈퇴 버튼 - 수정 모드이고 본인일 때만 표시 */}
+                {/* --- 4. 회원 탈퇴 버튼 --- */}
                 {isEditing && isOwner && onDelete && (
                     <div className="mt-8 pb-8 px-4 flex justify-center">
                         <button

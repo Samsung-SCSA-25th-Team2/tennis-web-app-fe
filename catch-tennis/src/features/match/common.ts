@@ -29,6 +29,13 @@ export interface MatchInfo {
     updatedAt: Date,
 }
 
+export interface CourtListResult {
+    courts: Array<CourtInfo>
+    size: number
+    hasNext: boolean
+    cursor: string
+}
+
 export interface CourtInfo {
     courtId: number,
     thumbnail: string,
