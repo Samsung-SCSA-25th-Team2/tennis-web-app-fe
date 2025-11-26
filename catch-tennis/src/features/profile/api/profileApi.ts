@@ -38,3 +38,13 @@ export async function deleteProfile() {
         {useJWT: true}
     )
 }
+
+export async function checkNicknameAvailability(nickname: string) {
+    return api.get<{ available: boolean }>(
+        '/v1/users/check-nickname',
+        {
+            useJWT: false,
+            params: { nickname }
+        }
+    )
+}

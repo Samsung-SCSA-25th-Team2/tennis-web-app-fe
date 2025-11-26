@@ -1,9 +1,9 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback} from 'react'
 import {useNavigate} from 'react-router-dom'
 
 import type {ProfileData} from "@shared/types/common.ts"
 
-import {updateProfile, deleteProfile} from '../api/profileApi'
+import {updateProfile, deleteProfile, checkNicknameAvailability} from '../api/profileApi'
 import {uploadProfileImage, validateImageFile} from '../api/imageUpload'
 
 export function useProfileEdit(initialProfile: ProfileData | null) {
@@ -14,6 +14,17 @@ export function useProfileEdit(initialProfile: ProfileData | null) {
     const [editedProfile, setEditedProfile] = useState<ProfileData | null>(initialProfile)
     const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null)
 
+    // 닉네임 검증 상태
+    const [nicknameValidation, setNicknameValidation] = useState<{
+        isChecking: boolean
+        isAvailable: boolean | null
+        error: string | null
+    }>({
+        isChecking: false,
+        isAvailable: null,
+        error: null
+    })
+
     // initialProfile이 변경되면 editedProfile도 업데이트
     useEffect(() => {
         if (initialProfile) {
@@ -23,13 +34,71 @@ export function useProfileEdit(initialProfile: ProfileData | null) {
 
     const handleEdit = () => {
         setIsEditing(true)
+        // 편집 모드 진입 시 닉네임 검증 상태 초기화
+        setNicknameValidation({
+            isChecking: false,
+            isAvailable: null,
+            error: null
+        })
     }
 
     const handleCancel = () => {
         setEditedProfile(initialProfile)
         setSelectedImageFile(null)
         setIsEditing(false)
+        // 닉네임 검증 상태 초기화
+        setNicknameValidation({
+            isChecking: false,
+            isAvailable: null,
+            error: null
+        })
     }
+
+    // 닉네임 중복 체크 (디바운스 적용)
+    const checkNickname = useCallback(async (nickname: string) => {
+        // 닉네임이 비어있거나 원래 닉네임과 같으면 체크하지 않음
+        if (!nickname || !initialProfile || nickname === initialProfile.nickname) {
+            setNicknameValidation({
+                isChecking: false,
+                isAvailable: null,
+                error: null
+            })
+            return
+        }
+
+        setNicknameValidation({
+            isChecking: true,
+            isAvailable: null,
+            error: null
+        })
+
+        try {
+            const response = await checkNicknameAvailability(nickname)
+            setNicknameValidation({
+                isChecking: false,
+                isAvailable: response.available,
+                error: null
+            })
+        } catch (error) {
+            console.error('Nickname check error:', error)
+            setNicknameValidation({
+                isChecking: false,
+                isAvailable: null,
+                error: '닉네임 확인 중 오류가 발생했습니다'
+            })
+        }
+    }, [initialProfile])
+
+    // 닉네임 변경 시 디바운스를 적용하여 체크
+    useEffect(() => {
+        if (!isEditing || !editedProfile) return
+
+        const timeoutId = setTimeout(() => {
+            checkNickname(editedProfile.nickname)
+        }, 500) // 500ms 디바운스
+
+        return () => clearTimeout(timeoutId)
+    }, [editedProfile?.nickname, isEditing, checkNickname])
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -57,7 +126,23 @@ export function useProfileEdit(initialProfile: ProfileData | null) {
     }
 
     const handleSave = async () => {
-        if (!editedProfile) return
+        if (!editedProfile || !initialProfile) return
+
+        // 닉네임이 변경되었고 사용 불가능한 경우 저장 방지
+        if (editedProfile.nickname !== initialProfile.nickname) {
+            if (nicknameValidation.isChecking) {
+                alert('닉네임 확인 중입니다. 잠시만 기다려주세요.')
+                return
+            }
+            if (nicknameValidation.isAvailable === false) {
+                alert('이미 사용 중인 닉네임입니다. 다른 닉네임을 입력해주세요.')
+                return
+            }
+            if (nicknameValidation.error) {
+                alert('닉네임 확인 중 오류가 발생했습니다. 다시 시도해주세요.')
+                return
+            }
+        }
 
         try {
             setIsSaving(true)
@@ -123,6 +208,7 @@ export function useProfileEdit(initialProfile: ProfileData | null) {
         handleSave,
         handleDelete,
         updateField,
-        handleImageChange
+        handleImageChange,
+        nicknameValidation
     }
 }

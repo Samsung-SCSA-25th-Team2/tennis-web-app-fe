@@ -20,7 +20,8 @@ export function Profile() {
         handleSave,
         handleDelete,
         updateField,
-        handleImageChange
+        handleImageChange,
+        nicknameValidation
     } = useProfileEdit(profile)
 
     if (!profile || isProfileLoading ) {
@@ -47,6 +48,7 @@ export function Profile() {
             onDelete={handleDelete}
             onImageChange={handleImageChange}
             onFieldUpdate={updateField}
+            nicknameValidation={nicknameValidation}
         />
     )
 }
