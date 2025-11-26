@@ -1,10 +1,13 @@
 import {useState, useEffect, useCallback} from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
+
+import AirplaneIcon from '@/assets/icons/Airplane.svg?react'
+
+import type {ChatMessage} from '../common'
+import type {ChatWebSocketMessage} from '../services/websocket'
 import {MessageItem} from '../components/MessageItem'
 import {useChatMessages} from '../hooks/useChatMessages'
 import {useWebSocket} from '../hooks/useWebSocket'
-import type {ChatMessage} from '../common'
-import type {ChatWebSocketMessage} from '../services/websocket'
 
 export function ChatRoom() {
     const {roomId} = useParams<{roomId: string}>()
@@ -180,11 +183,6 @@ export function ChatRoom() {
 
             {/* Input */}
             <div className="flex items-center gap-2 p-3 bg-surface border-t border-border">
-                <button className="p-2 text-text-muted hover:text-text-title transition-colors">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                </button>
                 <input
                     type="text"
                     value={messageInput}
@@ -198,9 +196,7 @@ export function ChatRoom() {
                     disabled={!messageInput.trim() || !connected}
                     className="p-2.5 bg-primary text-text-body rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                    </svg>
+                    <AirplaneIcon className="w-5 h-5" />
                 </button>
             </div>
         </div>
