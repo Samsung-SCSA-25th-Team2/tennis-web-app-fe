@@ -2,6 +2,7 @@ import {Client} from '@stomp/stompjs'
 import SockJS from 'sockjs-client'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8888/api'
+console.log(`API_BASE_URL: ${API_BASE_URL}`)
 // Extract base URL without /api suffix for WebSocket
 const BASE_URL = API_BASE_URL.replace(/\/api$/, '')
 
