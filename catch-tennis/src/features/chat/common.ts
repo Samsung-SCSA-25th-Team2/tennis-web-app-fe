@@ -18,17 +18,16 @@ export interface ChatRoomListResponse {
 
 // Chat Message Types
 export interface ChatMessage {
-    chatId?: number;       // WebSocket response
-    messageId?: number;    // Alternative field name
+    chatId: number;
     chatRoomId: number;
     senderId: number;
     senderNickname: string;
-    content?: string;      // Alternative field name
-    message?: string;      // Backend uses 'message'
-    createdAt?: string;    // Backend uses 'createdAt'
-    sentAt?: string;       // Alternative field name
-    isRead: boolean;
+    senderImgUrl?: string;
+    message: string;
+    createdAt?: string;
+    read?: boolean;
     readAt?: string;
+    mine?: boolean;
 }
 
 export interface ChatMessageListResponse {
