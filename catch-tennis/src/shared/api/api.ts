@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8888/api'
+import {apiUrl as API_BASE_URL} from "@shared/types/common.ts"
+
 
 async function apiCall<T = unknown>(
     endpoint: string,
