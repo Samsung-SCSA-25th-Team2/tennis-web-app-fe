@@ -3,10 +3,12 @@ import {useParams, useNavigate} from 'react-router-dom'
 
 // 사용자 정의 컴포넌트 및 유틸리티 타입/훅 임포트
 import {MessageItem} from '../components/MessageItem' // 단일 메시지 아이템 렌더링 컴포넌트
+import {DateDivider} from '../components/DateDivider' // 날짜 구분선 컴포넌트
 import {useChatMessages} from '../hooks/useChatMessages' // REST API로 채팅 기록을 불러오는 훅
 import {useWebSocket} from '../hooks/useWebSocket' // WebSocket 연결 및 메시지 송수신 훅
 import {ImgLoader} from '@shared/components/atoms' // 로딩 스피너 컴포넌트
 import SendIcon from '@/assets/icons/send.svg?react' // 메시지 전송 아이콘
+import {formatDateDivider, isSameDay} from '../utils/formatDate' // 날짜 포맷 유틸리티
 import type {ChatMessage} from '../common' // 채팅 메시지 데이터 타입 정의
 import type {ChatWebSocketMessage} from '../services/websocket' // WebSocket으로 수신되는 메시지 타입 정의
 
@@ -231,6 +233,12 @@ export function ChatRoom() {
                 {/* 전체 메시지 목록 렌더링 */}
                 {allMessages.map((message, index) => {
                     const prevMessage = allMessages[index - 1]
+
+                    // 날짜가 바뀌었는지 확인
+                    const currentDate = message.createdAt ? new Date(message.createdAt) : null
+                    const prevDate = prevMessage?.createdAt ? new Date(prevMessage.createdAt) : null
+                    const showDateDivider = currentDate && (!prevDate || !isSameDay(currentDate, prevDate))
+
                     // 프로필 표시 여부 결정: 이전 메시지가 없거나, 이전 메시지의 발신자와 현재 메시지의 발신자가 다를 경우에만 프로필/시간 표시
                     const showProfile = !prevMessage || prevMessage.senderId !== message.senderId
 
@@ -243,12 +251,19 @@ export function ChatRoom() {
                             : message.senderId === currentUserId
 
                     return (
-                        <MessageItem
-                            key={message.chatId} // 메시지 ID를 키로 사용
-                            message={message}
-                            isMine={isMine} // 내 메시지인지 여부
-                            showProfile={showProfile} // 프로필 및 시간 표시 여부
-                        />
+                        <div key={message.chatId}>
+                            {/* 날짜 구분선 */}
+                            {showDateDivider && (
+                                <DateDivider date={formatDateDivider(message.createdAt)} />
+                            )}
+
+                            {/* 메시지 아이템 */}
+                            <MessageItem
+                                message={message}
+                                isMine={isMine} // 내 메시지인지 여부
+                                showProfile={showProfile} // 프로필 및 시간 표시 여부
+                            />
+                        </div>
                     )
                 })}
             </div>
