@@ -24,17 +24,18 @@ export function TimePicker({
     }
 
     return (
-        <div>
-            <span>시작 시간: {value.start}</span>
-            <span>종료 시간: {value.end}</span>
-            <Slider
-                value={toSliderValue(value)}
-                onValueChange={handleValueChange}
-                min={0}
-                max={24}
-                step={1}
-                minStepsBetweenThumbs={1}
-            />
+        <div className='flex flex-col justify-center items-center gap-sm pt-sm'>
+            <span>시간대 선택: {value.start}시 ~ {value.end}시</span>
+            <div className='w-full px-sm pb-md border-b-sm border-border'>
+                <Slider
+                    value={toSliderValue(value)}
+                    onValueChange={handleValueChange}
+                    min={0}
+                    max={24}
+                    step={1}
+                    minStepsBetweenThumbs={1}
+                />
+            </div>
         </div>
     )
 }

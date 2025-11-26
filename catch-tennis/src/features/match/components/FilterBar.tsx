@@ -1,12 +1,15 @@
+import type {DateRange} from "react-day-picker"
+import {format} from "date-fns"
+import {ko} from "date-fns/locale"
+
 import {Button} from "@shared/components/atoms"
 import type {GameType} from "@shared/types"
-import {getSortTypeLabel, getStatusTypeLabel, type SortType, type StatusType} from "@features/match/common.ts"
-import type {DateRange} from "react-day-picker"
 import type {TimeRange} from "@shared/types/common.ts"
 import {getGametypeLabel} from "@shared/utils/toLabel.ts"
-import {format} from "date-fns";
-import {ko} from "date-fns/locale";
-import {DateTimeSelector} from "@shared/components/organisms";
+import {DateTimeSelector} from "@shared/components/organisms"
+
+import {getSortTypeLabel, getStatusTypeLabel, type SortType, type StatusType} from "@features/match/common.ts"
+
 
 interface FilterBarProps {
     gameType: GameType,
@@ -20,6 +23,7 @@ interface FilterBarProps {
     status: StatusType,
     onStatusChange: (status: StatusType) => void,
 }
+
 export function FilterBar({
     gameType,
     onGameTypeChange,
@@ -45,13 +49,19 @@ export function FilterBar({
     return (
         <div className="flex flex-col gap-xs">
             // TODO: use dropdowns
-            <Button buttonSize={'lg'}>{getGametypeLabel(gameType)}</Button>
-            <Button buttonSize={'lg'}>{getSortTypeLabel(sortType)}</Button>
-            <Button buttonSize={'lg'}>{getStatusTypeLabel(status)}</Button>
-
-            // TODO: implement DateTimeSelector as Popover
-            <DateTimeSelector></DateTimeSelector>
-            <Button buttonSize={'xl'}>{formatDateTimeRange(dateRange, timeRange)}</Button>
+            <div className='flex justify-between'>
+                <Button buttonSize={'lg'}>{getSortTypeLabel(sortType)}</Button>
+                <Button buttonSize={'lg'}>{getGametypeLabel(gameType)}</Button>
+            </div>
+            <div className='flex justify-between gap-lg'>
+                <DateTimeSelector
+                    dateRange={dateRange}
+                    onDateRangeChange={onDateRangeChange}
+                    timeRange={timeRange}
+                    onTimeRangeChange={onTimeRangeChange}
+                />
+                <Button buttonSize={'lg'}>{getStatusTypeLabel(status)}</Button>
+            </div>
         </div>
     )
 }
