@@ -1,13 +1,16 @@
 import {useState} from "react"
 import {useNavigate} from "react-router-dom"
+import {setHours} from "date-fns"
 
-import {CourtSearch} from "@features/match/components/CourtSearch.tsx"
 import {Button, DatePicker, TimePicker} from "@shared/components/atoms"
 import {Age, GameType, Period, type TimeRange} from "@shared/types"
 import {ToggleGroup, ToggleGroupItem} from "@shared/components/ui/toggle-group.tsx"
 import {Stepper} from "@shared/components/molecules"
 import {Input} from "@shared/components/ui/input.tsx"
 import {Textarea} from "@shared/components/ui/textarea.tsx"
+
+import {CourtSearch} from "@features/match/components/CourtSearch.tsx"
+import {matchCreatePost} from "@features/match/api/matchApi.ts"
 
 
 export function MatchCreate({questionNumber}: { questionNumber: string }) {
@@ -137,11 +140,35 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
         return false
     }
 
-    const toNextStep = () => {
+    const toNextStep = async () => {
         if (questionIdx < elems.length - 1) {
             navigate(`/match/create/${questionIdx + 2}`)
         } else {
-            // TODO: submit here
+            try {
+                if (!gameType || !courtId || !fee || !description) {
+                    throw new Error('Not Valid Request')
+                }
+                const body =
+                {
+                    startDateTime: setHours(date, timeRange.start).toISOString(),
+                        endDateTime: setHours(date, timeRange.end).toISOString(),
+                    gameType,
+                    courtId: parseInt(courtId),
+                    period: periods,
+                    playerCountMen,
+                    playerCountWomen,
+                    ageRange,
+                    fee,
+                    description
+                }
+                const matchCreateResult = await matchCreatePost(body)
+                navigate(`/match/${matchCreateResult.matchId}`, {replace: true})
+            } catch (error) {
+                console.error(error)
+                navigate('/error')
+            }
+
+
         }
     }
 
