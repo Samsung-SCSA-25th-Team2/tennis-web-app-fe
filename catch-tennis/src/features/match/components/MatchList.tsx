@@ -3,7 +3,7 @@ import type {DateRange} from "react-day-picker"
 
 import {ImgLoader} from "@shared/components/atoms"
 import type {TimeRange, GameType} from "@shared/types"
-import {useInfiniteMatchList} from "@features/match/hook/usesInfiniteMatchList.ts"
+import {useInfiniteMatchList} from "@features/match/hook/useInfiniteMatchList.ts"
 
 import {MatchCard} from "./MatchCard.tsx"
 import type {SortType, StatusType} from "../common.ts"
@@ -62,7 +62,7 @@ export function MatchList({
 
 
     return (
-        <div className="flex flex-1 flex-col gap-sm">
+        <div className="flex flex-1 flex-col overflow-y-auto min-h-0 gap-sm">
             {matches.map((match, i) => {
                 return <MatchCard key={i} matchInfo={match}/>
             })}

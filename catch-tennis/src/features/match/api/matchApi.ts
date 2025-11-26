@@ -2,7 +2,7 @@ import type {DateRange} from "react-day-picker"
 
 import {api} from '@shared/api'
 import type {TimeRange, GameType} from "@shared/types"
-import type {CourtInfo, MatchInfo} from "@features/match/common.ts"
+import type {CourtInfo, CourtListResult, MatchInfo} from "@features/match/common.ts"
 
 import type {MatchListResult, SortType, StatusType} from "../common"
 
@@ -20,7 +20,7 @@ export async function getCourtInfo(courtId: number | string) {
     )
 }
 
-export interface SearchParams {
+export interface SearchMatchParams {
     gameType: GameType
     sortType: SortType
     statusType: StatusType
@@ -29,7 +29,7 @@ export interface SearchParams {
     cursor?: string | null
 }
 
-export async function searchMatches(params: SearchParams): Promise<MatchListResult> {
+export async function searchMatches(params: SearchMatchParams): Promise<MatchListResult> {
     const {gameType, sortType, statusType, dateRange, timeRange, cursor} = params
 
     let sort: SortType | string = sortType
@@ -55,9 +55,27 @@ export async function searchMatches(params: SearchParams): Promise<MatchListResu
             endTime: timeRange.end,
             gameType: gameType,
             status: statusType,
-            size: 1,
+            size: 10,
             ...(cursor && {cursor}),
             ...distanceParams
+        },
+        useJWT: true
+    })
+}
+
+export interface SearchCourtParams {
+    keyword: string
+    cursor?: string | null
+}
+
+export async function searchCourts(params: SearchCourtParams): Promise<CourtListResult> {
+    const {keyword, cursor} = params
+
+    return api.get<CourtListResult>('/v1/tennis-courts/search', {
+        params: {
+            keyword,
+            size: 10,
+            ...(cursor && {cursor}),
         },
         useJWT: true
     })
