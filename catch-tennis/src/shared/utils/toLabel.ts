@@ -1,5 +1,6 @@
 import type {Gender, Period, Age, GameType} from "@shared/types"
 
+
 export const getGenderLabel = (gender: Gender) => {
     switch (gender) {
         case "MALE":
@@ -22,6 +23,17 @@ export const getPeriodLabel = (period: Period) => {
         case "OVER_FOUR_YEARS":
             return "4년 이상"
     }
+}
+
+const PERIOD_ORDER: Period[] = ['ONE_YEAR', 'TWO_YEARS', 'THREE_YEARS', "OVER_FOUR_YEARS"]
+export const getEarliestPeriodLabel = (periods: Period[]) => {
+    if (!periods.length) return ''
+
+    const sorted = [...periods].sort((a, b) => {
+        return PERIOD_ORDER.indexOf(a) - PERIOD_ORDER.indexOf(b)
+    })
+
+    return getPeriodLabel(sorted[0])
 }
 
 export const getAgeLabel = (age: Age) => {
@@ -49,3 +61,12 @@ export const getGametypeLabel= (gametype: GameType) => {
             return "혼복"
     }
 }
+
+export const GAME_TYPE_OPTIONS: Array<{value: GameType, label: string}> = [
+    'SINGLES', 'MEN_DOUBLES', 'WOMEN_DOUBLES', 'MIXED_DOUBLES'
+].map(value => (
+    {
+        value: value as GameType,
+        label: getGametypeLabel(value as GameType)
+    }
+))

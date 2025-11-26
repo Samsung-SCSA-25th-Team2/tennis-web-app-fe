@@ -61,6 +61,7 @@ export function MatchDetail() {
         return `${fee.toLocaleString()}원`
     }
 
+    // TODO: add chat button if host != user
 
     return (
         <div className='flex flex-col gap-md'>

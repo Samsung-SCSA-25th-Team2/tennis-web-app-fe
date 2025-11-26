@@ -49,7 +49,7 @@ interface ApiOptions {
     // 추가로 넣고 싶은 커스텀 헤더
     headers?: Record<string, string>
     // 쿼리 스트링으로 변환할 파라미터 객체
-    params?: Record<string, string | number | boolean>
+    params?: Record<string, string | number | boolean | undefined>
 }
 
 /**
@@ -203,11 +203,7 @@ export const api = {
      */
     get: <T = unknown>(
         endpoint: string,
-        options?: {
-            useJWT?: boolean
-            useCredentials?: boolean
-            params?: Record<string, string | number | boolean>
-        },
+        options?: ApiOptions
     ) => apiCall<T>(endpoint, "GET", undefined, options),
 
     /**
@@ -216,7 +212,7 @@ export const api = {
     post: <T = unknown>(
         endpoint: string,
         body?: unknown,
-        options?: { useJWT?: boolean; useCredentials?: boolean },
+        options?: ApiOptions
     ) => apiCall<T>(endpoint, "POST", body, options),
 
     /**
@@ -225,7 +221,7 @@ export const api = {
     put: <T = unknown>(
         endpoint: string,
         body?: unknown,
-        options?: { useJWT?: boolean; useCredentials?: boolean },
+        options?: ApiOptions
     ) => apiCall<T>(endpoint, "PUT", body, options),
 
     /**
@@ -234,7 +230,7 @@ export const api = {
     patch: <T = unknown>(
         endpoint: string,
         body?: unknown,
-        options?: { useJWT?: boolean; useCredentials?: boolean },
+        options?: ApiOptions
     ) => apiCall<T>(endpoint, "PATCH", body, options),
 
     /**
@@ -242,6 +238,6 @@ export const api = {
      */
     delete: <T = unknown>(
         endpoint: string,
-        options?: { useJWT?: boolean; useCredentials?: boolean },
+        options?: ApiOptions
     ) => apiCall<T>(endpoint, "DELETE", undefined, options),
 }

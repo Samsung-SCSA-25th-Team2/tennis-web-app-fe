@@ -1,78 +1,77 @@
-import type {HTMLAttributes} from "react"
+import {type HTMLAttributes, useEffect, useRef} from "react"
+import type {DateRange} from "react-day-picker"
 
-import {useGetApi} from "@shared/hooks"
 import {ImgLoader} from "@shared/components/atoms"
+import type {TimeRange, GameType} from "@shared/types"
+import {useInfiniteMatchList} from "@features/match/hook/usesInfiniteMatchList.ts"
 
 import {MatchCard} from "./MatchCard.tsx"
-import type {MatchListResult} from "../common.ts"
+import type {SortType, StatusType} from "../common.ts"
+
 
 interface MatchListProps extends HTMLAttributes<HTMLDivElement> {
-    // TODO: use types
-    gameType: string
-    sortType: string
-    startDatetime: Date
-    endDatetime: Date
-    status: string
+    gameType: GameType
+    sortType: SortType
+    dateRange: DateRange
+    timeRange: TimeRange
+    statusType: StatusType
 }
-
 
 export function MatchList({
     gameType,
     sortType,
-    startDatetime,
-    endDatetime,
-    status,
+    dateRange,
+    timeRange,
+    statusType,
                    }:MatchListProps) {
 
-    console.log(`MatchList: ${gameType}, ${sortType}, ${startDatetime}, ${endDatetime}, ${status}`)
-    // const size = 10
-    // const cursor = 1
-    // const latitude = 37.57
-    // const longitude = 126.97
-    // const radius = 999999999
+    const {matches, loading, loadingMore, error, hasNext, doLoadMore, isEmpty} = useInfiniteMatchList({
+        gameType,
+        sortType,
+        statusType,
+        dateRange,
+        timeRange
+    })
+    const sentinelRef = useRef<HTMLDivElement | null>(null)
 
-    // const options = {
-    //     params: {
-    //         sort: sortType,
-    //         date: startDatetime.toISOString().substring(0, 10),
-    //         // startTime: startDatetime.getHours(),
-    //         // endTime: endDatetime.getHours() > startDatetime.getHours() ? endDatetime.getHours() : 23,
-    //         startTime: 0,
-    //         endTime: 23,
-    //         gameType,
-    //         latitude,
-    //         longitude,
-    //         radius,
-    //         status: status === 'ALL' ? 'RECRUITING,COMPLETED' : 'RECRUITING',
-    //         size,
-    //         cursor,
-    //     }
-    // }
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting && hasNext && !loading && !loadingMore) {
+                    doLoadMore()
+                }
+            },
+            {threshold: 0.1, rootMargin: '100px'}
+        )
 
-    const options = {}
-
-    const {data, loading, error} = useGetApi<MatchListResult>('/v1/matches', JSON.stringify(options))
-
-    console.log(`${data} ${loading} ${error}`)
+        if (sentinelRef.current) {
+            observer.observe(sentinelRef.current)
+        }
+        return (() => {observer.disconnect()})
+    }, [hasNext, loading, loadingMore, doLoadMore])
 
     if (loading) {
         return <ImgLoader imgType={'loading'} imgSize={'full'}/>
-    } else if (error) {
-        console.log(`Error at MatchList: ${error}`)
-        return <ImgLoader imgType={'500_error'} imgSize={'full'}/>
     }
-
-    // TODO: calculate the distances for each courts
+    if (error && matches.length === 0) {
+        return <ImgLoader imgType={'500_error'} imgSize={'full'} />
+    }
+    if (isEmpty) {
+        return <div className="text-caption">해당하는 매치가 없습니다.</div>
+    }
 
 
     return (
-        <div className="flex flex-1 flex-col bg-blue-500">
-            {
-                data?.matches.map((item, index) => (
-                    <MatchCard key={index} matchInfo={item}/>
-                ))
-            }
+        <div className="flex flex-1 flex-col gap-sm">
+            {matches.map((match, i) => {
+                return <MatchCard key={i} matchInfo={match}/>
+            })}
 
+            {loadingMore && <span className='text-caption'>로딩중...</span> }
+            {hasNext && <div ref={sentinelRef} className='h-1'/>}
+            {!hasNext && matches.length > 0 && (
+                <span className='text-caption'>모든 매치를 조회했습니다.</span>
+            )}
         </div>
     )
 }

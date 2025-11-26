@@ -11,7 +11,7 @@ import {HomePage, ErrorPage, NotFoundPage} from "@/pages"
 import {LoginCallbackPage} from "@features/auth"
 
 // Match
-import {MatchPage, MatchDetailPage} from "@features/match"
+import {MatchPage, MatchDetailPage, MatchCreatePage} from "@features/match"
 
 // Chat
 import {ChatPage, ChatRoomPage} from "@features/chat"
@@ -57,6 +57,11 @@ const router = createBrowserRouter([
                 path: "/match/:matchId",
                 element: <MatchDetailPage/>,
                 handle: {showHeader: false, showFooter: true} satisfies RouteHandle
+            },
+            {
+                path: "/match/create",
+                element: <MatchCreatePage/>,
+                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
             },
 
             // Chat
