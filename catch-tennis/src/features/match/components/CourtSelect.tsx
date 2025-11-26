@@ -4,7 +4,17 @@ import {useInfiniteCourtList} from "@features/match/hook/useInfiniteCourtList.ts
 import {ImgLoader} from "@shared/components/atoms"
 import {CourtCard} from "@shared/components/molecules"
 
-export function CourtList({keyword}: {keyword: string}) {
+interface CourtSelectProps {
+    keyword: string
+    selected: string | null
+    onCourtIdChange: (courtId: string) => void
+}
+
+export function CourtSelect({
+    keyword,
+    selected,
+    onCourtIdChange,
+                          }: CourtSelectProps) {
     
     const {courts, loading, loadingMore, error, hasNext, doLoadMore, isEmpty} = useInfiniteCourtList(keyword)
     const sentinelRef = useRef<HTMLDivElement | null>(null)
@@ -35,10 +45,17 @@ export function CourtList({keyword}: {keyword: string}) {
         return <div className="text-caption">해당하는 코트가 없습니다.</div>
     }
 
+    const selectedCourtId = selected ? parseInt(selected) : -1
+
     return (
         <div className="flex flex-1 flex-col gap-sm">
             {courts.map((court, i) => {
-                return <CourtCard key={i} courtInfo={court}/>
+                return <CourtCard
+                    key={i}
+                    courtInfo={court}
+                    selected={court.courtId === selectedCourtId}
+                    onClick={()=>{onCourtIdChange(court.courtId.toString())}}
+                />
             })}
 
             {loadingMore && <span className='text-caption'>로딩중...</span> }

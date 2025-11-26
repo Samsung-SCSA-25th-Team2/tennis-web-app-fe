@@ -90,3 +90,16 @@ export const STATUS_TYPE_OPTIONS: Array<{value: StatusType, label: string}> = [
         label: getStatusTypeLabel(value as StatusType)
     }
 ))
+
+export interface MatchCreateBody {
+    startDateTime: string,
+    endDateTime: string,
+    gameType: GameType,
+    courtId: number,
+    period: Array<Period>,
+    playerCountMen: number,
+    playerCountWomen: number,
+    ageRange: Array<Age>,
+    fee: number,
+    description: string,
+}

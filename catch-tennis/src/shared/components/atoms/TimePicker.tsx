@@ -4,11 +4,13 @@ import type {TimeRange} from "@shared/types/common.ts"
 interface TimePickerProps {
     value: TimeRange
     onTimeRangeChange: (value: TimeRange) => void
+    border?: boolean
 }
 
 export function TimePicker({
     value,
     onTimeRangeChange,
+    border = true
                            }: TimePickerProps) {
 
     const toSliderValue = (timeRange: TimeRange) => {
@@ -23,10 +25,14 @@ export function TimePicker({
 
     }
 
+    const sliderStyle = border
+        ? 'w-full px-sm pb-md border-b-sm border-border'
+        : 'w-full px-sm pb-md'
+
     return (
-        <div className='flex flex-col justify-center items-center gap-sm pt-sm'>
+        <div className='flex flex-col justify-center items-center w-full gap-sm pt-sm'>
             <span>시간대 선택: {value.start}시 ~ {value.end}시</span>
-            <div className='w-full px-sm pb-md border-b-sm border-border'>
+            <div className={sliderStyle}>
                 <Slider
                     value={toSliderValue(value)}
                     onValueChange={handleValueChange}

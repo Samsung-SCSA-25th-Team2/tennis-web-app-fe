@@ -1,33 +1,50 @@
 import { useState } from "react"
 
-import {useDebounce} from "@shared/hooks"
-import { Button, InputText } from "@shared/components/atoms"
-
-import { CourtList } from "@features/match/components/CourtList.tsx"
-
+import {CourtSearch} from "@features/match/components/CourtSearch.tsx"
+import {Button, DatePicker, TimePicker} from "@shared/components/atoms"
+import type {TimeRange} from "@shared/types"
 
 export function MatchCreate() {
-    const [keyword, setKeyword] = useState("서울")
-    const debouncedKeyword = useDebounce(keyword, 750)
+    const [step, setStep] = useState(0)
+    const [courtId, setCourtId] = useState<string | null>(null)
+    const [date, setDate] = useState(new Date())
+    const [timeRange, setTimeRange] = useState<TimeRange>({start:0, end:24})
+
+    console.log(`data: ${courtId}, ${date.toISOString()}, ${timeRange.start}-${timeRange.end}`)
+
+    const elems = [
+        <CourtSearch courtId={courtId} onCourtIdChange={setCourtId}/>,
+        <div className='flex flex-1 flex-col justify-center items-center max-w-[300px]'>
+            <div className='text-heading-h2 pb-lg'>날짜와 시간을 선택해 주세요</div>
+            <DatePicker mode={'single'} date={date} onDateChange={setDate}/>
+            <TimePicker border={false} value={timeRange} onTimeRangeChange={setTimeRange}/>
+        </div>,
+        <div></div>
+    ]
+
+    const activated = () => {
+        if (step === 0 && courtId !== null) {
+            return true
+        } else if (step === 1) {
+            return true
+        }
+        return false
+    }
+
+    const toNextStep = () => {
+        setStep(step + 1)
+    }
 
     return (
-        <div className='flex flex-col overflow-hidden'>
-            <div className='flex flex-col flex-none gap-sm p-md'>
-                <div className='text-heading-h2'>테니스장을 선택해 주세요</div>
-                <InputText
-                    inputSize={'big'}
-                    onChange={(e)=>{setKeyword(e.target.value)}}
-                    placeholder={'예시: 서울, 과천, ...'}
-                    autoFocus={true}
-                />
-            </div>
-
-            <div className='flex-1 overflow-y-auto min-h-0 scrollbar-hide'>
-                <CourtList keyword={debouncedKeyword} />
-            </div>
-
-            <div className='flex-none pt-sm bg-surface'>
-                <Button buttonSize={'full'}>넘어가기</Button>
+        <div className='flex flex-1 flex-col overflow-hidden py-lg items-center'>
+            {elems[step]}
+            <div className='sticky bottom-0 z-50 flex-none pt-sm bg-surface w-full'>
+                <Button
+                    buttonSize={'full'}
+                    variant={activated() ? 'primary' : 'inactive'}
+                    disabled={!activated()}
+                    onClick={toNextStep}
+                >넘어가기</Button>
             </div>
         </div>
     )
