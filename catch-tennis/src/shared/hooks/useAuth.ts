@@ -1,6 +1,6 @@
 import {useEffect, useState, useCallback} from "react"
-import {getAuthStatus} from "@shared/api/authApi.js"
-import type {UserStatus} from "@shared/types/common.ts"
+import {getAuthStatus} from "@shared/api/authApi"
+import type {UserStatus} from "@shared/types/common"
 
 export function useAuth() {
     const [userStatus, setUserStatus] = useState<UserStatus | null>(null)
