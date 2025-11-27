@@ -22,7 +22,8 @@ export function CourtSearch({
                 <div className='text-heading-h2'>테니스장을 선택해 주세요</div>
                 <InputText
                     inputSize={'big'}
-                    onChange={(e)=>{setKeyword(e.target.value.trim())}}
+                    onChange={(e)=>{setKeyword(e.target.value)}}
+                    onBlur={(e)=>{setKeyword(e.target.value.trim())}}
                     placeholder={'예시: 서울, 과천, ...'}
                     autoFocus={true}
                 />

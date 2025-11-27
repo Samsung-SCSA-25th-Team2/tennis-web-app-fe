@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react"
 import {useNavigate, useParams} from "react-router-dom"
 
-import {postProfile} from "../api/profileApi.ts"
+import {checkNicknameAvailability, postProfile} from "../api/profileApi.ts"
 import {questions} from "../utils/questions.ts"
 import {storage} from "../utils/storage.ts"
 
@@ -30,6 +30,20 @@ export function useCompleteProfile() {
         storage.setAnswer(question.id, selectedValue.trim())
 
         if (questionIndex < questions.length - 1) {
+            setIsSubmitting(true)
+            try {
+                if (questionIndex === 0) {
+                    const {available} = await checkNicknameAvailability(selectedValue)
+                    if (available) {
+                        navigate(`/profile-complete/${questionIndex + 2}`)
+                    } else {
+                        alert('이미 사용중인 닉네임 입니다.')
+                        return
+                    }
+                }
+            } finally {
+                setIsSubmitting(false)
+            }
             navigate(`/profile-complete/${questionIndex + 2}`)
         } else {
             setIsSubmitting(true)

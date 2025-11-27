@@ -128,7 +128,8 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
                 <Textarea
                     className='field-sizing-fixed resize-none'
                     value={description}
-                    onChange={(e) => setDescription(e.target.value.trim())}
+                    onChange={(e) => setDescription(e.target.value)}
+                    onBlur={(e) => setDescription(e.target.value.trim())}
                     maxLength={255}
                     placeholder={'소개글 입력'}
                 />

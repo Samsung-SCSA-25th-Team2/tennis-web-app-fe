@@ -179,15 +179,22 @@ export function ProfileView({
 
                             {/* 닉네임 */}
                             <div>
-                                <label className="text-sm text-text-muted mb-2 block font-medium">닉네임</label>
                                 {isEditing && isOwner ? (
                                     <div>
+                                        <label className="text-sm text-text-muted mb-2 block font-medium">
+                                            <div className='flex justify-between'>
+                                                <span>닉네임</span>
+                                                <span>{displayProfile.nickname.length}/30</span>
+                                            </div>
+                                        </label>
                                         <input
                                             type="text"
                                             value={displayProfile.nickname}
                                             onChange={(e) => onFieldUpdate?.('nickname', e.target.value)}
+                                            onBlur={(e)=>onFieldUpdate?.('nickname', e.target.value.trim())}
                                             className="w-full py-2 px-3 text-base rounded-md border border-border bg-background text-text-title focus:outline-none focus:border-primary transition-colors"
                                             placeholder="닉네임을 입력하세요"
+                                            maxLength={30}
                                         />
                                         {nicknameValidation && (
                                             <div className="mt-2">
@@ -207,9 +214,16 @@ export function ProfileView({
                                         )}
                                     </div>
                                 ) : (
-                                    <p className="text-base text-text-title pt-1">
-                                        {profile.nickname}
-                                    </p>
+                                    <>
+                                        <label className="text-sm text-text-muted mb-2 block font-medium">
+                                            <div className='flex justify-between'>
+                                                <span>닉네임</span>
+                                            </div>
+                                        </label>
+                                        <p className="text-base text-text-title pt-1">
+                                            {profile.nickname}
+                                        </p>
+                                    </>
                                 )}
                             </div>
 
