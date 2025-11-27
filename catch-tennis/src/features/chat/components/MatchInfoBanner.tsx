@@ -78,8 +78,7 @@ export function MatchInfoBanner({matchId}: MatchInfoBannerProps) {
         return date.toLocaleDateString('ko-KR', {
             month: 'long',
             day: 'numeric',
-            weekday: 'short',
-            timeZone: 'Asia/Seoul'
+            weekday: 'short'
         })
     }
 
@@ -87,8 +86,7 @@ export function MatchInfoBanner({matchId}: MatchInfoBannerProps) {
         return date.toLocaleTimeString('ko-KR', {
             hour: '2-digit',
             minute: '2-digit',
-            hour12: false,
-            timeZone: 'Asia/Seoul'
+            hour12: false
         })
     }
 
