@@ -71,8 +71,8 @@ export class ChatWebSocketService {
                         // 토큰 갱신 실패 시 재연결 중단
                         this.reconnectAttempts++
                         if (this.reconnectAttempts >= this.MAX_RECONNECT_ATTEMPTS) {
-                            console.error('[WebSocket] Max reconnect attempts reached, redirecting to login...')
-                            window.location.href = '/login'
+                            console.error('[WebSocket] Max reconnect attempts reached, redirecting to home...')
+                            window.location.href = '/'
                         }
                         throw error
                     }
