@@ -14,13 +14,13 @@ export function Match() {
     const [searchParams, setSearchParams] = useSearchParams()
     const navigate = useNavigate()
 
-    const gameType = (searchParams.get("gameType") as GameType) || GameType.Singles
+    const gameType = (searchParams.get("gameType") as GameType) || GameType.ALL
     const sortType = (searchParams.get("sortType") as SortType) || "latest"
     const statusType = (searchParams.get("statusType") as StatusType) || "RECRUITING"
 
     const dateRange: DateRange = {
-        from: searchParams.get("from") ? new Date(searchParams.get("from")!) : new Date(),
-        to: searchParams.get("to") ? new Date(searchParams.get("to")!) : new Date(),
+        from: searchParams.get("from") ? new Date(searchParams.get("from")!) : undefined,
+        to: searchParams.get("to") ? new Date(searchParams.get("to")!) : undefined,
     }
 
     const timeRange: TimeRange = {

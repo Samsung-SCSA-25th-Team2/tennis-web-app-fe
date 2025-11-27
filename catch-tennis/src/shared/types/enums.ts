@@ -2,7 +2,8 @@ export const GameType = {
     Singles: 'SINGLES',
     MenDoubles: 'MEN_DOUBLES',
     WomenDoubles: 'WOMEN_DOUBLES',
-    MixedDoubles: 'MIXED_DOUBLES'
+    MixedDoubles: 'MIXED_DOUBLES',
+    ALL: 'ALL'
 } as const
 export type GameType = (typeof GameType)[keyof typeof GameType];
 

@@ -147,10 +147,14 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
                 if (!gameType || !courtId || !fee || !description) {
                     throw new Error('Not Valid Request')
                 }
+
+                const startDateTimeString = setHours(date, timeRange.start).toISOString()
+                const endDateTimeString = setHours(date, timeRange.end).toISOString()
+
                 const body =
                 {
-                    startDateTime: setHours(date, timeRange.start).toISOString(),
-                    endDateTime: setHours(date, timeRange.end).toISOString(),
+                    startDateTime: startDateTimeString.substring(0, startDateTimeString.length - 1),
+                    endDateTime: endDateTimeString.substring(0, endDateTimeString.length - 1),
                     gameType,
                     courtId: parseInt(courtId),
                     period: periods,

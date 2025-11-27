@@ -59,11 +59,13 @@ export const getGametypeLabel= (gametype: GameType) => {
             return "여복"
         case "MIXED_DOUBLES":
             return "혼복"
+        case "ALL":
+            return "모두"
     }
 }
 
 export const GAME_TYPE_OPTIONS: Array<{value: GameType, label: string}> = [
-    'SINGLES', 'MEN_DOUBLES', 'WOMEN_DOUBLES', 'MIXED_DOUBLES'
+    'SINGLES', 'MEN_DOUBLES', 'WOMEN_DOUBLES', 'MIXED_DOUBLES', 'ALL'
 ].map(value => (
     {
         value: value as GameType,

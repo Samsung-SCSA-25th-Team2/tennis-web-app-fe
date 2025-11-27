@@ -63,7 +63,8 @@ export const getSortTypeLabel = (sortType: SortType) => {
 }
 
 export const SORT_TYPE_OPTIONS: Array<{value: SortType, label: string}> = [
-    'latest', 'loc5', 'loc10', 'loc15', 'locInf', 'recommend'
+    'latest', 'recommend'
+    // 'latest', 'loc5', 'loc10', 'loc15', 'locInf', 'recommend'
 ].map(value => (
     {
         value: value as SortType,

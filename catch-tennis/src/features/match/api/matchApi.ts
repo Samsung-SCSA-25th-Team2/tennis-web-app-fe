@@ -1,7 +1,7 @@
 import type {DateRange} from "react-day-picker"
 
 import {api} from '@shared/api'
-import type {TimeRange, GameType, Period, Age} from "@shared/types"
+import {type TimeRange, GameType, Period, Age} from "@shared/types"
 import type {CourtInfo, CourtListResult, MatchInfo} from "@features/match/common.ts"
 
 import type {MatchListResult, SortType, StatusType} from "../common"
@@ -46,19 +46,28 @@ export async function searchMatches(params: SearchMatchParams): Promise<MatchLis
         else distanceParams.radius = 9999
     }
 
-    return api.get<MatchListResult>('/v1/matches', {
-        params: {
-            sort: sort,
-            startDate: dateRange.from?.toISOString().split("T")[0],
-            endDate: dateRange.to?.toISOString().split("T")[0],
-            startTime: timeRange.start,
-            endTime: timeRange.end,
+    let apiParams: Record<string, string | number | boolean | undefined> = {
+        sort: sort,
+        startDate: dateRange.from?.toISOString().split("T")[0],
+        endDate: dateRange.to?.toISOString().split("T")[0],
+        startTime: timeRange.start,
+        endTime: timeRange.end,
+        status: statusType,
+        size: 10,
+        ...(cursor && {cursor}),
+        ...distanceParams
+
+    }
+
+    if (gameType !== GameType.ALL) {
+        apiParams = {
+            ...apiParams,
             gameType: gameType,
-            status: statusType,
-            size: 10,
-            ...(cursor && {cursor}),
-            ...distanceParams
-        },
+        }
+    }
+
+    return api.get<MatchListResult>('/v1/matches', {
+        params: apiParams,
         useJWT: true
     })
 }
