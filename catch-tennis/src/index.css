@@ -24,6 +24,18 @@
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
     }
+
+    /* Hide arrows in Chrome, Safari, Edge, Opera */
+    .no-spinner::-webkit-outer-spin-button,
+    .no-spinner::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Hide arrows in Firefox */
+    .no-spinner {
+        -moz-appearance: textfield;
+    }
 }
 
 :root, body {

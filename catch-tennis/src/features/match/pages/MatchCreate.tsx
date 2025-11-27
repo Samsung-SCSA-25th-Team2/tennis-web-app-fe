@@ -2,12 +2,13 @@ import {useState} from "react"
 import {useNavigate} from "react-router-dom"
 import {setHours} from "date-fns"
 
-import {Button, DatePicker, TimePicker} from "@shared/components/atoms"
+import {DatePicker, TimePicker} from "@shared/components/atoms"
 import {Age, GameType, Period, type TimeRange} from "@shared/types"
 import {ToggleGroup, ToggleGroupItem} from "@shared/components/ui/toggle-group.tsx"
 import {Stepper} from "@shared/components/molecules"
 import {Input} from "@shared/components/ui/input.tsx"
 import {Textarea} from "@shared/components/ui/textarea.tsx"
+import {Button} from "@shared/components/ui/button"
 
 import {CourtSearch} from "@features/match/components/CourtSearch.tsx"
 import {matchCreatePost} from "@features/match/api/matchApi.ts"
@@ -43,7 +44,7 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
         setAgeRange(values as Age[])
     }
     // q7
-    const [fee, setFee] = useState<number>()
+    const [fee, setFee] = useState<number | undefined>(undefined)
     // q8
     const [description, setDescription] = useState<string>()
 
@@ -95,24 +96,39 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
         </div>,
         <div className='flex flex-1 flex-col justify-center gap-lg'>
             <span className='text-heading-h2 text-text-title text-center'>참가비를 입력해주세요</span>
-            <Input className='text-center'
-                   value={fee} onChange={(e)=>{setFee(Math.max(0, parseInt(e.target.value)))}}
-                   type={'number'} placeholder={'참가비 입력'}></Input>
+            <Input className='text-center no-spinner'
+                   value={fee} type={'number'} placeholder={'참가비 입력'}
+                   onChange={(e)=>{
+                       const strVal = e.target.value
+
+                       if (strVal === '') {
+                           setFee(undefined)
+                           return
+                       }
+
+                       const val = parseInt(e.target.value)
+                       if (val > 100 * 10000) {
+                           return
+                       }
+
+                       if (val < 0) {
+                           setFee(0)
+                           return
+                       }
+
+                       setFee(val)
+                   }}
+            />
         </div>,
-        <div className='flex flex-1 flex-col justify-center gap-lg'>
+        <div className='flex flex-1 flex-col justify-center gap-lg w-full px-xl'>
             <span className='text-heading-h2 text-text-title text-center'>매칭 소개글을 입력해 주세요</span>
             <div>
-                <div className='text-right'>{description ? description.length : 0}/1000</div>
+                <div className='text-right text-caption text-text-muted'>{description ? description.length : 0}/1000</div>
                 <Textarea
+                    className='field-sizing-fixed resize-none'
                     value={description}
-                    onChange={(e)=>{
-                        const val = e.target.value
-                        if (val.length <= 1000) {
-                            setDescription(val)
-                        } else {
-                            setDescription(description)
-                        }
-                    }}
+                    onChange={(e) => setDescription(e.target.value)}
+                    maxLength={1000}
                     placeholder={'소개글 입력'}
                 />
             </div>
@@ -181,10 +197,11 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
             {elems[questionIdx]}
             <div className='sticky bottom-0 z-50 flex-none pt-sm bg-surface w-full'>
                 <Button
-                    buttonSize={'full'}
-                    variant={activated() ? 'primary' : 'inactive'}
+                    className='w-full'
+                    variant={activated() ? 'default' : 'outline'}
                     disabled={!activated()}
                     onClick={toNextStep}
+                    size={'lg'}
                 >{questionIdx === elems.length - 1 ? '제출하기' : '넘어가기'}</Button>
             </div>
         </div>
