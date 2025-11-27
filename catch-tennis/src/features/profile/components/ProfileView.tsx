@@ -1,8 +1,9 @@
-import {useRef} from 'react'
+import {useRef, type RefObject} from 'react'
 import {ImgLoader} from '@shared/components/atoms/ImgLoader'
 import EditIcon from '@/assets/icons/edit.svg?react'
 import StarIcon from '@/assets/icons/star.svg?react'
 import type {ProfileData} from "@shared/types/common.ts"
+import {MyMatchList} from './MyMatchList'
 
 // --- Props 인터페이스 정의 ---
 interface ProfileViewProps {
@@ -45,6 +46,7 @@ export function ProfileView({
     nicknameValidation
 }: ProfileViewProps) {
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const scrollContainerRef = useRef<HTMLDivElement>(null)
 
     // 수정 중일 때는 편집된 프로필 데이터를, 아니면 원본 프로필을 표시
     const displayProfile = editedProfile || profile
@@ -80,7 +82,7 @@ export function ProfileView({
 
     return (
         <div className="flex flex-col h-full bg-background">
-            <div className="flex-1 overflow-y-auto pb-4">
+            <div className="flex-1 overflow-y-auto pb-4" ref={scrollContainerRef}>
 
                 {/* --- 1. 프로필 헤더 (상단 파란 배경) --- */}
                 <div className="bg-primary pt-8 pb-24 px-4 relative">
@@ -296,7 +298,10 @@ export function ProfileView({
                     </div>
                 </div>
 
-                {/* --- 3. 리뷰 섹션 (준비 중) --- */}
+                {/* --- 3. 내가 만든 매치 목록 (본인 프로필일 때만 표시) --- */}
+                {isOwner && <MyMatchList scrollContainerRef={scrollContainerRef} />}
+
+                {/* --- 4. 리뷰 섹션 (준비 중) --- */}
                 <div className="px-4 mt-6">
                     <div className="bg-surface rounded-lg shadow-md p-5">
                         <div className="flex items-center justify-between mb-4">
@@ -347,7 +352,7 @@ export function ProfileView({
                 {isEditing && isOwner && onDelete && (
                     <div className="mt-8 pb-8 px-4 flex justify-center">
                         <button
-                            onClick={onDelete}
+                            onClick={() => onDelete()}
                             disabled={isDeleting}
                             className="text-xs text-text-muted hover:text-error transition-colors underline disabled:opacity-50"
                         >

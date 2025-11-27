@@ -46,6 +46,16 @@ export function MatchInfoBanner({matchId}: MatchInfoBannerProps) {
         fetchMatchInfo()
     }, [matchId])
 
+    const getStatusLabel = (status: string) => {
+        return status === 'OPEN' ? '모집중' : '종료됨'
+    }
+
+    const getStatusColor = (status: string) => {
+        return status === 'OPEN'
+            ? 'bg-success/20 text-success border-success/30'
+            : 'bg-text-muted/20 text-text-muted border-text-muted/30'
+    }
+
     if (loading) {
         return (
             <div className="p-4 bg-surface border-b border-border">
@@ -100,12 +110,8 @@ export function MatchInfoBanner({matchId}: MatchInfoBannerProps) {
                         <span className="text-base font-bold text-text-title">
                             {getGametypeLabel(matchInfo.gameType)}
                         </span>
-                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                            matchInfo.status === 'RECRUITING'
-                                ? 'bg-success/20 text-success border border-success/30'
-                                : 'bg-text-muted/20 text-text-muted border border-text-muted/30'
-                        }`}>
-                            {matchInfo.status === 'RECRUITING' ? '모집중' : '종료'}
+                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${getStatusColor(matchInfo.status)}`}>
+                            {getStatusLabel(matchInfo.status)}
                         </span>
                     </div>
 
