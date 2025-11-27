@@ -2,7 +2,7 @@ import {useNavigate} from "react-router-dom"
 import {useAuth, useProfile} from "@shared/hooks"
 import {ProfileView} from '../components/ProfileView'
 import {useProfileEdit} from '../hooks/useProfileEdit'
-import {logout} from "@shared/api/authApi.ts";
+import {logout} from "@shared/api/authApi.js"
 
 export function Profile() {
     const {userStatus, clearUser} = useAuth()
@@ -25,12 +25,12 @@ export function Profile() {
 
     const handleLogout = async () => {
         try {
-            await logout();
+            await logout()
         } catch (e) {
             console.error("Logout failed", e)
         } finally {
-            clearUser();
-            navigate('/login');
+            clearUser()
+            navigate('/login')
         }
     }
 

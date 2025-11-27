@@ -1,5 +1,5 @@
 import {useEffect, useState, useCallback} from "react"
-import {getAuthStatus} from "@shared/api/authApi.ts"
+import {getAuthStatus} from "@shared/api/authApi.js"
 import type {UserStatus} from "@shared/types/common.ts"
 
 export function useAuth() {
@@ -9,7 +9,7 @@ export function useAuth() {
 
     useEffect(() => {
         getAuthStatus()
-            .then(userStatus => setUserStatus(userStatus))
+            .then(userStatus => setUserStatus(userStatus as UserStatus))
             .catch(error => {
                 setError(error)
                 console.error(`Error at useAuth: ${error.message}`)
@@ -21,10 +21,10 @@ export function useAuth() {
     }, [])
 
     const clearUser = useCallback(() => {
-        setUserStatus(null);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-    }, []);
+        setUserStatus(null)
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+    }, [])
 
     return {userStatus, isLoading, error, clearUser}
 }

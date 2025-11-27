@@ -21,10 +21,13 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
     const [nextCursor, setNextCursor] = useState<string | null>(null)
     const [hasNext, setHasNext] = useState(false)
 
-    const observer = useRef<IntersectionObserver>()
+    const observer = useRef<IntersectionObserver>(null)
     const lastMatchElementRef = useRef<HTMLDivElement>(null)
     const dropdownRef = useRef<HTMLDivElement>(null)
 
+    const openToRecruiting = (status: 'OPEN' | 'CLOSED') => {
+        return status === 'OPEN' ? 'RECRUITING' : 'COMPLETED'
+    }
     const handleStatusChange = async (matchId: number, currentStatus: 'OPEN' | 'CLOSED', desiredStatus: 'OPEN' | 'CLOSED') => {
         if (currentStatus === desiredStatus) {
             setOpenDropdownId(null)
@@ -37,7 +40,7 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
             await toggleMatchStatus(matchId)
             setMatches(prevMatches =>
                 prevMatches.map(m =>
-                    m.matchId === matchId ? {...m, status: desiredStatus} : m
+                    m.matchId === matchId ? {...m, status: openToRecruiting(desiredStatus)} : m
                 )
             )
         } catch (err) {
