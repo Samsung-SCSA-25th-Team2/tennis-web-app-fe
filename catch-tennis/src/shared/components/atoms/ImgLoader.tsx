@@ -5,8 +5,10 @@ import Error500Img from '@assets/images/500_error.png'
 import LoginImg from '@assets/images/kakao_login_large_wide.png'
 import LoadingImg from '@assets/images/loading.png'
 import LogoImg from '@assets/images/logo.png'
+import Ad1 from '@assets/images/ad1.png'
 
-export type ImgType = '404_error' | '500_error' | 'login' | 'loading' | 'logo' | 'unknown'
+
+export type ImgType = '404_error' | '500_error' | 'login' | 'loading' | 'logo' | 'unknown' | 'ad1'
 
 interface ImgLoaderProps extends ImgHTMLAttributes<HTMLImageElement>{
     imgSize?: 'small' | 'medium' | 'large' | 'full'
@@ -42,6 +44,7 @@ export function ImgLoader({
         loading: LoadingImg,
         logo: LogoImg,
         unknown: unknownSrc,
+        'ad1': Ad1,
     }
 
     const imgTypeAlt = {
@@ -51,6 +54,7 @@ export function ImgLoader({
         loading: 'Loading Image',
         logo: 'Logo Image',
         unknown: unknownAlt,
+        'ad1': 'ad1',
     }
 
     const shapeStyle = {

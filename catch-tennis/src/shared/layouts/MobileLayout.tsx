@@ -30,7 +30,6 @@ export function MobileLayout() {
                     overflow-y-auto
                     scrollbar-hide
                     min-h-0
-                    py-sm
                     px-md
                 ">
                     <Outlet/>

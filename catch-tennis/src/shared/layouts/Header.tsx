@@ -7,8 +7,8 @@ export const Header = () => {
                 <ImgLoader imgType={'logo'} imgSize={'medium'}/>
                 <span className="text-heading-h3 text-text-title">캐치 테니스</span>
             </div>
-            <div className="w-full h-[3rem] bg-surface-muted">
-                여기에 광고
+            <div className="w-full bg-surface-muted">
+                <ImgLoader imgType={'ad1'} imgSize={'full'}/>
             </div>
         </header>
     )

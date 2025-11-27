@@ -33,10 +33,10 @@ export function MatchDetail() {
         start = new Date(start)
         end = new Date(end)
         const year = start.getFullYear()
-        const month = start.getMonth() + 1 // getMonth() returns 0-11
+        const month = start.getMonth() + 1
         const day = start.getDate()
         const startHour = start.getHours()
-        const endHour = end.getHours()
+        const endHour = end.getHours() === 0 ? 24 : end.getHours()
 
         return `${year}년 ${month}월 ${day}일 ${startHour}~${endHour}시`
     }

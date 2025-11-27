@@ -43,7 +43,7 @@ export function MatchCard  ({
     const formatStartDate = (date: Date) => format(date, "yyyy년 MM월 dd일 HH시", {locale: ko})
     const formatEndDate = (date: Date) => format(date, "HH시", {locale: ko})
     const formatDateRangeText = () => {
-        return `${formatStartDate(matchInfo.startDateTime)} - ${formatEndDate(matchInfo.endDateTime)}`
+        return `${formatStartDate(matchInfo.startDateTime)} - ${formatEndDate(matchInfo.endDateTime).replace('00', '24')}`
     }
 
     const formatPlayerCount = () => {

@@ -57,7 +57,8 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
             <TimePicker border={false} value={timeRange} onTimeRangeChange={setTimeRange}/>
         </div>,
         <div className='flex flex-1 flex-col justify-center gap-lg'>
-            <span className='text-heading-h2 text-text-title text-center'>구력을 설정해 주세요</span>
+            <span className='text-heading-h2 text-text-title text-center'>모집 구력을 설정해 주세요</span>
+            <span className='text-heading-h4 text-center'>-복수선택 가능-</span>
             <ToggleGroup type={'multiple'} variant={'outline'} spacing={3} size={'lg'}
                          value={periods} onValueChange={handlePeriodsChange}>
                 <ToggleGroupItem className='w-15 bg-surface-raised data-[state=on]:bg-primary' value={Period.OneYear}>1년</ToggleGroupItem>
