@@ -3,8 +3,7 @@ import type {
     ChatRoomListResponse,
     ChatMessageListResponse,
     CreateChatRoomRequest,
-    CreateChatRoomResponse,
-    ChatRoomInfo
+    CreateChatRoomResponse
 } from '../common'
 
 /**
