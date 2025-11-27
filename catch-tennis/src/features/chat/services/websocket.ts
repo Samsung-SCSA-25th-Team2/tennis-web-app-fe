@@ -27,6 +27,8 @@ export class ChatWebSocketService {
     private connected = false // 현재 연결 상태
     // 구독 ID를 관리하는 맵: key=chatRoomId, value=subscription ID
     private subscriptions: Map<number, string> = new Map()
+    // 활성 구독 카운트 (모든 구독이 해제되면 연결 종료)
+    private activeSubscriptionCount = 0
 
     /**
      * ChatWebSocketService의 생성자입니다.
@@ -37,8 +39,8 @@ export class ChatWebSocketService {
             // 웹소켓 연결 팩토리: SockJS를 사용하여 브라우저 호환성 및 대체(fallback) 지원을 제공합니다.
             webSocketFactory: () => new SockJS(`${BASE_URL}/ws-stomp`),
             reconnectDelay: 5000, // 연결 끊김 시 5초 후 재연결 시도
-            heartbeatIncoming: 4000, // 서버에서 4초마다 하트비트 수신 예상
-            heartbeatOutgoing: 4000, // 서버로 4초마다 하트비트 전송
+            heartbeatIncoming: 10000, // 서버에서 10초마다 하트비트 수신 예상 (백엔드와 동기화)
+            heartbeatOutgoing: 10000, // 서버로 10초마다 하트비트 전송 (백엔드와 동기화)
             debug: (str) => {
                 console.log('[STOMP Debug]', str) // STOMP 내부 디버그 로그 출력
             }
@@ -149,15 +151,23 @@ export class ChatWebSocketService {
 
             // 구독 정보를 맵에 저장하여 관리합니다.
             this.subscriptions.set(chatRoomId, subscription.id)
+            this.activeSubscriptionCount++
 
-            console.log(`Subscribed to /topic/chatroom.${chatRoomId}`)
+            console.log(`Subscribed to /topic/chatroom.${chatRoomId} (active: ${this.activeSubscriptionCount})`)
 
             // 구독 해제 함수를 반환합니다.
             return () => {
                 try {
                     subscription.unsubscribe()
                     this.subscriptions.delete(chatRoomId)
-                    console.log(`Unsubscribed from /topic/chatroom.${chatRoomId}`)
+                    this.activeSubscriptionCount--
+                    console.log(`Unsubscribed from /topic/chatroom.${chatRoomId} (active: ${this.activeSubscriptionCount})`)
+
+                    // 모든 구독이 해제되면 WebSocket 연결도 끊기
+                    if (this.activeSubscriptionCount === 0) {
+                        console.log('No active subscriptions. Disconnecting WebSocket...')
+                        this.disconnect()
+                    }
                 } catch (error) {
                     console.warn('Failed to unsubscribe:', error)
                 }

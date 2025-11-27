@@ -82,6 +82,17 @@ export function MatchDetail() {
 
     return (
         <div className='flex flex-col gap-md'>
+            {/* 뒤로가기 버튼 */}
+            <div className="flex items-center gap-3 pb-2">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="text-text-title text-xl hover:opacity-70 transition-opacity"
+                >
+                    ←
+                </button>
+                <h2 className="text-heading-h2 font-bold text-text-title">매치 상세</h2>
+            </div>
+
             <div className='flex flex-col gap-md'>
                 <CourtCard courtInfo={courtInfo}/>
                 <ProfileCard userProfile={profile}/>

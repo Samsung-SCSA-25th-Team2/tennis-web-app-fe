@@ -4,13 +4,15 @@ import {useParams, useNavigate} from 'react-router-dom'
 // 사용자 정의 컴포넌트 및 유틸리티 타입/훅 임포트
 import {MessageItem} from '../components/MessageItem' // 단일 메시지 아이템 렌더링 컴포넌트
 import {DateDivider} from '../components/DateDivider' // 날짜 구분선 컴포넌트
+import {MatchInfoBanner} from '../components/MatchInfoBanner' // 매치 정보 배너 컴포넌트
 import {useChatMessages} from '../hooks/useChatMessages' // REST API로 채팅 기록을 불러오는 훅
 import {useWebSocket} from '../hooks/useWebSocket' // WebSocket 연결 및 메시지 송수신 훅
 import {ImgLoader} from '@shared/components/atoms' // 로딩 스피너 컴포넌트
 import SendIcon from '@/assets/icons/send.svg?react' // 메시지 전송 아이콘
 import {formatDateDivider, isSameDay} from '../utils/formatDate' // 날짜 포맷 유틸리티
-import type {ChatMessage} from '../common' // 채팅 메시지 데이터 타입 정의
+import type {ChatMessage, ChatRoomInfo} from '../common' // 채팅 메시지 데이터 타입 정의
 import type {ChatWebSocketMessage} from '../services/websocket' // WebSocket으로 수신되는 메시지 타입 정의
+import {getMyChatRooms} from '../api/chatApi' // 채팅방 목록 API
 
 /**
  * 채팅방 메인 컴포넌트
@@ -26,6 +28,8 @@ export function ChatRoom() {
     const [messageInput, setMessageInput] = useState('')
     // REST API(이전 메시지)와 WebSocket(실시간 메시지)을 합친 최종 메시지 목록
     const [allMessages, setAllMessages] = useState<ChatMessage[]>([])
+    // 채팅방 정보 (상대방 프로필 이미지 등)
+    const [chatRoomInfo, setChatRoomInfo] = useState<ChatRoomInfo | null>(null)
 
     // 이전에 불러온 REST 메시지 목록을 추적하여 불필요한 동기화/재렌더링을 방지
     const prevMessagesRef = useRef<ChatMessage[]>([])
@@ -54,7 +58,8 @@ export function ChatRoom() {
             chatRoomId: wsMessage.chatRoomId,
             senderId: wsMessage.senderId,
             senderNickname: wsMessage.senderNickname,
-            senderImgUrl: wsMessage.senderImgUrl,
+            // WebSocket에 senderImgUrl이 없으면 채팅방 정보에서 상대방 이미지 사용
+            senderImgUrl: wsMessage.senderImgUrl || (chatRoomInfo?.opponentImgUrl),
             message: wsMessage.message,
             createdAt: wsMessage.createdAt,
             read: wsMessage.read,
@@ -69,13 +74,34 @@ export function ChatRoom() {
         setTimeout(() => {
             scrollToBottom()
         }, 100)
-    }, [scrollToBottom]) // scrollToBottom 함수가 변경될 때만 재생성
+    }, [scrollToBottom, chatRoomInfo]) // scrollToBottom 함수와 chatRoomInfo가 변경될 때만 재생성
 
     // WebSocket 연결 상태 및 메시지 전송 함수를 제공하는 훅
     const {connected, sendMessage} = useWebSocket(
         roomIdNumber,
         handleMessageReceived // 메시지 수신 시 처리할 콜백 전달
     )
+
+    // [채팅방 정보 불러오기]
+    // roomId가 변경될 때마다 채팅방 목록에서 현재 채팅방을 찾아 정보를 가져옵니다.
+    useEffect(() => {
+        if (!Number.isNaN(roomIdNumber)) {
+            console.log('[ChatRoom] Fetching chat room info for roomId:', roomIdNumber)
+            getMyChatRooms(undefined, 100) // 충분히 큰 사이즈로 모든 채팅방 가져오기
+                .then(response => {
+                    const room = response.rooms.find(r => r.chatRoomId === roomIdNumber)
+                    if (room) {
+                        console.log('[ChatRoom] Chat room info loaded:', room)
+                        setChatRoomInfo(room)
+                    } else {
+                        console.warn('[ChatRoom] Chat room not found in list')
+                    }
+                })
+                .catch(error => {
+                    console.error('[ChatRoom] Failed to fetch chat room info:', error)
+                })
+        }
+    }, [roomIdNumber])
 
     // [핵심 로직: REST 메시지와 실시간 WS 메시지 동기화]
     // messages (REST)가 변경될 때마다 allMessages 상태를 업데이트합니다.
@@ -193,9 +219,13 @@ export function ChatRoom() {
     }
 
     // 상대방 닉네임 결정
-    // 현재 사용자가 아닌 다른 사용자의 닉네임을 찾아서 표시, 없으면 '채팅'으로 기본값 설정
+    // 1. 채팅방 정보에서 가져오기 (우선순위)
+    // 2. 메시지에서 현재 사용자가 아닌 다른 사용자의 닉네임 찾기
+    // 3. 없으면 '채팅'으로 기본값 설정
     const opponentNickname =
-        allMessages.find(msg => msg.senderId !== currentUserId)?.senderNickname || '채팅'
+        chatRoomInfo?.opponentNickname ||
+        allMessages.find(msg => msg.senderId !== currentUserId)?.senderNickname ||
+        '채팅'
 
     // === 렌더링 시작 ===
     return (
@@ -212,6 +242,11 @@ export function ChatRoom() {
                     {opponentNickname} {/* 상대방 닉네임 표시 */}
                 </h2>
             </div>
+
+            {/* Match Info Banner: 매치 정보 표시 */}
+            {chatRoomInfo && chatRoomInfo.matchId && (
+                <MatchInfoBanner matchId={chatRoomInfo.matchId} />
+            )}
 
             {/* Messages: 메시지 목록 영역 (스크롤 가능) */}
             <div
