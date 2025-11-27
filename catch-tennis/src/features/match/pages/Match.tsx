@@ -43,8 +43,8 @@ export function Match() {
     // URL handlers
     const handleDateRangeChange = (range: DateRange | undefined) => {
         setSearchParams((prev) => {
-            if (range?.from) prev.set("from", range.from.toISOString())
-            if (range?.to) prev.set("to", range.to.toISOString())
+            if (range?.from) prev.set("from", range.from.toDateString())
+            if (range?.to) prev.set("to", range.to.toDateString())
             return prev
         })
     }

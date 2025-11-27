@@ -42,6 +42,14 @@ export function DateTimeSelector({
     const dateRangeText = formatDateRangeText()
     const timeRangeText = formatTimeRangeText()
 
+    const showPlaceholder = () => {
+        if (dateRange.from === undefined || dateRange.to === undefined) {
+            return true
+        }
+        return false
+    }
+
+
     return (
         <div className='w-full'>
             <Popover>
@@ -54,7 +62,10 @@ export function DateTimeSelector({
                         )}
                     >
                         <CalendarIcon/>
-                        {dateRangeText}: {timeRangeText}
+                        {
+                            showPlaceholder()
+                            ? '날짜와 시간대를 선택해 주세요' : <>{dateRangeText} : {timeRangeText}</>
+                        }
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent

@@ -48,8 +48,8 @@ export async function searchMatches(params: SearchMatchParams): Promise<MatchLis
 
     let apiParams: Record<string, string | number | boolean | undefined> = {
         sort: sort,
-        startDate: dateRange.from?.toISOString().split("T")[0],
-        endDate: dateRange.to?.toISOString().split("T")[0],
+        startDate: dateRange.from?.toDateString().split("T")[0],
+        endDate: dateRange.to?.toDateString().split("T")[0],
         startTime: timeRange.start,
         endTime: timeRange.end,
         status: statusType,

@@ -29,8 +29,8 @@ export function useInfiniteMatchList(params: Params) {
         gameType,
         sortType,
         statusType,
-        startDate: dateRange.from ? dateRange.from.toISOString() : "",
-        endDate: dateRange.to ? dateRange.to.toISOString() : "",
+        startDate: dateRange.from ? dateRange.from.toDateString() : "",
+        endDate: dateRange.to ? dateRange.to.toDateString() : "",
         startTime: timeRange.start,
         endTime: timeRange.end
     })

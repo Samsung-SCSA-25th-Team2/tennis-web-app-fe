@@ -148,8 +148,8 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
                     throw new Error('Not Valid Request')
                 }
 
-                const startDateTimeString = setHours(date, timeRange.start).toISOString()
-                const endDateTimeString = setHours(date, timeRange.end).toISOString()
+                const startDateTimeString = setHours(date, timeRange.start).toDateString()
+                const endDateTimeString = setHours(date, timeRange.end).toDateString()
 
                 const body =
                 {
