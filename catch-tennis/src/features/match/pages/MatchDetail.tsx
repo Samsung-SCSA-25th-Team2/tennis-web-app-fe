@@ -1,6 +1,6 @@
-import {useParams} from "react-router-dom"
+import {useNavigate, useParams} from "react-router-dom"
 
-import {useProfile} from "@shared/hooks"
+import {useAuth, useProfile} from "@shared/hooks"
 import {ImgLoader} from "@shared/components/atoms"
 import {ProfileCard, CourtCard} from "@shared/components/molecules"
 import {getAgeLabel, getGametypeLabel, getPeriodLabel} from "@shared/utils/toLabel.ts"
@@ -8,13 +8,18 @@ import {getAgeLabel, getGametypeLabel, getPeriodLabel} from "@shared/utils/toLab
 import {useMatchInfo} from "@features/match/hook/useMatchInfo.ts"
 import {useCourtInfo} from "@features/match/hook/useCourtInfo.ts"
 import type {Age, Period} from "@shared/types"
+import {Button} from "@shared/components/ui/button.tsx"
+import {chatCreatePost} from "@features/match/api/matchApi.ts"
 
 
 export function MatchDetail() {
+    const navigate = useNavigate()
+
     const {matchId} = useParams()
     const {matchInfo, isLoading, error} = useMatchInfo(matchId)
     const {courtInfo, isLoading: isCourtLoading, error: isCourtError} = useCourtInfo(matchInfo?.courtId)
     const {profile, isLoading: isProfileLoading, error: isProfileError} = useProfile(matchInfo?.hostId)
+    const {userStatus} = useAuth()
 
     if (error || isCourtError || isProfileError || matchInfo === null || courtInfo === null || profile === null) {
         return <ImgLoader imgType={"404_error"} imgSize={"full"}/>
@@ -61,7 +66,15 @@ export function MatchDetail() {
         return `${fee.toLocaleString()}원`
     }
 
-    // TODO: add chat button if host != user
+    const toChat = async () => {
+        try {
+            const {chatRoomId} = await chatCreatePost({matchId:matchInfo.matchId})
+            navigate(`/chat/${chatRoomId}`)
+        } catch (error) {
+            console.error(error)
+            navigate('/error')
+        }
+    }
 
     return (
         <div className='flex flex-col gap-md'>
@@ -98,6 +111,17 @@ export function MatchDetail() {
             <div className='text-body pb-lg'>
                 {matchInfo.description}
             </div>
+            {
+                userStatus?.userId !== matchInfo.hostId ?
+                <div
+                    className='flex w-full justify-end sticky bottom-0 z-50'
+                >
+                    <Button
+                        size={'lg'}
+                        onClick={toChat}
+                    >채팅하기</Button>
+                </div> : <></>
+            }
         </div>
     )
 }

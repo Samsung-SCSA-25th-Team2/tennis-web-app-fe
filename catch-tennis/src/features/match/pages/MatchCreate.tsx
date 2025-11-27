@@ -150,7 +150,7 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
                 const body =
                 {
                     startDateTime: setHours(date, timeRange.start).toISOString(),
-                        endDateTime: setHours(date, timeRange.end).toISOString(),
+                    endDateTime: setHours(date, timeRange.end).toISOString(),
                     gameType,
                     courtId: parseInt(courtId),
                     period: periods,

@@ -101,9 +101,32 @@ export interface MatchCreateResult {
 
 export async function matchCreatePost(body: MatchCreateBody): Promise<MatchCreateResult> {
     return api.post<MatchCreateResult>(
-        '/v1/me/matches/create',
+        '/v1/me/matches',
         body,
         {
             useJWT:true,
         })
+}
+
+export interface ChatCreateBody {
+    matchId: number
+}
+
+export interface ChatCreateResult {
+    chatRoomId: string
+    matchId: string
+    hostId: string
+    hostNickname: string
+    hostImgUrl: string
+    guestId: string
+    guestNickname: string
+    guestImgUrl: string
+}
+
+export async function chatCreatePost(body: ChatCreateBody): Promise<ChatCreateResult> {
+    return api.post<ChatCreateResult>(
+        '/v1/chat/rooms',
+        body,
+        {useJWT:true}
+    )
 }
