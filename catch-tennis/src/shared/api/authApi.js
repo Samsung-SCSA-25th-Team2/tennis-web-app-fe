@@ -22,22 +22,10 @@ export async function login(body) {
 }
 
 /**
- * 토큰 재발급
- */
-export async function refresh() {
-    const refreshToken = localStorage.getItem('refreshToken')
-    if (!refreshToken) {
-        return Promise.reject(new Error('No refresh token'))
-    }
-    return api.post('/v1/auth/refresh', {refreshToken})
-}
-
-/**
  * 로그아웃
  */
 export async function logout() {
-    const refreshToken = localStorage.getItem('refreshToken')
-    return api.post('/v1/auth/logout', { refreshToken })
+    return api.post('/v1/auth/logout')
 }
 
 /**

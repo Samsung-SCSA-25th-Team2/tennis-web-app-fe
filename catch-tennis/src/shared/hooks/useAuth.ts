@@ -23,7 +23,6 @@ export function useAuth() {
     const clearUser = useCallback(() => {
         setUserStatus(null)
         localStorage.removeItem('accessToken')
-        localStorage.removeItem('refreshToken')
     }, [])
 
     return {userStatus, isLoading, error, clearUser}
