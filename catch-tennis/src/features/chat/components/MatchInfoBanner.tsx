@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import {useNavigate} from 'react-router-dom'
 import {getMatchInfo} from '@features/match/api/matchApi'
 import {getCourtInfo} from '@features/match/api/matchApi'
 import type {MatchInfo, CourtInfo} from '@features/match/common'
@@ -12,10 +13,16 @@ interface MatchInfoBannerProps {
  * 채팅방 상단에 매치 정보를 표시하는 배너 컴포넌트
  */
 export function MatchInfoBanner({matchId}: MatchInfoBannerProps) {
+    const navigate = useNavigate()
     const [matchInfo, setMatchInfo] = useState<MatchInfo | null>(null)
     const [courtInfo, setCourtInfo] = useState<CourtInfo | null>(null)
     const [loading, setLoading] = useState(true)
     const [isExpanded, setIsExpanded] = useState(true) // 토글 상태
+
+    // 매치 상세 페이지로 이동
+    const handleNavigateToMatch = () => {
+        navigate(`/match/${matchId}`)
+    }
 
     useEffect(() => {
         const fetchMatchInfo = async () => {
@@ -89,11 +96,8 @@ export function MatchInfoBanner({matchId}: MatchInfoBannerProps) {
         <div className="p-4 bg-surface border-b border-border">
             {/* 카드 형태의 매치 정보 */}
             <div className="bg-gradient-to-r from-primary/15 to-primary/5 rounded-xl shadow-sm border border-primary/20">
-                {/* 헤더 (항상 표시, 클릭 시 토글) */}
-                <button
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="w-full p-4 flex items-center justify-between hover:bg-primary/5 transition-colors rounded-xl"
-                >
+                {/* 헤더 (항상 표시) */}
+                <div className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <span className="text-base font-bold text-text-title">
                             {getGametypeLabel(matchInfo.gameType)}
@@ -106,11 +110,28 @@ export function MatchInfoBanner({matchId}: MatchInfoBannerProps) {
                             {matchInfo.status === 'RECRUITING' ? '모집중' : '종료'}
                         </span>
                     </div>
-                    {/* 토글 아이콘 */}
-                    <span className={`text-text-muted transition-transform ${isExpanded ? 'rotate-180' : ''}`}>
-                        ▼
-                    </span>
-                </button>
+
+                    {/* 버튼 그룹 */}
+                    <div className="flex items-center gap-3">
+                        {/* 상세보기 버튼 */}
+                        <button
+                            onClick={handleNavigateToMatch}
+                            className="text-xs px-3 py-1.5 bg-neutral-300 text-text-body rounded-full hover:opacity-90 transition-opacity font-medium"
+                        >
+                            상세보기
+                        </button>
+
+                        {/* 토글 버튼 */}
+                        <button
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            className="p-1.5 hover:bg-primary/10 rounded-full transition-colors"
+                        >
+                            <span className={`text-text-muted text-sm transition-transform inline-block ${isExpanded ? 'rotate-180' : ''}`}>
+                                ▼
+                            </span>
+                        </button>
+                    </div>
+                </div>
 
                 {/* 상세 정보 (토글 가능) */}
                 {isExpanded && (
