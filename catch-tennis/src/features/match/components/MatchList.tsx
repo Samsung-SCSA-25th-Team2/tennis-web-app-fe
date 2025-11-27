@@ -51,7 +51,11 @@ export function MatchList({
     }, [hasNext, loading, loadingMore, doLoadMore])
 
     if (loading) {
-        return <ImgLoader imgType={'loading'} imgSize={'full'}/>
+        return (
+            <div className="flex h-64 items-center justify-center">
+                <Spinner size="lg" />
+            </div>
+        )
     }
     if (error && matches.length === 0) {
         return <ImgLoader imgType={'500_error'} imgSize={'full'} />
@@ -68,8 +72,8 @@ export function MatchList({
             })}
 
             {loadingMore && (
-                <div className="flex justify-center items-center p-4">
-                    <Spinner size="md" />
+                <div className="flex items-center justify-center p-4">
+                    <Spinner size="sm" />
                 </div>
             )}
             {hasNext && <div ref={sentinelRef} className='h-1'/>}

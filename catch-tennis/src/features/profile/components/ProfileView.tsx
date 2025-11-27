@@ -1,5 +1,5 @@
 import {useRef, type RefObject} from 'react'
-import {ImgLoader} from '@shared/components/atoms/ImgLoader'
+import {Spinner} from '@shared/components/atoms'
 import EditIcon from '@/assets/icons/edit.svg?react'
 import StarIcon from '@/assets/icons/star.svg?react'
 import type {ProfileData} from "@shared/types/common.ts"
@@ -64,9 +64,9 @@ export function ProfileView({
     // --- 로딩 상태 ---
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center justify-center h-full">
-                <ImgLoader imgType="loading" imgSize="full" />
-                <p className="text-body text-text-muted mt-md">로딩 중...</p>
+            <div className="flex h-full flex-col items-center justify-center gap-4">
+                <Spinner size="lg" />
+                <p className="text-body text-text-muted">로딩 중...</p>
             </div>
         )
     }

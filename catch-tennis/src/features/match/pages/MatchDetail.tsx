@@ -2,7 +2,7 @@ import {useNavigate, useParams} from "react-router-dom"
 import {differenceInCalendarDays} from "date-fns"
 
 import {useAuth, useProfile} from "@shared/hooks"
-import {GoogleMap, ImgLoader} from "@shared/components/atoms"
+import {GoogleMap, ImgLoader, Spinner} from "@shared/components/atoms"
 import {ProfileCard, CourtCard} from "@shared/components/molecules"
 import {getAgeLabel, getGametypeLabel, getPeriodLabel} from "@shared/utils/toLabel.ts"
 
@@ -22,12 +22,27 @@ export function MatchDetail() {
     const {profile, isLoading: isProfileLoading, error: isProfileError} = useProfile(matchInfo?.hostId)
     const {userStatus} = useAuth()
 
-    if (error || isCourtError || isProfileError || matchInfo === null || courtInfo === null || profile === null) {
+    const noMatchFound = !isLoading && matchInfo === null
+    const noCourtInfo = matchInfo !== null && !isCourtLoading && courtInfo === null
+    const noProfileInfo = matchInfo !== null && !isProfileLoading && profile === null
+
+    if (error || isCourtError || isProfileError || noMatchFound || noCourtInfo || noProfileInfo) {
         return <ImgLoader imgType={"404_error"} imgSize={"full"}/>
     }
 
-    if (isLoading || isCourtLoading || isProfileLoading) {
-        return <ImgLoader imgType={"loading"} imgSize={"full"}/>
+    if (
+        isLoading ||
+        isCourtLoading ||
+        isProfileLoading ||
+        matchInfo === null ||
+        courtInfo === null ||
+        profile === null
+    ) {
+        return (
+            <div className="flex h-72 items-center justify-center">
+                <Spinner size="lg" />
+            </div>
+        )
     }
 
     const toDDay = (date: Date) => {
