@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom"
+import {useNavigate, useSearchParams} from "react-router-dom"
 import type { DateRange } from "react-day-picker"
 
 import { GameType } from "@shared/types"
@@ -7,10 +7,12 @@ import type { TimeRange } from "@shared/types/common.ts"
 import { FilterBar } from "../components/FilterBar.tsx"
 import { MatchList } from "../components/MatchList.tsx"
 import type { SortType, StatusType } from "../common.ts"
+import {Button} from "@shared/components/ui/button.tsx"
 
 
 export function Match() {
     const [searchParams, setSearchParams] = useSearchParams()
+    const navigate = useNavigate()
 
     const gameType = (searchParams.get("gameType") as GameType) || GameType.Singles
     const sortType = (searchParams.get("sortType") as SortType) || "latest"
@@ -55,6 +57,10 @@ export function Match() {
         })
     }
 
+    const toMatchCreate = () => {
+        navigate('/match/create')
+    }
+
     return (
         <div className='flex flex-col gap-md'>
             <div className='sticky top-0 z-10 bg-surface pb-sm border-border border-b-sm'>
@@ -71,13 +77,23 @@ export function Match() {
                     onStatusTypeChange={(val) => updateFilter("statusType", val)}
                 />
             </div>
-            <MatchList
-                gameType={gameType}
-                sortType={sortType}
-                dateRange={dateRange}
-                timeRange={timeRange}
-                statusType={statusType}
-            />
+            <div className='flex-1 overflow-y-auto min-h-0 scrollbar-hide'>
+                <MatchList
+                    gameType={gameType}
+                    sortType={sortType}
+                    dateRange={dateRange}
+                    timeRange={timeRange}
+                    statusType={statusType}
+                />
+            </div>
+            <div
+                className='flex w-full justify-end sticky bottom-0 z-50'
+            >
+                <Button
+                    size={'lg'}
+                    onClick={toMatchCreate}
+                >글쓰기</Button>
+            </div>
         </div>
     )
 }

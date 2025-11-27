@@ -15,7 +15,6 @@ import {matchCreatePost} from "@features/match/api/matchApi.ts"
 
 export function MatchCreate({questionNumber}: { questionNumber: string }) {
 
-    console.log(questionNumber)
     const questionIdx = parseInt(questionNumber) - 1
     const navigate = useNavigate()
 
@@ -171,8 +170,6 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
 
         }
     }
-
-    console.log(`questionIdx: ${questionIdx}`)
 
     return (
         <div className='flex flex-1 flex-col overflow-hidden py-lg items-center'>
