@@ -3,6 +3,8 @@ import SockJS from 'sockjs-client'
 
 // 백엔드 API의 기본 URL을 가져옵니다. STOMP 엔드포인트에 사용됩니다.
 import {baseUrl as BASE_URL} from "@shared/types/common.ts"
+import {isTokenExpired, getUserIdFromToken} from "@shared/utils/jwt"
+import {api} from "@shared/api"
 
 
 // 웹소켓을 통해 수신되는 채팅 메시지의 데이터 구조를 정의합니다.
@@ -29,6 +31,9 @@ export class ChatWebSocketService {
     private subscriptions: Map<number, string> = new Map()
     // 활성 구독 카운트 (모든 구독이 해제되면 연결 종료)
     private activeSubscriptionCount = 0
+    // 재연결 시도 횟수 추적
+    private reconnectAttempts = 0
+    private readonly MAX_RECONNECT_ATTEMPTS = 3
 
     /**
      * ChatWebSocketService의 생성자입니다.
@@ -43,37 +48,86 @@ export class ChatWebSocketService {
             heartbeatOutgoing: 10000, // 서버로 10초마다 하트비트 전송 (백엔드와 동기화)
             debug: (str) => {
                 console.log('[STOMP Debug]', str) // STOMP 내부 디버그 로그 출력
+            },
+            // 재연결 전에 토큰을 갱신하는 콜백
+            beforeConnect: async () => {
+                console.log('[WebSocket] beforeConnect - checking token...')
+                const token = localStorage.getItem('accessToken')
+
+                // 토큰이 만료되었으면 갱신 시도
+                if (isTokenExpired(token)) {
+                    console.log('[WebSocket] Token expired before reconnect, refreshing...')
+                    try {
+                        await api.get('/v1/auth/status', { useJWT: true })
+                        const newToken = localStorage.getItem('accessToken')
+                        if (this.client && newToken) {
+                            this.client.connectHeaders = {
+                                Authorization: `Bearer ${newToken}`
+                            }
+                        }
+                        console.log('[WebSocket] Token refreshed for reconnection')
+                    } catch (error) {
+                        console.error('[WebSocket] Failed to refresh token before reconnect:', error)
+                        // 토큰 갱신 실패 시 재연결 중단
+                        this.reconnectAttempts++
+                        if (this.reconnectAttempts >= this.MAX_RECONNECT_ATTEMPTS) {
+                            console.error('[WebSocket] Max reconnect attempts reached, redirecting to login...')
+                            window.location.href = '/login'
+                        }
+                        throw error
+                    }
+                }
             }
         })
     }
 
     /**
      * 웹소켓 연결을 활성화하고 연결 상태가 될 때까지 기다립니다.
+     * 토큰이 만료된 경우 자동으로 갱신을 시도합니다.
      * @param onConnected 연결 성공 시 실행될 콜백 함수
      * @param onError 연결 또는 STOMP 오류 발생 시 실행될 콜백 함수
      * @returns 연결이 설정될 때 resolve되는 Promise
      */
-    connect(onConnected?: () => void, onError?: (error: Error) => void): Promise<void> {
-        return new Promise((resolve, reject) => {
-            if (!this.client) {
-                const error = new Error('WebSocket client not initialized')
-                onError?.(error)
-                reject(error)
-                return
-            }
+    async connect(onConnected?: () => void, onError?: (error: Error) => void): Promise<void> {
+        if (!this.client) {
+            const error = new Error('WebSocket client not initialized')
+            onError?.(error)
+            throw error
+        }
 
+        // 1. 토큰 유효성 확인 및 갱신
+        let token = localStorage.getItem('accessToken')
+
+        if (isTokenExpired(token)) {
+            console.log('[WebSocket] Token expired, refreshing...')
+            try {
+                // /auth/status API를 호출하면 api.ts의 로직이 자동으로 토큰 갱신
+                await api.get('/v1/auth/status', { useJWT: true })
+                token = localStorage.getItem('accessToken') // 갱신된 토큰 가져오기
+                console.log('[WebSocket] Token refreshed successfully')
+            } catch (error) {
+                console.error('[WebSocket] Token refresh failed:', error)
+                const refreshError = new Error('Failed to refresh token')
+                onError?.(refreshError)
+                throw refreshError
+            }
+        }
+
+        // 2. WebSocket 연결
+        return new Promise((resolve, reject) => {
             // 연결 성공 시 핸들러
-            this.client.onConnect = () => {
+            this.client!.onConnect = () => {
+                console.log('[WebSocket] Connected successfully')
                 this.connected = true
+                this.reconnectAttempts = 0 // 연결 성공 시 재연결 카운터 리셋
                 onConnected?.()
                 resolve()
             }
 
-            // STOMP 프로토콜 수준 오류 핸들러 (예: 잘못된 목적지)
-            this.client.onStompError = (frame) => {
-                // 구독 오류는 연결 실패로 간주하지 않고 로깅만 합니다.
+            // STOMP 프로토콜 수준 오류 핸들러
+            this.client!.onStompError = (frame) => {
                 const errorMsg = frame.headers['message']
-                console.warn('STOMP error:', errorMsg, frame.body)
+                console.warn('[WebSocket] STOMP error:', errorMsg, frame.body)
 
                 // 연결이 아직 완료되지 않았을 때 발생한 오류만 Promise를 reject합니다.
                 if (!this.connected && errorMsg !== 'Invalid destination') {
@@ -83,23 +137,29 @@ export class ChatWebSocketService {
                 }
             }
 
-            // 기본 웹소켓 연결 오류 핸들러
-            this.client.onWebSocketError = (event) => {
+            // 웹소켓 연결 오류 핸들러
+            this.client!.onWebSocketError = (event) => {
                 const error = new Error('WebSocket connection error')
-                console.error('WebSocket error:', event)
+                console.error('[WebSocket] Connection error:', event)
                 onError?.(error)
             }
 
-            // 로컬 저장소에서 JWT 토큰을 가져와 연결 헤더에 추가합니다. (인증에 사용)
-            const token = localStorage.getItem('accessToken')
+            // 최신 토큰으로 연결 헤더 설정
             if (token) {
-                this.client.connectHeaders = {
+                this.client!.connectHeaders = {
                     Authorization: `Bearer ${token}`
                 }
+                console.log('[WebSocket] Connecting with fresh token...')
+            } else {
+                const error = new Error('No access token available')
+                console.error('[WebSocket]', error.message)
+                onError?.(error)
+                reject(error)
+                return
             }
 
-            // STOMP 클라이언트를 활성화하고 연결 프로세스를 시작합니다.
-            this.client.activate()
+            // STOMP 클라이언트 활성화
+            this.client!.activate()
         })
     }
 
@@ -191,18 +251,7 @@ export class ChatWebSocketService {
         }
 
         const token = localStorage.getItem('accessToken')
-
-        // JWT 토큰에서 발신자 사용자 ID를 추출합니다.
-        let userId: number | null = null
-        if (token) {
-            try {
-                // 토큰 페이로드(두 번째 부분)를 Base64 디코딩 후 JSON 파싱
-                const payload = JSON.parse(atob(token.split('.')[1]))
-                userId = parseInt(payload.sub) // 'sub' 클레임에서 사용자 ID 추출
-            } catch (error) {
-                console.error('Failed to parse JWT token:', error)
-            }
-        }
+        const userId = getUserIdFromToken(token)
 
         if (!userId) {
             throw new Error('User ID not found in token')
