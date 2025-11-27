@@ -98,6 +98,8 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
             try {
                 setLoading(true)
                 const response = await getMyMatches(undefined, 5)
+                console.log('Initial matches loaded:', response.matches) // 디버깅용
+                response.matches.forEach(m => console.log(`Match ${m.matchId} status:`, m.status))
                 setMatches(response.matches)
                 setNextCursor(response.nextCursor)
                 setHasNext(response.hasNext)
@@ -178,11 +180,15 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
     }
 
     const getStatusLabel = (status: string) => {
-        return status === 'RECRUITING' ? '모집중' : '종료됨'
+        console.log('Match status:', status) // 디버깅용
+        // 대소문자 구분 없이 비교
+        const normalizedStatus = status?.toUpperCase()
+        return normalizedStatus === 'RECRUITING' || normalizedStatus === 'OPEN' ? '모집중' : '종료됨'
     }
 
     const getStatusColor = (status: string) => {
-        return status === 'RECRUITING'
+        const normalizedStatus = status?.toUpperCase()
+        return normalizedStatus === 'RECRUITING' || normalizedStatus === 'OPEN'
             ? 'bg-success/20 text-success border-success/30'
             : 'bg-text-muted/20 text-text-muted border-text-muted/30'
     }
