@@ -18,6 +18,7 @@
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@stomp/stompjs": "^7.2.1",
     "@tailwindcss/vite": "^4.1.17",
+    "@vis.gl/react-google-maps": "^1.7.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

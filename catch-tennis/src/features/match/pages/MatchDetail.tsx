@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom"
 
 import {useAuth, useProfile} from "@shared/hooks"
-import {ImgLoader} from "@shared/components/atoms"
+import {GoogleMap, ImgLoader} from "@shared/components/atoms"
 import {ProfileCard, CourtCard} from "@shared/components/molecules"
 import {getAgeLabel, getGametypeLabel, getPeriodLabel} from "@shared/utils/toLabel.ts"
 
@@ -111,6 +111,9 @@ export function MatchDetail() {
             <div className='text-body pb-lg'>
                 {matchInfo.description}
             </div>
+            <>
+                <GoogleMap latitude={courtInfo.latitude} longitude={courtInfo.longitude}/>
+            </>
             {
                 userStatus?.userId !== matchInfo.hostId ?
                 <div
