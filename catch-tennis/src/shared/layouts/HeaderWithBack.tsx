@@ -1,5 +1,5 @@
 import {useNavigate} from "react-router-dom"
-import {ArrowBigLeftIcon, ArrowLeft, SendToBackIcon} from "lucide-react"
+import {ArrowLeft} from "lucide-react"
 
 
 export const HeaderWithBack = () => {
