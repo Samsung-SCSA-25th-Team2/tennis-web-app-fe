@@ -1,5 +1,4 @@
-import {useEffect, useState} from "react"
-
+import {useEffect, useState, useCallback} from "react"
 import {getAuthStatus} from "@shared/api/authApi.ts"
 import type {UserStatus} from "@shared/types/common.ts"
 
@@ -21,5 +20,11 @@ export function useAuth() {
 
     }, [])
 
-    return {userStatus, isLoading, error}
+    const clearUser = useCallback(() => {
+        setUserStatus(null);
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+    }, []);
+
+    return {userStatus, isLoading, error, clearUser}
 }

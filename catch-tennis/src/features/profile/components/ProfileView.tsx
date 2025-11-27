@@ -19,6 +19,7 @@ interface ProfileViewProps {
     onCancel?: () => void
     onSave?: () => void
     onDelete?: () => void
+    onLogout?: () => void
     onImageChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
     onFieldUpdate?: (field: keyof ProfileData, value: string) => void
     nicknameValidation?: {
@@ -26,6 +27,7 @@ interface ProfileViewProps {
         isAvailable: boolean | null
         error: string | null
     }
+    scrollContainerRef?: RefObject<HTMLDivElement | null>
 }
 
 export function ProfileView({
@@ -41,12 +43,13 @@ export function ProfileView({
     onCancel,
     onSave,
     onDelete,
+    onLogout,
     onImageChange,
     onFieldUpdate,
-    nicknameValidation
+    nicknameValidation,
+    scrollContainerRef
 }: ProfileViewProps) {
     const fileInputRef = useRef<HTMLInputElement>(null)
-    const scrollContainerRef = useRef<HTMLDivElement>(null)
 
     // 수정 중일 때는 편집된 프로필 데이터를, 아니면 원본 프로필을 표시
     const displayProfile = editedProfile || profile
@@ -299,7 +302,7 @@ export function ProfileView({
                 </div>
 
                 {/* --- 3. 내가 만든 매치 목록 (본인 프로필일 때만 표시) --- */}
-                {isOwner && <MyMatchList scrollContainerRef={scrollContainerRef} />}
+                {isOwner && scrollContainerRef && <MyMatchList scrollContainerRef={scrollContainerRef} />}
 
                 {/* --- 4. 리뷰 섹션 (준비 중) --- */}
                 <div className="px-4 mt-6">
@@ -348,9 +351,16 @@ export function ProfileView({
                     </div>
                 </div>
 
-                {/* --- 4. 회원 탈퇴 버튼 --- */}
-                {isEditing && isOwner && onDelete && (
-                    <div className="mt-8 pb-8 px-4 flex justify-center">
+                <div className="mt-8 pb-8 px-4 flex justify-center">
+                    {!isEditing && isOwner && onLogout && (
+                        <button
+                            onClick={onLogout}
+                            className="text-xs text-text-muted hover:text-error transition-colors underline"
+                        >
+                            로그아웃
+                        </button>
+                    )}
+                    {isEditing && isOwner && onDelete && (
                         <button
                             onClick={() => onDelete()}
                             disabled={isDeleting}
@@ -358,8 +368,8 @@ export function ProfileView({
                         >
                             {isDeleting ? '삭제 중...' : '회원 탈퇴'}
                         </button>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     )
