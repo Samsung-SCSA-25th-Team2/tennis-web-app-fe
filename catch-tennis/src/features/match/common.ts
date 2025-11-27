@@ -77,7 +77,7 @@ export const getStatusTypeLabel = (statusType: StatusType) => {
         case "RECRUITING":
             return "모집중"
         case "COMPLETED":
-            return "종료됨"
+            return "마감"
         case "RECRUITING,COMPLETED":
             return "모두"
     }

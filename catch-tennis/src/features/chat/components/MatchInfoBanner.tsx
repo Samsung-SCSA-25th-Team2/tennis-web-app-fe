@@ -47,11 +47,13 @@ export function MatchInfoBanner({matchId}: MatchInfoBannerProps) {
     }, [matchId])
 
     const getStatusLabel = (status: string) => {
-        return status === 'OPEN' ? '모집중' : '종료됨'
+        const normalizedStatus = status?.toUpperCase()
+        return normalizedStatus === 'RECRUITING' || normalizedStatus === 'OPEN' ? '모집중' : '마감'
     }
 
     const getStatusColor = (status: string) => {
-        return status === 'OPEN'
+        const normalizedStatus = status?.toUpperCase()
+        return normalizedStatus === 'RECRUITING' || normalizedStatus === 'OPEN'
             ? 'bg-success/20 text-success border-success/30'
             : 'bg-text-muted/20 text-text-muted border-text-muted/30'
     }
