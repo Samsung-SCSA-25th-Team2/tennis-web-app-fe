@@ -59,3 +59,14 @@ export async function markChatRoomAsRead(chatRoomId: number) {
         {useJWT: true}
     )
 }
+
+/**
+ * Get the number of chat rooms for a specific match
+ * Public API - no authentication required
+ */
+export async function getChatRoomCountByMatch(matchId: number) {
+    return api.get<{matchId: number, chatRoomCount: number}>(
+        `/v1/chat/rooms/count/match/${matchId}`,
+        {useJWT: false}
+    )
+}

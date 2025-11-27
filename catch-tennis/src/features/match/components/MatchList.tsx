@@ -1,7 +1,7 @@
 import {type HTMLAttributes, useEffect, useRef} from "react"
 import type {DateRange} from "react-day-picker"
 
-import {ImgLoader} from "@shared/components/atoms"
+import {ImgLoader, Spinner} from "@shared/components/atoms"
 import type {TimeRange, GameType} from "@shared/types"
 import {useInfiniteMatchList} from "@features/match/hook/useInfiniteMatchList.ts"
 
@@ -51,7 +51,11 @@ export function MatchList({
     }, [hasNext, loading, loadingMore, doLoadMore])
 
     if (loading) {
-        return <ImgLoader imgType={'loading'} imgSize={'full'}/>
+        return (
+            <div className="flex h-64 items-center justify-center">
+                <Spinner size="lg" />
+            </div>
+        )
     }
     if (error && matches.length === 0) {
         return <ImgLoader imgType={'500_error'} imgSize={'full'} />
@@ -62,15 +66,21 @@ export function MatchList({
 
 
     return (
-        <div className="flex flex-1 flex-col overflow-y-auto min-h-0 gap-sm">
+        <div className="flex flex-1 flex-col overflow-y-auto min-h-0 gap-4 p-4">
             {matches.map((match, i) => {
                 return <MatchCard key={i} matchInfo={match}/>
             })}
 
-            {loadingMore && <span className='text-caption'>로딩중...</span> }
+            {loadingMore && (
+                <div className="flex items-center justify-center p-4">
+                    <Spinner size="sm" />
+                </div>
+            )}
             {hasNext && <div ref={sentinelRef} className='h-1'/>}
             {!hasNext && matches.length > 0 && (
-                <span className='text-caption'>모든 매치를 조회했습니다.</span>
+                <div className="text-center py-4">
+                    <span className='text-sm text-text-muted'>모든 매치를 조회했습니다.</span>
+                </div>
             )}
         </div>
     )

@@ -1,6 +1,8 @@
 import {useNavigate} from "react-router-dom"
 import {useRef} from "react"
+
 import {useAuth, useProfile} from "@shared/hooks"
+import {Spinner} from "@shared/components/atoms"
 import {ProfileView} from '../components/ProfileView'
 import {useProfileEdit} from '../hooks/useProfileEdit'
 import {logout} from "@shared/api/authApi"
@@ -40,7 +42,11 @@ export function Profile() {
     }
 
     if (isLoading || !profile) {
-        return null
+        return (
+            <div className="flex h-full items-center justify-center">
+                <Spinner size="xl" />
+            </div>
+        )
     }
 
     if (error) {

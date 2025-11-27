@@ -4,6 +4,7 @@ import {getMyMatches} from '../api/myMatchesApi'
 import {getCourtInfo, toggleMatchStatus, deleteMatch} from '@features/match/api/matchApi'
 import type {MatchInfo, CourtInfo} from '@features/match/common'
 import {getGametypeLabel} from '@shared/utils/toLabel'
+import {Spinner} from '@shared/components/atoms'
 
 interface MyMatchListProps {
     scrollContainerRef: RefObject<HTMLDivElement | null>
@@ -98,8 +99,6 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
             try {
                 setLoading(true)
                 const response = await getMyMatches(undefined, 5)
-                console.log('Initial matches loaded:', response.matches) // 디버깅용
-                response.matches.forEach(m => console.log(`Match ${m.matchId} status:`, m.status))
                 setMatches(response.matches)
                 setNextCursor(response.nextCursor)
                 setHasNext(response.hasNext)
@@ -180,10 +179,9 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
     }
 
     const getStatusLabel = (status: string) => {
-        console.log('Match status:', status) // 디버깅용
         // 대소문자 구분 없이 비교
         const normalizedStatus = status?.toUpperCase()
-        return normalizedStatus === 'RECRUITING' || normalizedStatus === 'OPEN' ? '모집중' : '종료됨'
+        return normalizedStatus === 'RECRUITING' || normalizedStatus === 'OPEN' ? '모집중' : '마감'
     }
 
     const getStatusColor = (status: string) => {
@@ -335,9 +333,7 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
                                                 <span>{getStatusLabel(match.status)}</span>
                                                 <span className="ml-1.5 text-base">▼</span>
                                             </button>
-                                            {isUpdating && (
-                                                <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                                            )}
+                                            {isUpdating && <Spinner size="sm" />}
                                         </div>
                                         {openDropdownId === match.matchId && (
                                             <div className="absolute right-0 mt-2 w-28 bg-white rounded-md shadow-lg z-10" onClick={e => e.stopPropagation()}>
@@ -363,7 +359,7 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
                                                             }}
                                                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                         >
-                                                            종료됨
+                                                            마감
                                                         </a>
                                                     </li>
                                                     <li>
@@ -389,7 +385,7 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
 
                         {loadingMore && (
                             <div className="flex justify-center items-center p-4">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                                <Spinner size="md" />
                             </div>
                         )}
                     </div>
