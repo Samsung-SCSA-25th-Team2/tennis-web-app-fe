@@ -1,7 +1,7 @@
 import {useEffect, useState, useRef} from "react"
 import {useNavigate, useSearchParams} from "react-router-dom"
 
-import {getAuthStatus} from "@shared/api/authApi.js"
+import {getAuthStatus} from "@shared/api/authApi"
 
 export function useProcessLogin() {
     const [searchParams] = useSearchParams()

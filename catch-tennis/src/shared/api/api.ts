@@ -18,6 +18,7 @@ let refreshPromise: Promise<string> | null = null
  * - 실패 시 에러를 던짐
  */
 async function refreshAccessToken(): Promise<string> {
+    console.log("[Token Refresh] 토큰 갱신 시작")
     const response = await fetch(`${API_BASE_URL}/v1/auth/refresh`, {
         method: "POST",
         credentials: "include", // 리프레시 토큰이 들어있는 쿠키 전송
@@ -26,14 +27,18 @@ async function refreshAccessToken(): Promise<string> {
         },
     })
 
+    console.log(`[Token Refresh] 응답 상태: ${response.status}`)
+
     if (!response.ok) {
         // 4xx, 5xx 등의 상태 코드인 경우
+        console.error("[Token Refresh] 토큰 갱신 실패")
         throw new Error("Token refresh failed")
     }
 
     const data = (await response.json()) as RefreshTokenResponse
     // 새 액세스 토큰 저장
     localStorage.setItem("accessToken", data.accessToken)
+    console.log("[Token Refresh] 토큰 갱신 성공")
     return data.accessToken
 }
 
@@ -122,6 +127,7 @@ async function apiCall<T = unknown>(
 
     // 401 이면서 JWT를 사용하는 요청이면: 액세스 토큰 갱신 후 재시도
     if (response.status === 401 && useJWT) {
+        console.log(`[API] 401 감지 - ${method} ${endpoint}`)
         try {
             // 이미 다른 요청이 갱신을 시작했다면 그 Promise를 재사용
             if (!refreshPromise) {

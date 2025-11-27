@@ -1,13 +1,15 @@
 import {useNavigate} from "react-router-dom"
+import {useRef} from "react"
 import {useAuth, useProfile} from "@shared/hooks"
 import {ProfileView} from '../components/ProfileView'
 import {useProfileEdit} from '../hooks/useProfileEdit'
-import {logout} from "@shared/api/authApi.js"
+import {logout} from "@shared/api/authApi"
 
 export function Profile() {
     const {userStatus, clearUser} = useAuth()
     const {profile, isLoading, error} = useProfile(userStatus?.userId)
     const navigate = useNavigate()
+    const scrollContainerRef = useRef<HTMLDivElement>(null)
 
     const {
         isEditing,
@@ -61,6 +63,7 @@ export function Profile() {
             onImageChange={handleImageChange}
             onFieldUpdate={updateField}
             nicknameValidation={nicknameValidation}
+            scrollContainerRef={scrollContainerRef}
         />
     )
 }
