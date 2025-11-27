@@ -1,5 +1,5 @@
-import {Button, InputText} from "@shared/components/atoms"
-import {Button as NewButton} from "@shared/components/ui/button.tsx"
+import {Button} from "@shared/components/ui/button.tsx"
+import {Input} from "@shared/components/ui/input.tsx"
 
 import {useCompleteProfile} from "../hooks/useCompleteProfile.tsx"
 
@@ -16,9 +16,9 @@ export function ProfileComplete() {
     return (
         <>
             <div className="flex flex-col h-full">
-                <div className="flex-1 flex flex-col justify-center items-center gap-md">
+                <div className="flex-1 flex flex-col justify-center items-center gap-lg">
 
-                    <span className="text-heading-h1 text-center">{question.heading}</span>
+                    <span className="text-heading-h2 text-text-title text-center">{question.heading}</span>
                     {
                         question.type === 'button' && question.options
                         && (
@@ -26,8 +26,8 @@ export function ProfileComplete() {
                                 {
                                     question.options.map((option) => (
                                         <Button
-                                            variant={selectedValue === option.value ? 'primary' : 'inactive'}
-                                            buttonSize='sm'
+                                            variant={selectedValue === option.value ? 'default' : 'outline'}
+                                            size={'lg'}
                                             key={option.value}
                                             onClick={() => setSelectedValue(option.value)}
                                         >
@@ -42,34 +42,28 @@ export function ProfileComplete() {
                     {
                         question.type === 'input'
                         && (
-                            <InputText
-                                inputSize="big"
-                                value={selectedValue}
-                                type="text"
-                                onChange={(e) => setSelectedValue(e.target.value)}
-                                placeholder={question.placeholder}
-                                autoFocus
-                            />
+                            <div className='flex flex-col'>
+                                <Input
+                                    className='text-center min-h-[40px]'
+                                    value={selectedValue}
+                                    onChange={(e)=>setSelectedValue(e.target.value)}
+                                    placeholder={question.placeholder}
+                                    type='text'
+                                    maxLength={30}
+                                />
+                                <span className='text-right text-caption text-text-muted'
+                                >{selectedValue.length}/30</span>
+                            </div>
                         )
                     }
                 </div>
 
 
-                <NewButton
-                    variant={selectedValue.length > 0 ? 'default':'outline'}
-                    size={"lg"}
-                >
-                    {
-                        isSubmitting ? '제출중...' : '넘어가기'
-                    }
-
-                </NewButton>
                 <Button
-                    variant={selectedValue.length > 0 ? 'primary' : 'inactive'}
-                    onClick={handleNext}
-                    buttonSize='full'
+                    variant={selectedValue.length > 0 ? 'default':'outline'}
                     disabled={selectedValue.length == 0 || isSubmitting}
-                    type="submit"
+                    size={"lg"}
+                    onClick={handleNext}
                 >
                     {
                         isSubmitting ? '제출중...' : '넘어가기'

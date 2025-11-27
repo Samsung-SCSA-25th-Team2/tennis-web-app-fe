@@ -101,7 +101,7 @@ export interface MatchCreateResult {
 
 export async function matchCreatePost(body: MatchCreateBody): Promise<MatchCreateResult> {
     return api.post<MatchCreateResult>(
-        '/v1/me/matches/create',
+        '/v1/me/matches',
         body,
         {
             useJWT:true,
