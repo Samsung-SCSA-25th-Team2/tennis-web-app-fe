@@ -53,7 +53,7 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
         <CourtSearch courtId={courtId} onCourtIdChange={setCourtId}/>,
         <div className='flex flex-1 flex-col justify-center items-center max-w-[300px]'>
             <div className='text-heading-h2 text-text-title pb-lg'>날짜와 시간을 선택해 주세요</div>
-            <DatePicker mode={'single'} date={date} onDateChange={setDate}/>
+            <DatePicker mode={'single'} date={date} onDateChange={setDate} fromCurrentDate={true}/>
             <TimePicker border={false} value={timeRange} onTimeRangeChange={setTimeRange}/>
         </div>,
         <div className='flex flex-1 flex-col justify-center gap-lg'>
