@@ -1,3 +1,5 @@
 export {ProfileCard} from './ProfileCard.tsx'
 export {CourtCard} from './CourtCard.tsx'
 export {Stepper} from './Stepper.tsx'
+export { LocationPermissionPrompt } from './LocationPermissionPrompt'
+export type { LocationPermissionPromptProps } from './LocationPermissionPrompt'

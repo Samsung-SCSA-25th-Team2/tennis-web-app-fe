@@ -1,3 +1,4 @@
+import {useEffect, useState} from "react"
 import {useNavigate, useSearchParams} from "react-router-dom"
 import type { DateRange } from "react-day-picker"
 
@@ -8,14 +9,58 @@ import { FilterBar } from "../components/FilterBar.tsx"
 import { MatchList } from "../components/MatchList.tsx"
 import type { SortType, StatusType } from "../common.ts"
 import {Button} from "@shared/components/ui/button.tsx"
+import {useGeolocation} from "@shared/hooks"
+import {LocationPermissionPrompt} from "@shared/components/molecules"
 
 
 export function Match() {
+    const {coordinates, loading, permission, hasLocation, requestLocation} = useGeolocation()
+    const [showPrompt, setShowPrompt] = useState(false)
+    const [dismissedForSortType, setDismissedForSortType] = useState<SortType | null>(null)
     const [searchParams, setSearchParams] = useSearchParams()
     const navigate = useNavigate()
 
-    const gameType = (searchParams.get("gameType") as GameType) || GameType.Singles
     const sortType = (searchParams.get("sortType") as SortType) || "latest"
+
+    // Derive promptDismissed: only dismissed if user dismissed for this specific sortType
+    const promptDismissed = dismissedForSortType === sortType
+
+    // Save coordinates to localStorage when available and sortType starts with 'loc'
+    useEffect(() => {
+        if (coordinates && sortType.startsWith('loc')) {
+            localStorage.setItem('catch-tennis-lat', coordinates.latitude.toString())
+            localStorage.setItem('catch-tennis-lng', coordinates.longitude.toString())
+        }
+    }, [coordinates, sortType])
+
+    // Request location when user selects location-based sorting
+    useEffect(() => {
+        if (sortType.startsWith('loc') && !hasLocation && permission === 'granted') {
+            requestLocation()
+        }
+    }, [sortType, hasLocation, permission, requestLocation])
+
+    // Show location prompt for location-based sorting
+    useEffect(() => {
+        console.log(`permission: ${permission}, sortType: ${sortType}`)
+        console.log(`promptDismissed: ${promptDismissed}, hasLocation: ${hasLocation}`)
+        if (sortType.startsWith('loc') && permission === 'prompt' && !promptDismissed && !hasLocation) {
+            const timer = setTimeout(()=>setShowPrompt(true), 1)
+            return () => clearTimeout(timer)
+        }
+    }, [permission, hasLocation, sortType, promptDismissed])
+
+    const handleRequestLocation = async () => {
+        await requestLocation()
+        setShowPrompt(false)
+    }
+
+    const handleDismissPrompt = () => {
+        setShowPrompt(false)
+        setDismissedForSortType(sortType)
+    }
+
+    const gameType = (searchParams.get("gameType") as GameType) || GameType.Singles
     const statusType = (searchParams.get("statusType") as StatusType) || "RECRUITING"
 
     const dateRange: DateRange = {
@@ -77,6 +122,17 @@ export function Match() {
                     onStatusTypeChange={(val) => updateFilter("statusType", val)}
                 />
             </div>
+
+            {showPrompt && (
+                <div className='px-md'>
+                    <LocationPermissionPrompt
+                        onRequestPermission={handleRequestLocation}
+                        onDismiss={handleDismissPrompt}
+                        loading={loading}
+                    />
+                </div>
+            )}
+
             <div className='flex-1 overflow-y-auto min-h-0 scrollbar-hide'>
                 <MatchList
                     gameType={gameType}

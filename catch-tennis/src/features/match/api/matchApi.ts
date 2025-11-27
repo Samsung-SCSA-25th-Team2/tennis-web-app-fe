@@ -37,8 +37,11 @@ export async function searchMatches(params: SearchMatchParams): Promise<MatchLis
 
     if (sortType !== 'latest' && sortType !== 'recommend') {
         sort = 'distance'
-        distanceParams.latitude = 0  // TODO: Get from user location
-        distanceParams.longitude = 0
+
+        const lat = localStorage.getItem('catch-tennis-lat')
+        const lng = localStorage.getItem('catch-tennis-lng')
+        distanceParams.latitude = lat ? parseFloat(lat) : 0
+        distanceParams.longitude = lng ? parseFloat(lng) : 0
 
         if (sortType === 'loc5') distanceParams.radius = 5
         else if (sortType === 'loc10') distanceParams.radius = 10
