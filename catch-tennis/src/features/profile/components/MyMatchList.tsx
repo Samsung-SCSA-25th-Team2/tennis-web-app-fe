@@ -25,10 +25,7 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
     const lastMatchElementRef = useRef<HTMLDivElement>(null)
     const dropdownRef = useRef<HTMLDivElement>(null)
 
-    const openToRecruiting = (status: 'OPEN' | 'CLOSED') => {
-        return status === 'OPEN' ? 'RECRUITING' : 'COMPLETED'
-    }
-    const handleStatusChange = async (matchId: number, currentStatus: 'OPEN' | 'CLOSED', desiredStatus: 'OPEN' | 'CLOSED') => {
+    const handleStatusChange = async (matchId: number, currentStatus: string, desiredStatus: string) => {
         if (currentStatus === desiredStatus) {
             setOpenDropdownId(null)
             return
@@ -38,9 +35,11 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
         setOpenDropdownId(null)
         try {
             await toggleMatchStatus(matchId)
+            // OPEN/CLOSED를 RECRUITING/COMPLETED로 변환
+            const newStatus = desiredStatus === 'OPEN' ? 'RECRUITING' : 'COMPLETED'
             setMatches(prevMatches =>
                 prevMatches.map(m =>
-                    m.matchId === matchId ? {...m, status: openToRecruiting(desiredStatus)} : m
+                    m.matchId === matchId ? {...m, status: newStatus as any} : m
                 )
             )
         } catch (err) {
@@ -179,11 +178,11 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
     }
 
     const getStatusLabel = (status: string) => {
-        return status === 'OPEN' ? '모집중' : '종료됨'
+        return status === 'RECRUITING' ? '모집중' : '종료됨'
     }
 
     const getStatusColor = (status: string) => {
-        return status === 'OPEN'
+        return status === 'RECRUITING'
             ? 'bg-success/20 text-success border-success/30'
             : 'bg-text-muted/20 text-text-muted border-text-muted/30'
     }
@@ -342,7 +341,7 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
                                                             href="#"
                                                             onClick={(e) => {
                                                                 e.preventDefault()
-                                                                handleStatusChange(match.matchId, match.status as 'OPEN' | 'CLOSED', 'OPEN')
+                                                                handleStatusChange(match.matchId, match.status, 'OPEN')
                                                             }}
                                                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                         >
@@ -354,7 +353,7 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
                                                             href="#"
                                                             onClick={(e) => {
                                                                 e.preventDefault()
-                                                                handleStatusChange(match.matchId, match.status as 'OPEN' | 'CLOSED', 'CLOSED')
+                                                                handleStatusChange(match.matchId, match.status, 'CLOSED')
                                                             }}
                                                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                         >
