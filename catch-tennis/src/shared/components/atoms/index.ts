@@ -4,4 +4,5 @@ export { type ImgType, ImgLoader } from './ImgLoader.tsx'
 export { type IconType, IconLoader } from './IconLoader.tsx'
 export { TimePicker } from './TimePicker.tsx'
 export { DatePicker } from './DatePicker.tsx'
+export {GoogleMap} from './GoogleMap.tsx'
 
