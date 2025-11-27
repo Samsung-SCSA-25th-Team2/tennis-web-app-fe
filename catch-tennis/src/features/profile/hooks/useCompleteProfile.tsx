@@ -39,7 +39,7 @@ export function useCompleteProfile() {
                 storage.clearAnswers()
                 navigate('/match')
             } catch (error) {
-                console.log('CompleteProfileError:', error)
+                console.error('CompleteProfileError:', error)
                 navigate('/error')
             } finally {
                 setIsSubmitting(false)

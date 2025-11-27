@@ -46,7 +46,7 @@ export function ProfileComplete() {
                                 <Input
                                     className='text-center min-h-[40px]'
                                     value={selectedValue}
-                                    onChange={(e)=>setSelectedValue(e.target.value)}
+                                    onChange={(e)=>setSelectedValue(e.target.value.trim())}
                                     placeholder={question.placeholder}
                                     type='text'
                                     maxLength={30}

@@ -123,12 +123,12 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
         <div className='flex flex-1 flex-col justify-center gap-lg w-full px-xl'>
             <span className='text-heading-h2 text-text-title text-center'>매칭 소개글을 입력해 주세요</span>
             <div>
-                <div className='text-right text-caption text-text-muted'>{description ? description.length : 0}/1000</div>
+                <div className='text-right text-caption text-text-muted'>{description ? description.length : 0}/255</div>
                 <Textarea
                     className='field-sizing-fixed resize-none'
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    maxLength={1000}
+                    onChange={(e) => setDescription(e.target.value.trim())}
+                    maxLength={255}
                     placeholder={'소개글 입력'}
                 />
             </div>

@@ -37,8 +37,6 @@ export function Stepper({
         }
     }
 
-    console.log(`value: ${value} ${min} ${max} / ${value === max} ${value===min}`)
-
     return (
         <div className='flex justify-between items-center py-sm px-lg gap-md shadow-sm bg-surface-raised border-border border-sm rounded-sm'>
             <span className='text-heading-h4'>{label}</span>
