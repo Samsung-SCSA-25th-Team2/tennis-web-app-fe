@@ -8,6 +8,7 @@ interface SingleDatePickerProps {
     onDateChange?: (date: Date) => void
     placeholder?: string
     disabled?: boolean
+    fromCurrentDate?: boolean
 }
 
 interface DoubleDatePickerProps {
@@ -16,21 +17,25 @@ interface DoubleDatePickerProps {
     onDatesChange?: (dates: Date[]) => void
     placeholder?: string
     disabled?: boolean
+    fromCurrentDate?: boolean
 }
 
 interface RangeDatePickerProps {
     mode: "range"
     dateRange?: DateRange
     onDateRangeChange?: (range: DateRange) => void
+    fromCurrentDate?: boolean
 }
 
 type DataPickerProps = SingleDatePickerProps | DoubleDatePickerProps | RangeDatePickerProps
 
 export function DatePicker(props: DataPickerProps) {
-    const {mode } = props
-    
+    const {mode, fromCurrentDate = false} = props
+
+    const cur = new Date()
 
     const getCalendar = (mode: "single" | "multiple" | "range") => {
+        const disabledDays = fromCurrentDate ? { before: cur } : undefined
         switch (mode) {
             case "single":
             {
@@ -41,6 +46,7 @@ export function DatePicker(props: DataPickerProps) {
                     required={true}
                     selected={date}
                     onSelect={onDateChange}
+                    disabled={disabledDays}
                 />)
             }
             case "multiple":
@@ -52,6 +58,7 @@ export function DatePicker(props: DataPickerProps) {
                     required={true}
                     selected={dates}
                     onSelect={onDatesChange}
+                    disabled={disabledDays}
                     max={2}
                 />)
             }
@@ -64,6 +71,7 @@ export function DatePicker(props: DataPickerProps) {
                     required={true}
                     selected={dateRange}
                     onSelect={onDateRangeChange}
+                    disabled={disabledDays}
                     numberOfMonths={1}
                 />)
 

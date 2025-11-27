@@ -5,6 +5,7 @@ import type {TimeRange, GameType} from "@shared/types"
 import type {MatchInfo, SortType, StatusType} from "@features/match/common.ts"
 import {generateCacheKey, loadFromCache, saveToCache} from "@features/match/utils/matchCache.ts"
 import {searchMatches} from "@features/match/api/matchApi.ts"
+import {toISOStringKR} from "@shared/utils/datetimeFormatter.ts"
 
 
 interface Params {
@@ -29,8 +30,8 @@ export function useInfiniteMatchList(params: Params) {
         gameType,
         sortType,
         statusType,
-        startDate: dateRange.from ? dateRange.from.toDateString() : "",
-        endDate: dateRange.to ? dateRange.to.toDateString() : "",
+        startDate: dateRange.from ? toISOStringKR(dateRange.from) : "",
+        endDate: dateRange.to ? toISOStringKR(dateRange.to) : "",
         startTime: timeRange.start,
         endTime: timeRange.end
     })

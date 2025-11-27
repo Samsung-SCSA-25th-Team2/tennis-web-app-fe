@@ -11,6 +11,7 @@ import {Textarea} from "@shared/components/ui/textarea.tsx"
 
 import {CourtSearch} from "@features/match/components/CourtSearch.tsx"
 import {matchCreatePost} from "@features/match/api/matchApi.ts"
+import {toISOStringKR} from "@shared/utils/datetimeFormatter.ts"
 
 
 export function MatchCreate({questionNumber}: { questionNumber: string }) {
@@ -148,13 +149,13 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
                     throw new Error('Not Valid Request')
                 }
 
-                const startDateTimeString = setHours(date, timeRange.start).toDateString()
-                const endDateTimeString = setHours(date, timeRange.end).toDateString()
+                const startDateTimeString = toISOStringKR(setHours(date, timeRange.start))
+                const endDateTimeString = toISOStringKR(setHours(date, timeRange.end))
 
                 const body =
                 {
-                    startDateTime: startDateTimeString.substring(0, startDateTimeString.length - 1),
-                    endDateTime: endDateTimeString.substring(0, endDateTimeString.length - 1),
+                    startDateTime: startDateTimeString,
+                    endDateTime: endDateTimeString,
                     gameType,
                     courtId: parseInt(courtId),
                     period: periods,

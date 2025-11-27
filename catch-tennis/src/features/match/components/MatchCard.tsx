@@ -40,8 +40,8 @@ export function MatchCard  ({
         return days > 0 ? `D-${days}` : `D+${Math.abs(days)}`
     }
 
-    const formatStartDate = (date: Date) => format(date, "yyyy년 MM월 dd일 hh시", {locale: ko})
-    const formatEndDate = (date: Date) => format(date, "hh시", {locale: ko})
+    const formatStartDate = (date: Date) => format(date, "yyyy년 MM월 dd일 HH시", {locale: ko})
+    const formatEndDate = (date: Date) => format(date, "HH시", {locale: ko})
     const formatDateRangeText = () => {
         return `${formatStartDate(matchInfo.startDateTime)} - ${formatEndDate(matchInfo.endDateTime)}`
     }
@@ -84,7 +84,6 @@ export function MatchCard  ({
                 <div className='flex justify-between text-body'>
                     <div>{getGametypeLabel(matchInfo.gameType)}({formatPlayerCount()})</div>
                     <div>{getEarliestPeriodLabel(matchInfo.period)}</div>
-                    <div>거리</div>
                 </div>
 
             </div>

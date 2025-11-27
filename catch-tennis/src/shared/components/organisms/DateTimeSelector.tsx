@@ -73,7 +73,7 @@ export function DateTimeSelector({
                     align={'start'}
                 >
                     <TimePicker value={timeRange} onTimeRangeChange={onTimeRangeChange}/>
-                    <DatePicker mode={'range'} dateRange={dateRange} onDateRangeChange={onDateRangeChange}/>
+                    <DatePicker mode={'range'} dateRange={dateRange} onDateRangeChange={onDateRangeChange} fromCurrentDate={true}/>
                 </PopoverContent>
             </Popover>
         </div>

@@ -32,6 +32,8 @@ export function MatchDetail() {
     const toDatetimeString = (start: Date, end: Date) => {
         start = new Date(start)
         end = new Date(end)
+        console.log(`start: ${start}`)
+        console.log(`end: ${end}`)
         const year = start.getFullYear()
         const month = start.getMonth() + 1 // getMonth() returns 0-11
         const day = start.getDate()
@@ -75,6 +77,8 @@ export function MatchDetail() {
             navigate('/error')
         }
     }
+
+    console.log(matchInfo)
 
     return (
         <div className='flex flex-col gap-md'>

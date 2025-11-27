@@ -5,6 +5,7 @@ import {type TimeRange, GameType, Period, Age} from "@shared/types"
 import type {CourtInfo, CourtListResult, MatchInfo} from "@features/match/common.ts"
 
 import type {MatchListResult, SortType, StatusType} from "../common"
+import {toISOStringKR} from "@shared/utils/datetimeFormatter.ts"
 
 export async function getMatchInfo(matchId: number | string) {
     return api.get<MatchInfo>(
@@ -48,8 +49,8 @@ export async function searchMatches(params: SearchMatchParams): Promise<MatchLis
 
     let apiParams: Record<string, string | number | boolean | undefined> = {
         sort: sort,
-        startDate: dateRange.from?.toDateString().split("T")[0],
-        endDate: dateRange.to?.toDateString().split("T")[0],
+        startDate: dateRange.from ? toISOStringKR(dateRange.from).split("T")[0] : undefined,
+        endDate: dateRange.to ? toISOStringKR(dateRange.to).split("T")[0] : undefined,
         startTime: timeRange.start,
         endTime: timeRange.end,
         status: statusType,
