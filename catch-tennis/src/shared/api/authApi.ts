@@ -69,9 +69,13 @@ export async function login(body: LoginRequest): Promise<LoginResponse> {
 
 /**
  * 로그아웃
+ * JWT 토큰과 쿠키(Refresh Token)를 포함하여 서버에 로그아웃 요청
  */
 export async function logout(): Promise<LogoutResponse> {
-    return api.post<LogoutResponse>('/v1/auth/logout')
+    return api.post<LogoutResponse>('/v1/auth/logout', undefined, {
+        useJWT: true,
+        useCredentials: true
+    })
 }
 
 /**
