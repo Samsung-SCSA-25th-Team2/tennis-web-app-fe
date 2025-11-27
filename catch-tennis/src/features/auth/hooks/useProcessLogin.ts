@@ -1,7 +1,7 @@
 import {useEffect, useState, useRef} from "react"
 import {useNavigate, useSearchParams} from "react-router-dom"
 
-import {getAuthStatus} from "@shared/api/authApi.ts"
+import {getAuthStatus} from "@shared/api/authApi.js"
 
 export function useProcessLogin() {
     const [searchParams] = useSearchParams()
@@ -25,7 +25,7 @@ export function useProcessLogin() {
             localStorage.setItem("accessToken", token)
 
             try {
-                const { isProfileComplete } = await getAuthStatus()
+                const { isProfileComplete } = await getAuthStatus() as { isProfileComplete: boolean }
 
                 if (isProfileComplete) {
                     navigate("/match", {replace:true})

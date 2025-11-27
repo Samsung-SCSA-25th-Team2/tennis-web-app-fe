@@ -1,8 +1,9 @@
-import {useRef} from 'react'
+import {useRef, type RefObject} from 'react'
 import {ImgLoader} from '@shared/components/atoms/ImgLoader'
 import EditIcon from '@/assets/icons/edit.svg?react'
 import StarIcon from '@/assets/icons/star.svg?react'
 import type {ProfileData} from "@shared/types/common.ts"
+import {MyMatchList} from './MyMatchList'
 
 // --- Props 인터페이스 정의 ---
 interface ProfileViewProps {
@@ -18,6 +19,7 @@ interface ProfileViewProps {
     onCancel?: () => void
     onSave?: () => void
     onDelete?: () => void
+    onLogout?: () => void
     onImageChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
     onFieldUpdate?: (field: keyof ProfileData, value: string) => void
     nicknameValidation?: {
@@ -25,6 +27,7 @@ interface ProfileViewProps {
         isAvailable: boolean | null
         error: string | null
     }
+    scrollContainerRef?: RefObject<HTMLDivElement | null>
 }
 
 export function ProfileView({
@@ -40,9 +43,11 @@ export function ProfileView({
     onCancel,
     onSave,
     onDelete,
+    onLogout,
     onImageChange,
     onFieldUpdate,
-    nicknameValidation
+    nicknameValidation,
+    scrollContainerRef
 }: ProfileViewProps) {
     const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -80,7 +85,7 @@ export function ProfileView({
 
     return (
         <div className="flex flex-col h-full bg-background">
-            <div className="flex-1 overflow-y-auto pb-4">
+            <div className="flex-1 overflow-y-auto pb-4" ref={scrollContainerRef}>
 
                 {/* --- 1. 프로필 헤더 (상단 파란 배경) --- */}
                 <div className="bg-primary pt-8 pb-24 px-4 relative">
@@ -310,7 +315,10 @@ export function ProfileView({
                     </div>
                 </div>
 
-                {/* --- 3. 리뷰 섹션 (준비 중) --- */}
+                {/* --- 3. 내가 만든 매치 목록 (본인 프로필일 때만 표시) --- */}
+                {isOwner && scrollContainerRef && <MyMatchList scrollContainerRef={scrollContainerRef} />}
+
+                {/* --- 4. 리뷰 섹션 (준비 중) --- */}
                 <div className="px-4 mt-6">
                     <div className="bg-surface rounded-lg shadow-md p-5">
                         <div className="flex items-center justify-between mb-4">
@@ -357,18 +365,25 @@ export function ProfileView({
                     </div>
                 </div>
 
-                {/* --- 4. 회원 탈퇴 버튼 --- */}
-                {isEditing && isOwner && onDelete && (
-                    <div className="mt-8 pb-8 px-4 flex justify-center">
+                <div className="mt-8 pb-8 px-4 flex justify-center">
+                    {!isEditing && isOwner && onLogout && (
                         <button
-                            onClick={onDelete}
+                            onClick={onLogout}
+                            className="text-xs text-text-muted hover:text-error transition-colors underline"
+                        >
+                            로그아웃
+                        </button>
+                    )}
+                    {isEditing && isOwner && onDelete && (
+                        <button
+                            onClick={() => onDelete()}
                             disabled={isDeleting}
                             className="text-xs text-text-muted hover:text-error transition-colors underline disabled:opacity-50"
                         >
                             {isDeleting ? '삭제 중...' : '회원 탈퇴'}
                         </button>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     )

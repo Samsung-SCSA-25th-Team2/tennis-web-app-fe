@@ -1,12 +1,11 @@
 import {useNavigate} from "react-router-dom"
-
 import {useAuth, useProfile} from "@shared/hooks"
-
 import {ProfileView} from '../components/ProfileView'
 import {useProfileEdit} from '../hooks/useProfileEdit'
+import {logout} from "@shared/api/authApi.js"
 
 export function Profile() {
-    const {userStatus} = useAuth()
+    const {userStatus, clearUser} = useAuth()
     const {profile, isLoading, error} = useProfile(userStatus?.userId)
     const navigate = useNavigate()
 
@@ -23,6 +22,17 @@ export function Profile() {
         handleImageChange,
         nicknameValidation
     } = useProfileEdit(profile)
+
+    const handleLogout = async () => {
+        try {
+            await logout()
+        } catch (e) {
+            console.error("Logout failed", e)
+        } finally {
+            clearUser()
+            navigate('/login')
+        }
+    }
 
     if (isLoading || !profile) {
         return null
@@ -47,6 +57,7 @@ export function Profile() {
             onCancel={handleCancel}
             onSave={handleSave}
             onDelete={handleDelete}
+            onLogout={handleLogout}
             onImageChange={handleImageChange}
             onFieldUpdate={updateField}
             nicknameValidation={nicknameValidation}
