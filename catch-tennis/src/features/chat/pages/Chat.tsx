@@ -1,7 +1,7 @@
 import {useNavigate} from 'react-router-dom'
 import {ChatRoomItem} from '../components/ChatRoomItem'
 import {useChatRooms} from '../hooks/useChatRooms' // 채팅방 목록 데이터 관리를 위한 커스텀 훅
-import {Button, ImgLoader} from '@shared/components/atoms' // 공통 컴포넌트 임포트
+import {Button, Spinner} from '@shared/components/atoms' // 공통 컴포넌트 임포트
 
 /**
  * 전체 채팅방 목록을 표시하고 관리하는 페이지 컴포넌트입니다.
@@ -24,8 +24,8 @@ export function Chat() {
     // 1. 초기 로딩 상태: 채팅방 데이터가 아직 없고 로딩 중일 때 (최초 로딩)
     if (loading && rooms.length === 0) {
         return (
-            <div className="flex items-center justify-center h-full">
-                <ImgLoader imgType="loading" imgSize="large" /> {/* 큰 로딩 스피너 표시 */}
+            <div className="flex h-full items-center justify-center">
+                <Spinner size="xl" />
             </div>
         )
     }
@@ -77,7 +77,7 @@ export function Chat() {
                 {/* 추가 로딩 중 표시 (이미 채팅방이 로드된 상태에서 '더 보기'를 눌렀을 때) */}
                 {loading && rooms.length > 0 && (
                     <div className="flex justify-center py-4">
-                        <ImgLoader imgType="loading" imgSize="medium" /> {/* 중간 크기 로딩 스피너 표시 */}
+                        <Spinner size="lg" />
                     </div>
                 )}
             </div>

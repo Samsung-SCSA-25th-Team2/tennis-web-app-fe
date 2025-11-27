@@ -1,7 +1,7 @@
 import {useParams, useNavigate} from 'react-router-dom'
 
 import {useAuth, useProfile} from "@shared/hooks"
-import {ImgLoader} from "@shared/components/atoms"
+import {Spinner} from "@shared/components/atoms"
 
 import {ProfileView} from '../components/ProfileView'
 
@@ -12,7 +12,11 @@ export function UserProfile() {
     const {profile, isLoading: isProfileLoading, error: profileError} = useProfile(userId)
 
     if (isLoading || isProfileLoading) {
-        return <ImgLoader imgType={"loading"} imgSize={'full'}/>
+        return (
+            <div className="flex h-full items-center justify-center">
+                <Spinner size="xl" />
+            </div>
+        )
     }
     if (error || profileError) {
         navigate('/error')

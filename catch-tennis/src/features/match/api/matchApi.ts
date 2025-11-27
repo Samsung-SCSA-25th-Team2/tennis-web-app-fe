@@ -147,7 +147,7 @@ export interface ToggleMatchStatusResult {
 }
 
 /**
- * 매치 상태를 토글합니다 (모집중 ↔ 종료됨)
+ * 매치 상태를 토글합니다 (모집중 ↔ 마감)
  * @param matchId 매치 ID
  */
 export async function toggleMatchStatus(matchId: number): Promise<ToggleMatchStatusResult> {

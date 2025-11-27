@@ -1,5 +1,5 @@
 import {useRef, type RefObject} from 'react'
-import {ImgLoader} from '@shared/components/atoms/ImgLoader'
+import {Spinner} from '@shared/components/atoms'
 import EditIcon from '@/assets/icons/edit.svg?react'
 import StarIcon from '@/assets/icons/star.svg?react'
 import type {ProfileData} from "@shared/types/common.ts"
@@ -64,9 +64,9 @@ export function ProfileView({
     // --- 로딩 상태 ---
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center justify-center h-full">
-                <ImgLoader imgType="loading" imgSize="full" />
-                <p className="text-body text-text-muted mt-md">로딩 중...</p>
+            <div className="flex h-full flex-col items-center justify-center gap-4">
+                <Spinner size="lg" />
+                <p className="text-body text-text-muted">로딩 중...</p>
             </div>
         )
     }
@@ -181,56 +181,42 @@ export function ProfileView({
                 <div className="px-4 -mt-12 relative z-20">
                     <div className="bg-surface rounded-lg shadow-md p-5">
                         <div className="flex flex-col gap-6">
-
-                            {/* 닉네임 */}
-                            <div>
-                                {isEditing && isOwner ? (
-                                    <div>
-                                        <label className="text-sm text-text-muted mb-2 block font-medium">
-                                            <div className='flex justify-between'>
-                                                <span>닉네임</span>
-                                                <span>{displayProfile.nickname.length}/30</span>
-                                            </div>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            value={displayProfile.nickname}
-                                            onChange={(e) => onFieldUpdate?.('nickname', e.target.value)}
-                                            onBlur={(e)=>onFieldUpdate?.('nickname', e.target.value.trim())}
-                                            className="w-full py-2 px-3 text-base rounded-md border border-border bg-background text-text-title focus:outline-none focus:border-primary transition-colors"
-                                            placeholder="닉네임을 입력하세요"
-                                            maxLength={30}
-                                        />
-                                        {nicknameValidation && (
-                                            <div className="mt-2">
-                                                {nicknameValidation.isChecking && (
-                                                    <p className="text-xs text-text-muted">확인 중...</p>
-                                                )}
-                                                {!nicknameValidation.isChecking && nicknameValidation.isAvailable === true && displayProfile.nickname !== profile.nickname && (
-                                                    <p className="text-xs text-green-600">사용 가능한 닉네임입니다</p>
-                                                )}
-                                                {!nicknameValidation.isChecking && nicknameValidation.isAvailable === false && (
-                                                    <p className="text-xs text-error">이미 사용 중인 닉네임입니다</p>
-                                                )}
-                                                {nicknameValidation.error && (
-                                                    <p className="text-xs text-error">{nicknameValidation.error}</p>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <>
-                                        <label className="text-sm text-text-muted mb-2 block font-medium">
-                                            <div className='flex justify-between'>
-                                                <span>닉네임</span>
-                                            </div>
-                                        </label>
-                                        <p className="text-base text-text-title pt-1">
-                                            {profile.nickname}
-                                        </p>
-                                    </>
-                                )}
-                            </div>
+                            {/* 닉네임 (수정 모드에서만 표시) */}
+                            {isEditing && isOwner && (
+                                <div>
+                                    <label className="text-sm text-text-muted mb-2 block font-medium">
+                                        <div className='flex justify-between'>
+                                            <span>닉네임</span>
+                                            <span>{displayProfile.nickname.length}/30</span>
+                                        </div>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={displayProfile.nickname}
+                                        onChange={(e) => onFieldUpdate?.('nickname', e.target.value)}
+                                        onBlur={(e)=>onFieldUpdate?.('nickname', e.target.value.trim())}
+                                        className="w-full py-2 px-3 text-base rounded-md border border-border bg-background text-text-title focus:outline-none focus:border-primary transition-colors"
+                                        placeholder="닉네임을 입력하세요"
+                                        maxLength={30}
+                                    />
+                                    {nicknameValidation && (
+                                        <div className="mt-2">
+                                            {nicknameValidation.isChecking && (
+                                                <p className="text-xs text-text-muted">확인 중...</p>
+                                            )}
+                                            {!nicknameValidation.isChecking && nicknameValidation.isAvailable === true && displayProfile.nickname !== profile.nickname && (
+                                                <p className="text-xs text-green-600">사용 가능한 닉네임입니다</p>
+                                            )}
+                                            {!nicknameValidation.isChecking && nicknameValidation.isAvailable === false && (
+                                                <p className="text-xs text-error">이미 사용 중인 닉네임입니다</p>
+                                            )}
+                                            {nicknameValidation.error && (
+                                                <p className="text-xs text-error">{nicknameValidation.error}</p>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                             {/* 테니스 경력 */}
                             <div>

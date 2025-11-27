@@ -1,12 +1,13 @@
 import {useNavigate, useSearchParams} from "react-router-dom"
-import type { DateRange } from "react-day-picker"
+import type {DateRange} from "react-day-picker"
+import {Plus} from "lucide-react"
 
-import { GameType } from "@shared/types"
-import type { TimeRange } from "@shared/types/common.ts"
+import {GameType} from "@shared/types"
+import type {TimeRange} from "@shared/types/common.ts"
 
-import { FilterBar } from "../components/FilterBar.tsx"
-import { MatchList } from "../components/MatchList.tsx"
-import type { SortType, StatusType } from "../common.ts"
+import {FilterBar} from "../components/FilterBar.tsx"
+import {MatchList} from "../components/MatchList.tsx"
+import type {SortType, StatusType} from "../common.ts"
 import {Button} from "@shared/components/ui/button.tsx"
 
 
@@ -63,8 +64,8 @@ export function Match() {
     }
 
     return (
-        <div className='flex flex-col gap-md'>
-            <div className='sticky top-0 z-10 bg-surface pb-sm border-border border-b-sm'>
+        <div className='flex flex-col gap-md pb-32'>
+            <div className='sticky top-0 z-10 border-border border-b-sm bg-surface pb-sm'>
                 <FilterBar
                     gameType={gameType}
                     onGameTypeChange={(val) => updateFilter("gameType", val)}
@@ -78,7 +79,7 @@ export function Match() {
                     onStatusTypeChange={(val) => updateFilter("statusType", val)}
                 />
             </div>
-            <div className='flex-1 overflow-y-auto min-h-0 scrollbar-hide'>
+            <div className='flex-1 min-h-0 overflow-y-auto scrollbar-hide'>
                 <MatchList
                     gameType={gameType}
                     sortType={sortType}
@@ -87,14 +88,26 @@ export function Match() {
                     statusType={statusType}
                 />
             </div>
-            <div
-                className='flex w-full justify-end sticky bottom-0 z-50'
-            >
-                <Button
-                    size={'lg'}
-                    onClick={toMatchCreate}
-                >글쓰기</Button>
-            </div>
+            <section className='sticky bottom-4 z-40'>
+                <div className="flex items-center gap-4 rounded-2xl border border-border bg-surface/90 p-4 shadow-lg backdrop-blur">
+                    <div className="flex-1">
+                        <p className="text-[11px] uppercase tracking-[0.2em] text-text-muted">
+                            Match Post
+                        </p>
+                        <p className="text-sm font-medium text-text-title">
+                            새로운 매치 글을 올려보세요
+                        </p>
+                    </div>
+                    <Button
+                        size={'lg'}
+                        onClick={toMatchCreate}
+                        className="flex items-center gap-2 whitespace-nowrap"
+                    >
+                        <Plus className="h-4 w-4"/>
+                        글쓰기
+                    </Button>
+                </div>
+            </section>
         </div>
     )
 }
