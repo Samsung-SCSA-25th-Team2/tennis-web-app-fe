@@ -3,7 +3,7 @@ import {useRef} from "react"
 import {useAuth, useProfile} from "@shared/hooks"
 import {ProfileView} from '../components/ProfileView'
 import {useProfileEdit} from '../hooks/useProfileEdit'
-import {logout} from "@shared/api/authApi.js"
+import {logout} from "@shared/api/authApi"
 
 export function Profile() {
     const {userStatus, clearUser} = useAuth()
