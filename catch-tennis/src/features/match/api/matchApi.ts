@@ -130,3 +130,18 @@ export async function chatCreatePost(body: ChatCreateBody): Promise<ChatCreateRe
         {useJWT:true}
     )
 }
+
+export interface ToggleMatchStatusResult {
+    matchId: number;
+    message: string;
+}
+
+/**
+ * 매치 상태를 토글합니다 (모집중 ↔ 종료됨)
+ * @param matchId 매치 ID
+ */
+export async function toggleMatchStatus(matchId: number): Promise<ToggleMatchStatusResult> {
+    return api.patch(`/v1/me/matches/${matchId}`, {}, {
+        useJWT: true,
+    });
+}
