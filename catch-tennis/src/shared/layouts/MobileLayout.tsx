@@ -3,13 +3,14 @@ import {Outlet, type UIMatch, useMatches} from 'react-router-dom'
 import type {RouteHandle} from "@shared/types/routes.ts"
 
 import {Header} from "./Header.tsx"
+import {HeaderWithBack} from "./HeaderWithBack.tsx"
 import {Footer} from  "./Footer.tsx"
 
 
 export function MobileLayout() {
     const matches = useMatches() as UIMatch<unknown, RouteHandle>[]
     const currentRoute = matches[matches.length - 1]
-    const {showHeader = true, showFooter = true} = currentRoute.handle || {}
+    const {showHeader = true, showFooter = true, showBackButton = false} = currentRoute.handle || {}
     return (
         <div className="
             flex justify-center items-center
@@ -25,6 +26,7 @@ export function MobileLayout() {
                 bg-background shadow-sm
             ">
                 {showHeader && (<Header />)}
+                {!showHeader && showBackButton && <HeaderWithBack />}
                 <main className="
                     flex-1 flex flex-col
                     overflow-y-auto

@@ -56,17 +56,17 @@ const router = createBrowserRouter([
             {
                 path: "/match/:matchId",
                 element: <MatchDetailPage/>,
-                handle: {showHeader: false, showFooter: true} satisfies RouteHandle
+                handle: {showHeader: false, showFooter: true, showBackButton: true} satisfies RouteHandle
             },
             {
                 path: "/match/create",
                 element: <Navigate to={"/match/create/1"} replace/>,
-                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
+                handle: {showHeader: false, showFooter: false, showBackButton: true} satisfies RouteHandle
             },
             {
                 path: "/match/create/:questionNumber",
                 element: <MatchCreatePage/>,
-                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
+                handle: {showHeader: false, showFooter: false, showBackButton: true} satisfies RouteHandle
             },
 
             // Chat
@@ -97,12 +97,12 @@ const router = createBrowserRouter([
             {
                 path: "/profile-complete",
                 element: <Navigate to={"/profile-complete/1"} replace/>,
-                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
+                handle: {showHeader: false, showFooter: false, showBackButton: true} satisfies RouteHandle
             },
             {
                 path: "/profile-complete/:questionNumber",
                 element: <ProfileCompletePage/>,
-                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
+                handle: {showHeader: false, showFooter: false, showBackButton: true} satisfies RouteHandle
             },
 
             // 404 Not Found
