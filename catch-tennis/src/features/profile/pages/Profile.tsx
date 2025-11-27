@@ -28,11 +28,14 @@ export function Profile() {
     const handleLogout = async () => {
         try {
             await logout()
+            console.log("Logout successful")
         } catch (e) {
             console.error("Logout failed", e)
         } finally {
+            // 로컬 상태 정리
             clearUser()
-            navigate('/login')
+            // 홈페이지(로그인 페이지)로 리다이렉트
+            navigate('/')
         }
     }
 

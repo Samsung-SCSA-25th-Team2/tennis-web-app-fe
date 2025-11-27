@@ -171,9 +171,9 @@ async function apiCall<T = unknown>(
         } catch (refreshError) {
             // 토큰 갱신 자체가 실패한 경우:
             // - 액세스 토큰 제거
-            // - 로그인 페이지로 이동
+            // - 홈페이지(로그인 페이지)로 이동
             localStorage.removeItem("accessToken")
-            window.location.href = "/login"
+            window.location.href = "/"
             throw refreshError
         } finally {
             // 성공/실패와 상관없이 항상 Promise 초기화
