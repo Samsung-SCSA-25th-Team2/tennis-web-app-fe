@@ -143,5 +143,15 @@ export interface ToggleMatchStatusResult {
 export async function toggleMatchStatus(matchId: number): Promise<ToggleMatchStatusResult> {
     return api.patch(`/v1/me/matches/${matchId}`, {}, {
         useJWT: true,
-    });
+    })
+}
+
+/**
+ * 매치를 삭제합니다.
+ * @param matchId 매치 ID
+ */
+export async function deleteMatch(matchId: number): Promise<string> {
+    return api.delete(`/v1/me/matches/${matchId}`, {
+        useJWT: true,
+    })
 }

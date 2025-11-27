@@ -1,7 +1,7 @@
 import {useState, useEffect, useRef, useCallback, type RefObject} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {getMyMatches} from '../api/myMatchesApi'
-import {getCourtInfo, toggleMatchStatus} from '@features/match/api/matchApi'
+import {getCourtInfo, toggleMatchStatus, deleteMatch} from '@features/match/api/matchApi'
 import type {MatchInfo, CourtInfo} from '@features/match/common'
 import {getGametypeLabel} from '@shared/utils/toLabel'
 
@@ -44,6 +44,22 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
             console.error('Failed to update match status:', err)
         } finally {
             setUpdatingStatus(null)
+        }
+    }
+
+    const handleDeleteMatch = async (matchId: number) => {
+        setOpenDropdownId(null)
+        if (window.confirm('정말로 이 매치를 삭제하시겠습니까?')) {
+            setUpdatingStatus(matchId)
+            try {
+                await deleteMatch(matchId)
+                setMatches(prevMatches => prevMatches.filter(m => m.matchId !== matchId))
+            } catch (err) {
+                console.error('Failed to delete match:', err)
+                alert('매치 삭제에 실패했습니다.')
+            } finally {
+                setUpdatingStatus(null)
+            }
         }
     }
 
@@ -340,6 +356,19 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
                                                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                         >
                                                             종료됨
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <hr className="my-1" />
+                                                        <a
+                                                            href="#"
+                                                            onClick={(e) => {
+                                                                e.preventDefault()
+                                                                handleDeleteMatch(match.matchId)
+                                                            }}
+                                                            className="block px-4 py-2 text-sm text-error hover:bg-red-50"
+                                                        >
+                                                            삭제
                                                         </a>
                                                     </li>
                                                 </ul>
