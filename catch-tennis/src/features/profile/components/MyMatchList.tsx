@@ -26,7 +26,9 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
     const lastMatchElementRef = useRef<HTMLDivElement>(null)
     const dropdownRef = useRef<HTMLDivElement>(null)
 
-    const handleStatusChange = async (matchId: number, currentStatus: string, desiredStatus: string) => {
+    type NormalizedStatus = 'RECRUITING' | 'COMPLETED'
+
+    const handleStatusChange = async (matchId: number, currentStatus: string, desiredStatus: NormalizedStatus) => {
         if (currentStatus === desiredStatus) {
             setOpenDropdownId(null)
             return
@@ -36,11 +38,9 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
         setOpenDropdownId(null)
         try {
             await toggleMatchStatus(matchId)
-            // OPEN/CLOSED를 RECRUITING/COMPLETED로 변환
-            const newStatus = desiredStatus === 'OPEN' ? 'RECRUITING' : 'COMPLETED'
             setMatches(prevMatches =>
                 prevMatches.map(m =>
-                    m.matchId === matchId ? {...m, status: newStatus as any} : m
+                    m.matchId === matchId ? {...m, status: desiredStatus as MatchInfo['status']} : m
                 )
             )
         } catch (err) {
@@ -343,7 +343,7 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
                                                             href="#"
                                                             onClick={(e) => {
                                                                 e.preventDefault()
-                                                                handleStatusChange(match.matchId, match.status, 'OPEN')
+                                                                handleStatusChange(match.matchId, match.status, 'RECRUITING')
                                                             }}
                                                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                         >
@@ -355,7 +355,7 @@ export function MyMatchList({scrollContainerRef}: MyMatchListProps) {
                                                             href="#"
                                                             onClick={(e) => {
                                                                 e.preventDefault()
-                                                                handleStatusChange(match.matchId, match.status, 'CLOSED')
+                                                                handleStatusChange(match.matchId, match.status, 'COMPLETED')
                                                             }}
                                                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                         >
