@@ -65,7 +65,7 @@ export function Match() {
 
     return (
         <div className='flex flex-col gap-md pb-32'>
-            <div className='sticky top-0 z-10 border-border border-b-sm bg-surface pb-sm'>
+            <div className='sticky top-0 z-10 border-border border-b-sm bg-surface py-sm'>
                 <FilterBar
                     gameType={gameType}
                     onGameTypeChange={(val) => updateFilter("gameType", val)}
