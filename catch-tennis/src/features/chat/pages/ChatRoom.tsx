@@ -231,7 +231,7 @@ export function ChatRoom() {
     return (
         <div className="flex flex-col h-full">
             {/* Header: 채팅방 제목 및 뒤로가기 버튼 */}
-            <div className="flex items-center p-md border-b border-border bg-surface">
+            <div className="flex items-center px-md py-xs border-b border-border bg-surface">
                 <button
                     onClick={() => navigate('/chat/my')} // 내 채팅 목록으로 이동
                     className="text-text-title mr-md"
@@ -245,13 +245,13 @@ export function ChatRoom() {
 
             {/* Match Info Banner: 매치 정보 표시 */}
             {chatRoomInfo && chatRoomInfo.matchId && (
-                <MatchInfoBanner matchId={chatRoomInfo.matchId} />
+                <MatchInfoBanner smallGap={true} matchId={chatRoomInfo.matchId} />
             )}
 
             {/* Messages: 메시지 목록 영역 (스크롤 가능) */}
             <div
                 ref={scrollRef} // 스크롤 위치 제어를 위한 ref
-                className="flex-1 overflow-y-auto px-4 py-3 bg-surface-muted"
+                className="flex-1 overflow-y-auto px-4 py-3 bg-surface-raised"
             >
                 {/* 이전 메시지 더 불러오기 버튼 (hasNext이 true일 때만 표시) */}
                 {hasNext && (

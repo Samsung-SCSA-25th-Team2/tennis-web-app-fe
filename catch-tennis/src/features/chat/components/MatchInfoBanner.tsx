@@ -7,12 +7,16 @@ import {getGametypeLabel} from '@shared/utils/toLabel'
 
 interface MatchInfoBannerProps {
     matchId: number
+    smallGap?: boolean
 }
 
 /**
  * 채팅방 상단에 매치 정보를 표시하는 배너 컴포넌트
  */
-export function MatchInfoBanner({matchId}: MatchInfoBannerProps) {
+export function MatchInfoBanner({
+                                    matchId,
+    smallGap = false,
+                                }: MatchInfoBannerProps) {
     const navigate = useNavigate()
     const [matchInfo, setMatchInfo] = useState<MatchInfo | null>(null)
     const [courtInfo, setCourtInfo] = useState<CourtInfo | null>(null)
@@ -102,8 +106,11 @@ export function MatchInfoBanner({matchId}: MatchInfoBannerProps) {
         })
     }
 
+    const gap = smallGap ? 'py-sm' : 'py-4'
+    const containerStyle = `${gap} px-4 bg-surface border-b border-border`
+
     return (
-        <div className="p-4 bg-surface border-b border-border">
+        <div className={containerStyle}>
             {/* 카드 형태의 매치 정보 */}
             <div className="bg-gradient-to-r from-primary/15 to-primary/5 rounded-xl shadow-sm border border-primary/20">
                 {/* 헤더 (항상 표시) */}

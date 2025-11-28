@@ -77,6 +77,7 @@ const router = createBrowserRouter([
             {
                 path: "/chat/:roomId",
                 element: <ChatRoomPage/>,
+                handle: {showHeader: false, showFooter: false} satisfies RouteHandle
             },
 
             // Club
