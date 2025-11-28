@@ -187,7 +187,7 @@ export function ProfileView({
                                     <label className="text-sm text-text-muted mb-2 block font-medium">
                                         <div className='flex justify-between'>
                                             <span>닉네임</span>
-                                            <span>{displayProfile.nickname.length}/30</span>
+                                            <span>{displayProfile.nickname.length}/20</span>
                                         </div>
                                     </label>
                                     <input
@@ -197,7 +197,7 @@ export function ProfileView({
                                         onBlur={(e)=>onFieldUpdate?.('nickname', e.target.value.trim())}
                                         className="w-full py-2 px-3 text-base rounded-md border border-border bg-background text-text-title focus:outline-none focus:border-primary transition-colors"
                                         placeholder="닉네임을 입력하세요"
-                                        maxLength={30}
+                                        maxLength={20}
                                     />
                                     {nicknameValidation && (
                                         <div className="mt-2">

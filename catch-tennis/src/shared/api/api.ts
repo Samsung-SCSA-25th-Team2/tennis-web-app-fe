@@ -173,7 +173,7 @@ async function apiCall<T = unknown>(
             // - 액세스 토큰 제거
             // - 홈페이지(로그인 페이지)로 이동
             localStorage.removeItem("accessToken")
-            window.location.href = "/"
+            // window.location.href = "/"
             throw refreshError
         } finally {
             // 성공/실패와 상관없이 항상 Promise 초기화

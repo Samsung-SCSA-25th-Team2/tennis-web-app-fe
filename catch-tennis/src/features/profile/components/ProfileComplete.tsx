@@ -50,10 +50,10 @@ export function ProfileComplete() {
                                     onBlur={(e)=>setSelectedValue(e.target.value.trim())}
                                     placeholder={question.placeholder}
                                     type='text'
-                                    maxLength={30}
+                                    maxLength={20}
                                 />
                                 <span className='text-right text-caption text-text-muted'
-                                >{selectedValue.length}/30</span>
+                                >{selectedValue.length}/20</span>
                             </div>
                         )
                     }
