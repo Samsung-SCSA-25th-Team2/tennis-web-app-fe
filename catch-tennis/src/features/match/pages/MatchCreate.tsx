@@ -150,7 +150,7 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
             return true
         } else if (questionIdx === 5 && ageRange.length > 0) {
             return true
-        } else if (questionIdx === 6 && fee) {
+        } else if (questionIdx === 6 && fee !== undefined && fee >= 0) {
             return true
         } else if (questionIdx === 7 && description?.length) {
             return true
@@ -163,7 +163,7 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
             navigate(`/match/create/${questionIdx + 2}`)
         } else {
             try {
-                if (!gameType || !courtId || !fee || !description) {
+                if (!gameType || !courtId || fee===undefined || !description) {
                     throw new Error('Not Valid Request')
                 }
 
@@ -184,7 +184,8 @@ export function MatchCreate({questionNumber}: { questionNumber: string }) {
                     description
                 }
                 const matchCreateResult = await matchCreatePost(body)
-                navigate(`/match/${matchCreateResult.matchId}`, {replace: true})
+                navigate(`/match/${matchCreateResult.matchId}`,
+                    {replace: true, state: {from:'matchCreate'}})
             } catch (error) {
                 console.error(error)
                 navigate('/error')

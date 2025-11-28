@@ -51,7 +51,7 @@ export function useCompleteProfile() {
                 const answers = storage.getAnswers()
                 await postProfile(answers)
                 storage.clearAnswers()
-                navigate('/match')
+                navigate(`/match`, {replace: true, state: {from:'profileComplete'}})
             } catch (error) {
                 console.error('CompleteProfileError:', error)
                 navigate('/error')
