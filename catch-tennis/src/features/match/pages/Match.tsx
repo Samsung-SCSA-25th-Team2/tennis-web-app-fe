@@ -77,6 +77,7 @@ export function Match() {
                     onTimeRangeChange={handleTimeRangeChange}
                     statusType={statusType}
                     onStatusTypeChange={(val) => updateFilter("statusType", val)}
+                    setSearchParams={setSearchParams}
                 />
             </div>
             <div className='flex-1 min-h-0 overflow-y-auto scrollbar-hide'>

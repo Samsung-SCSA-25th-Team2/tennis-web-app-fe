@@ -11,6 +11,7 @@ import {
     type StatusType
 } from "@features/match/common.ts"
 import {FilterDropdown} from "@features/match/components/FilterDropdown.tsx"
+import {Button} from "@shared/components/ui/button.tsx"
 
 
 interface FilterBarProps {
@@ -24,6 +25,7 @@ interface FilterBarProps {
     onTimeRangeChange: (timeRange: TimeRange) => void,
     statusType: StatusType,
     onStatusTypeChange: (status: StatusType) => void,
+    setSearchParams: () => void
 }
 
 export function FilterBar({
@@ -37,6 +39,7 @@ export function FilterBar({
     onTimeRangeChange,
     statusType,
     onStatusTypeChange,
+    setSearchParams
                           }: FilterBarProps) {
 
 
@@ -66,6 +69,7 @@ export function FilterBar({
                     timeRange={timeRange}
                     onTimeRangeChange={onTimeRangeChange}
                 />
+                <Button onClick={() => {setSearchParams()}}>초기화</Button>
             </div>
         </div>
     )

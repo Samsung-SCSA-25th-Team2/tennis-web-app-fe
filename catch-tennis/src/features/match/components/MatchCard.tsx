@@ -1,6 +1,6 @@
 import {type HTMLAttributes, useState, useEffect} from "react"
 import {useNavigate} from "react-router-dom"
-import {differenceInCalendarDays} from "date-fns"
+import {differenceInCalendarDays, setDate} from "date-fns"
 
 import {useGetApi} from "@shared/hooks"
 import {getEarliestPeriodLabel, getGametypeLabel} from "@shared/utils/toLabel.ts"
@@ -63,13 +63,16 @@ export function MatchCard  ({
         })
     }
 
-    const formatTime = (date: Date) => {
-        const d = new Date(date)
-        return d.toLocaleTimeString('ko-KR', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        })
+    const formatTimes = (start: Date, end: Date) => {
+        const startDay = new Date(start)
+        let endDay = new Date(end)
+        endDay = setDate(endDay, startDay.getDate())
+
+        const startTime = startDay.toLocaleDateString('ko-KR', {hour:'2-digit', minute:'2-digit', hour12: false})
+        let endTime = endDay.toLocaleDateString('ko-KR', {hour:'2-digit', minute:'2-digit', hour12: false})
+        endTime = endTime.replace('00:', '24:')
+
+        return `${startTime} - ${endTime}`
     }
 
     const getStatusLabel = (status: string) => {
@@ -151,7 +154,7 @@ export function MatchCard  ({
                         <div className="flex items-center gap-2 text-sm text-text-body">
                             <span className="text-base">⏰</span>
                             <span>
-                                {formatTime(startDate)} - {formatTime(endDate)}
+                                {formatTimes(startDate, endDate)}
                             </span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-text-body">
